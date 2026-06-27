@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- 锦囊图标 - 选中态（填充风格） -->
+  <g>
+    <!-- 锦囊袋子 - 填充 -->
+    <path d="M14 16 L14 34 Q14 38 18 38 L30 38 Q34 38 34 34 L34 16 Q34 12 30 12 L18 12 Q14 12 14 16Z" fill="#4A7C59"/>
+    <!-- 袋子褶皱 - 白色线条 -->
+    <path d="M14 20 L34 20" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M14 28 L34 28" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- 绳子 -->
+    <path d="M20 12 Q24 8 28 12" stroke="#4A7C59" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <line x1="24" y1="8" x2="24" y2="4" stroke="#4A7C59" stroke-width="2" stroke-linecap="round"/>
+    <!-- 智慧之光 - 白色 -->
+    <circle cx="24" cy="26" r="2" fill="#fff"/>
+  </g>
+</svg>

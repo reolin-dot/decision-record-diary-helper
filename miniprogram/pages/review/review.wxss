@@ -1,0 +1,392 @@
+/* pages/review/review.wxss */
+
+.review-body {
+  flex: 1;
+  padding: 32rpx;
+  overflow-y: auto;
+}
+
+/* ====== 决策摘要卡片 ====== */
+.decision-summary {
+  background: #ffffff;
+  border: 2rpx solid #d0d0d0;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 40rpx;
+}
+
+.summary-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.summary-meta {
+  font-size: 22rpx;
+  color: #888888;
+  display: block;
+}
+
+/* ====== 复盘问题 ====== */
+.review-type-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  margin-bottom: 32rpx;
+  padding: 20rpx 24rpx;
+  background: rgba(74, 124, 89, 0.06);
+  border-radius: 16rpx;
+  border-left: 6rpx solid #4a7c59;
+}
+
+.review-type-tag {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #4a7c59;
+}
+
+.review-type-hint {
+  font-size: 22rpx;
+  color: #888888;
+}
+
+.review-question {
+  margin-bottom: 40rpx;
+}
+
+.review-q-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.review-q-label .required {
+  color: #555555;
+  font-size: 24rpx;
+}
+
+.review-q-hint {
+  font-size: 22rpx;
+  color: #b0b0b0;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+/* ====== 结果评分选项 ====== */
+.review-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.review-option {
+  padding: 24rpx 28rpx;
+  border: 2rpx solid #d0d0d0;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  background: #ffffff;
+}
+
+.review-option.selected {
+  border-color: #555555;
+  background: #e0e0e0;
+}
+
+.review-option:active {
+  background: #e0e0e0;
+}
+
+/* ====== 摘要头部（含阶段图标） ====== */
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.summary-stage-icon {
+  font-size: 48rpx;
+  flex-shrink: 0;
+}
+
+.summary-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+/* ====== 已复盘：只读结果 ====== */
+.review-result-view {
+  margin-top: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+.result-section {
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+}
+
+.result-label {
+  font-size: 24rpx;
+  color: #888888;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.result-rating {
+  display: inline-block;
+  padding: 8rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.result-good {
+  background: #e8f0e8;
+  color: #2d5a3d;
+}
+
+.result-bad {
+  background: #f0e0e0;
+  color: #5a2d2d;
+}
+
+.result-text {
+  font-size: 26rpx;
+  color: #222222;
+  line-height: 1.6;
+  display: block;
+}
+
+/* ====== 决策未找到 ====== */
+.review-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 48rpx 0;
+}
+
+.not-found-icon {
+  font-size: 96rpx;
+  opacity: 0.5;
+  margin-bottom: 32rpx;
+}
+
+.not-found-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 12rpx;
+}
+
+.not-found-desc {
+  font-size: 24rpx;
+  color: #888888;
+  margin-bottom: 48rpx;
+}
+
+.not-found-btn {
+  background: #555555;
+  color: #ffffff;
+  font-size: 28rpx;
+  padding: 24rpx 64rpx;
+  border-radius: 48rpx;
+}
+
+.not-found-btn:active {
+  opacity: 0.8;
+  transform: scale(0.97);
+}
+
+/* ====== 跟进选择弹窗 ====== */
+.followup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.followup-modal {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 48rpx 40rpx 64rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.followup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  margin-bottom: 8rpx;
+}
+
+.followup-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #222222;
+}
+
+.followup-sub {
+  font-size: 24rpx;
+  color: #888888;
+}
+
+.followup-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.followup-option {
+  padding: 28rpx 32rpx;
+  border: 2rpx solid #d0d0d0;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #222222;
+  background: #ffffff;
+  transition: background 0.15s;
+}
+
+.followup-option:active {
+  background: #f0f0f0;
+}
+
+.followup-custom {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 8rpx;
+}
+
+.followup-input {
+  flex: 1;
+  height: 80rpx;
+  border: 2rpx solid #d0d0d0;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+}
+
+.followup-custom-btn {
+  padding: 20rpx 32rpx;
+  background: #222222;
+  color: #ffffff;
+  font-size: 26rpx;
+  border-radius: 12rpx;
+  white-space: nowrap;
+}
+
+.followup-custom-btn:active {
+  opacity: 0.8;
+}
+
+.followup-cancel {
+  text-align: center;
+  padding: 20rpx;
+  font-size: 24rpx;
+  color: #b0b0b0;
+  margin-top: 8rpx;
+}
+
+.followup-cancel:active {
+  color: #222222;
+}
+
+/* ====== 复盘历史 ====== */
+.review-history {
+  margin-top: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+.history-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 4rpx;
+  display: block;
+}
+
+.history-item {
+  background: #f5f5f5;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.history-round {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #222222;
+}
+
+.history-date {
+  font-size: 22rpx;
+  color: #888888;
+}
+
+.history-rating {
+  display: inline-block;
+  padding: 8rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.history-label {
+  font-size: 24rpx;
+  color: #888888;
+}
+
+.history-text {
+  font-size: 26rpx;
+  color: #222222;
+  line-height: 1.6;
+}
+
+.history-followup {
+  background: #e8f0e8;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 22rpx;
+  color: #2d5a3d;
+  margin-top: 4rpx;
+}

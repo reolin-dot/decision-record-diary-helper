@@ -1,0 +1,17 @@
+<view class="coach-page">
+  <view class="coach-header">
+    <text class="coach-title">决策锦囊</text>
+    <text class="coach-desc" decode>选择一个困境类型，获得结构化的分析框架\n锦囊不替你做决定，只帮你理清思路</text>
+  </view>
+
+  <view class="coach-body">
+    <view class="dilemma-card" wx:for="{{dilemmaTypes}}" wx:key="title" bindtap="onSelectDilemma" data-index="{{index}}">
+      <view class="dilemma-icon">{{item.icon}}</view>
+      <view class="dilemma-info">
+        <text class="dilemma-title">{{item.title}}</text>
+        <text class="dilemma-desc">{{item.desc}}</text>
+      </view>
+      <text class="dilemma-arrow">›</text>
+    </view>
+  </view>
+</view>

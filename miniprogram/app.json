@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/garden/garden",
+    "pages/style-test/style-test",
+    "pages/record/record",
+    "pages/record-success/record-success",
+    "pages/watering/watering",
+    "pages/review/review",
+    "pages/decision-detail/decision-detail",
+    "pages/coach/coach",
+    "pages/coach-analyze/coach-analyze",
+    "pages/coach-result/coach-result",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "决策成长日记",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f5f5",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#888888",
+    "selectedColor": "#222222",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/garden/garden",
+        "text": "花园",
+        "iconPath": "images/tab-garden.png",
+        "selectedIconPath": "images/tab-garden-active.png"
+      },
+      {
+        "pagePath": "pages/coach/coach",
+        "text": "锦囊",
+        "iconPath": "images/tab-coach.png",
+        "selectedIconPath": "images/tab-coach-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab-profile.png",
+        "selectedIconPath": "images/tab-profile-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

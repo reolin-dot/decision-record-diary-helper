@@ -1,0 +1,130 @@
+<!-- pages/record/record.wxml -->
+<view class="record-page">
+  <view class="record-header">
+    <button class="back-btn" bindtap="onBack">‹</button>
+    <text class="record-header-title">记录决策</text>
+    <text class="record-header-action">{{step}}/{{totalSteps}}</text>
+  </view>
+
+  <view class="progress-bar">
+    <view class="progress-step {{step >= 1 ? (step > 1 ? 'done' : 'current') : ''}}"></view>
+    <view class="progress-step {{step >= 2 ? (step > 2 ? 'done' : 'current') : ''}}"></view>
+    <view class="progress-step {{step >= 3 ? (step > 3 ? 'done' : 'current') : ''}}"></view>
+    <view class="progress-step {{step >= 4 ? 'current' : ''}}"></view>
+  </view>
+  <view class="progress-label">步骤 {{step}} / {{totalSteps}}</view>
+
+  <view class="record-body">
+    <view wx:if="{{step === 1}}" class="step-content">
+      <view class="step-title">描述你的决策</view>
+      <view class="step-desc">把要做决定的事情写下来，帮自己理清思路。</view>
+
+      <view class="form-group">
+        <view class="form-label">决策标题 <text class="required">必填</text></view>
+        <input class="form-input" placeholder="例如：要不要换工作" value="{{title}}" bindinput="onTitleInput" maxlength="50" />
+        <view class="form-hint">用一句话概括这个决策</view>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">背景描述 <text class="optional">选填</text></view>
+        <textarea class="form-input form-textarea" placeholder="简单描述一下事情的来龙去脉" value="{{background}}" bindinput="onBgInput" maxlength="500" />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">此刻的心情 <text class="optional">选填</text></view>
+        <view class="mood-chip-group">
+          <view wx:for="{{moods}}" wx:key="*this" class="mood-chip {{selectedMood === item ? 'selected' : ''}}" data-mood="{{item}}" bindtap="onSelectMood">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{step === 2}}" class="step-content">
+      <view class="step-title">列出你的选项</view>
+      <view class="step-desc">把可选的方案都写下来，最多 6 个。</view>
+
+      <view class="option-list">
+        <view class="option-card" wx:for="{{options}}" wx:key="*this">
+          <view class="option-letter">{{index + 1}}</view>
+          <input class="option-input" placeholder="输入选项内容" value="{{item}}" data-index="{{index}}" bindinput="onOptionInput" maxlength="100" />
+        </view>
+      </view>
+
+      <view class="add-option-btn" wx:if="{{options.length < 6}}" bindtap="onAddOption">
+        <text class="add-option-icon">+</text>
+        <text>添加选项</text>
+      </view>
+    </view>
+
+    <view wx:if="{{step === 3}}" class="step-content">
+      <view class="step-title">做出你的选择</view>
+      <view class="step-desc">选一个你目前决定采用的方案，并写下原因。</view>
+
+      <view class="form-group">
+        <view class="form-label">选择方案 <text class="required">必填</text></view>
+        <view class="choice-list">
+          <view wx:for="{{options}}" wx:key="*this" class="choice-item {{selectedOption === index ? 'selected' : ''}}" data-index="{{index}}" bindtap="onSelectChoice">
+            <view class="choice-radio">
+              <view class="choice-radio-inner" wx:if="{{selectedOption === index}}"></view>
+            </view>
+            <text class="choice-letter">{{index + 1}}</text>
+            <text class="choice-text">{{item || '未填写'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">选择理由 <text class="optional">选填</text></view>
+        <textarea class="form-input form-textarea" placeholder="为什么选这个方案？" value="{{choiceReason}}" bindinput="onReasonInput" maxlength="500" />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">预期结果 <text class="optional">选填</text></view>
+        <textarea class="form-input form-textarea" placeholder="你期待这个选择带来什么结果？" value="{{expectation}}" bindinput="onExpectInput" maxlength="500" />
+      </view>
+    </view>
+
+    <view wx:if="{{step === 4}}" class="step-content">
+      <view class="step-title">设置复盘时间</view>
+      <view class="step-desc">定期回顾决策结果，才能不断成长。</view>
+
+      <view class="form-group">
+        <view class="form-label">多久后复盘？</view>
+        <view class="time-chip-grid">
+          <view wx:for="{{timeOptions}}" wx:key="key" class="time-chip {{reviewPeriod === item.key ? 'selected' : ''}}" data-key="{{item.key}}" bindtap="onSelectTime">
+            <text class="time-chip-value">{{item.value}}</text>
+            <text class="time-chip-label">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">自定义日期 <text class="optional">选填</text></view>
+        <picker mode="date" start="{{today}}" end="2030-12-31" bindchange="onDatePicker">
+          <view class="form-input date-picker-input">
+            <text wx:if="{{customDate}}">{{customDate}}</text>
+            <text wx:else class="placeholder-text">选择一个日期</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="review-summary" wx:if="{{title}}">
+        <view class="review-summary-title">决策摘要</view>
+        <view class="review-summary-item">
+          <text class="review-summary-label">决策：</text>
+          <text class="review-summary-value">{{title}}</text>
+        </view>
+        <view class="review-summary-item" wx:if="{{selectedOption >= 0 && options[selectedOption]}}">
+          <text class="review-summary-label">选择：</text>
+          <text class="review-summary-value">{{options[selectedOption]}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <button class="btn-primary" wx:if="{{step < 4}}" bindtap="onNext" loading="{{saving}}" disabled="{{saving}}">下一步</button>
+    <button class="btn-primary" wx:if="{{step === 4}}" bindtap="onComplete" loading="{{saving}}" disabled="{{saving}}">完成记录</button>
+    <view class="skip-link" wx:if="{{step < 4 && title}}" bindtap="onSaveDraft">先保存为种子</view>
+    <view class="skip-link" wx:if="{{step === 4}}" bindtap="onSkipReview">跳过，直接保存</view>
+  </view>
+</view>

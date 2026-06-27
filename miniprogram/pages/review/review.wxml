@@ -1,0 +1,130 @@
+<view class="page-container">
+  <!-- ====== 决策未找到 ====== -->
+  <view class="review-not-found" wx:if="{{!decision}}">
+    <text class="not-found-icon">🔍</text>
+    <text class="not-found-title">决策未找到</text>
+    <text class="not-found-desc">这条决策可能已被删除或链接无效</text>
+    <view class="not-found-btn" bindtap="onGoBack">
+      <text>返回花园</text>
+    </view>
+  </view>
+
+  <!-- ====== 正常复盘内容 ====== -->
+  <view class="review-body" wx:else>
+    <view class="decision-summary">
+      <view class="summary-header">
+        <text class="summary-stage-icon">{{stageMeta.icon}}</text>
+        <view class="summary-title-wrap">
+          <text class="summary-title">{{decision.title}}</text>
+          <text class="summary-meta">{{stageMeta.label}} · {{stageMeta.description}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{!decision.actionStarted && (decision.stage === 'sprout' || decision.stage === 'seed')}}" class="review-question">
+      <text class="review-q-label">开始行动了吗？</text>
+      <text class="review-q-hint">标记后，这朵花会从发芽进入长叶。成长从迈出第一步开始。</text>
+      <button class="btn-secondary" bindtap="onMarkActionStarted">我开始行动了</button>
+    </view>
+
+    <!-- 已复盘：显示历史（只读） -->
+    <view wx:if="{{decision.wateringHistory && decision.wateringHistory.length > 0}}" class="review-history">
+      <view class="history-title">复盘历史</view>
+      <view class="history-item" wx:for="{{decision.wateringHistory}}" wx:key="date">
+        <view class="history-header">
+          <text class="history-round">第 {{index + 1}} 次复盘</text>
+          <text class="history-date">{{item.date}}</text>
+        </view>
+        <view class="history-rating result-good">{{item.type === 'result' ? '结果复盘' : '当下复盘'}} · {{item.rating}}</view>
+        <view wx:if="{{item.reflection}}" class="history-section">
+          <text class="history-label">实际结果与期望的差异</text>
+          <text class="history-text">{{item.reflection}}</text>
+        </view>
+        <view wx:if="{{item.lesson}}" class="history-section">
+          <text class="history-label">收获与下次做法</text>
+          <text class="history-text">{{item.lesson}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{decision.hasRemainingFollowUps}}" class="history-followup">
+        <text>还剩 {{decision.remainingWaterings}} 次跟进复盘，下次提醒日期：{{decision.reviewDate}}</text>
+      </view>
+    </view>
+
+  <!-- 未复盘 / 需继续跟进：显示复盘表单 -->
+  <view wx:if="{{canReview}}" class="review-type-indicator">
+    <text class="review-type-tag">{{reviewTypeName}}</text>
+    <text class="review-type-hint" wx:if="{{reviewType === 'current'}}">记录当下看到的信息，为后续复盘积累素材</text>
+    <text class="review-type-hint" wx:else>结果逐渐明朗了，沉淀这次的经验</text>
+  </view>
+
+  <!-- Q1: 状态选择（两种复盘共用，但选项文案微调） -->
+  <view wx:if="{{canReview}}" class="review-question">
+    <text class="review-q-label">1. {{reviewType === 'result' ? '最终结果是什么？' : '现在这件事处在什么状态？'}}<text class="required"> *必答</text></text>
+    <view class="review-options">
+      <view class="review-option {{resultRating === item ? 'selected' : ''}}" wx:for="{{resultOptions}}" wx:key="*this" bindtap="onSelectResult" data-value="{{item}}">
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- Q2: 当下复盘 vs 结果复盘 -->
+  <view wx:if="{{canReview}}" class="review-question">
+    <text class="review-q-label" wx:if="{{reviewType === 'current'}}">2. 和当初想象有什么不同？</text>
+    <text class="review-q-label" wx:else>2. 当初的判断哪些被验证了？</text>
+    <text class="review-q-hint" wx:if="{{reviewType === 'current'}}">可以写事实，也可以写感受，不需要判定好坏。</text>
+    <text class="review-q-hint" wx:else>哪些想法被证实了，哪些出乎意料？</text>
+    <textarea class="form-input form-textarea" placeholder="{{reviewType === 'current' ? '写下目前看到的变化...' : '写下和当初预想的异同...'}}" maxlength="200" bindinput="onReflectionInput" />
+  </view>
+
+  <!-- Q3: 当下复盘 vs 结果复盘 -->
+  <view wx:if="{{canReview}}" class="review-question">
+    <text class="review-q-label" wx:if="{{reviewType === 'current'}}">3. 你现在看见了什么新信息？</text>
+    <text class="review-q-label" wx:else>3. 下次遇到类似选择，你会保留什么做法？</text>
+    <text class="review-q-hint" wx:if="{{reviewType === 'current'}}">这会成为下一次复盘时的参考。</text>
+    <text class="review-q-hint" wx:else>这次经验可以带走什么？</text>
+    <textarea class="form-input form-textarea" placeholder="{{reviewType === 'current' ? '写下可以带走的一点新信息...' : '写下可以保留的做法...'}}" maxlength="200" bindinput="onLessonInput" />
+  </view>
+  </view>
+
+  <view class="bottom-bar" wx:if="{{decision && canReview}}">
+    <button class="btn-primary" bindtap="onCompleteReview">完成复盘</button>
+  </view>
+
+  <!-- ====== 跟进选择弹窗 ====== -->
+  <view class="followup-mask" wx:if="{{showFollowUpModal}}" bindtap="onCancelFollowUp">
+    <view class="followup-modal" catchtap="return">
+      <view class="followup-header">
+        <text class="followup-title">复盘已记录</text>
+        <text class="followup-sub">结果还没完全明朗的话，可以继续跟进；已经清楚了，就让它盛开。</text>
+      </view>
+
+      <view class="followup-options">
+        <view
+          class="followup-option"
+          wx:for="{{followUpOptions}}"
+          wx:key="key"
+          data-key="{{item.key}}"
+          bindtap="onChooseFollowUp"
+        >
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+
+      <view class="followup-custom" wx:if="{{showCustomInput}}">
+        <input
+          class="followup-input"
+          type="number"
+          placeholder="输入次数（1~20）"
+          value="{{customFollowUpCount}}"
+          bindinput="onCustomFollowUpInput"
+        />
+        <view class="followup-custom-btn" bindtap="onConfirmCustomFollowUp">确认</view>
+      </view>
+
+      <view class="followup-cancel" bindtap="onCancelFollowUp">
+        <text>取消（直接完成）</text>
+      </view>
+    </view>
+  </view>
+</view>
