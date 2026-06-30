@@ -1,0 +1,50 @@
+<view class="page-container">
+  <view class="result-body">
+    <view class="result-card">
+      <text class="result-card-title">利弊对比分析</text>
+      <view class="result-comparison">
+        <view class="result-col">
+          <text class="result-col-title">选项 A：{{optionA.title}}</text>
+          <view wx:for="{{optionA.pros}}" wx:key="*this">
+            <text class="result-item pro">+ {{item}}</text>
+          </view>
+          <view wx:for="{{optionA.cons}}" wx:key="*this">
+            <text class="result-item con">- {{item}}</text>
+          </view>
+        </view>
+        <view class="result-col">
+          <text class="result-col-title">选项 B：{{optionB.title}}</text>
+          <view wx:for="{{optionB.pros}}" wx:key="*this">
+            <text class="result-item pro">+ {{item}}</text>
+          </view>
+          <view wx:for="{{optionB.cons}}" wx:key="*this">
+            <text class="result-item con">- {{item}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="result-score">
+        <text class="score-label">加权得分参考</text>
+        <view class="score-values">
+          <view class="score-item">
+            <text>选项 A</text>
+            <text class="score-value">{{optionA.score}}</text>
+          </view>
+          <view class="score-item">
+            <text>选项 B</text>
+            <text class="score-value">{{optionB.score}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="disclaimer">
+      <text decode>这只是参考分析，最终决定权在你。\n分数不代表绝对对错，重要的是你想成为什么样的人。</text>
+    </view>
+
+    <button class="save-draft-btn" bindtap="onSaveDecision">保存到我的决策</button>
+  </view>
+
+  <view class="bottom-bar">
+    <button class="btn-secondary" bindtap="onBackToCoach">返回锦囊</button>
+  </view>
+</view>

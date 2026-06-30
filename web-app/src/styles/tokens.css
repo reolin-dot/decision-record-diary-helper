@@ -1,0 +1,31 @@
+/* Design Tokens - migrated from miniprogram app.wxss */
+:root {
+  /* Colors */
+  --color-bg: #f5f5f5;
+  --color-surface: #ffffff;
+  --color-border: #e8e8e8;
+  --color-border-light: #f0f0f0;
+  --color-text-primary: #222222;
+  --color-text-secondary: #888888;
+  --color-text-placeholder: #b0b0b0;
+  --color-accent: #4a7c59;
+  --color-accent-light: #e8f0e8;
+  --color-accent-dark: #3a6247;
+  --color-danger: #c0392b;
+  --color-warning: #e67e22;
+  --color-success: #4a7c59;
+
+  /* Spacing & Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-button: 0 4px 16px rgba(74, 124, 89, 0.2);
+
+  /* Layout */
+  --app-max-width: 480px;
+  --tab-bar-height: 56px;
+  --page-header-height: 48px;
+}

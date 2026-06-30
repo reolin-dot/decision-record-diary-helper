@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>决策成长日记 - 花园主页设计稿</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+      background: #f5f5f5;
+      color: #222222;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ====== 顶部状态栏 ====== */
+    .top-bar {
+      background: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e8f0e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .streak {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .streak-num {
+      color: #4A7C59;
+      font-weight: 600;
+    }
+
+    /* ====== 统计区 ====== */
+    .stats-card {
+      background: #fff;
+      margin: 12px 16px;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .stat-item {
+      text-align: center;
+      flex: 1;
+    }
+
+    .stat-num {
+      display: block;
+      font-size: 24px;
+      font-weight: 700;
+      color: #4A7C59;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      background: #e8e8e8;
+      margin: 0 8px;
+    }
+
+    /* ====== 提醒卡片 ====== */
+    .reminder-card {
+      background: linear-gradient(135deg, #4A7C59 0%, #3A6247 100%);
+      margin: 0 16px 12px;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(74,124,89,0.2);
+    }
+
+    .reminder-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #F5A623;
+      flex-shrink: 0;
+    }
+
+    .reminder-text {
+      font-size: 14px;
+      flex: 1;
+    }
+
+    .reminder-arrow {
+      font-size: 18px;
+      opacity: 0.8;
+    }
+
+    /* ====== 花朵网格 ====== */
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 16px 12px;
+      color: #222;
+    }
+
+    .flower-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 16px;
+    }
+
+    .flower-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.2s;
+    }
+
+    .flower-card:active {
+      transform: scale(0.96);
+    }
+
+    .flower-visual {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    .stage-seed .flower-visual {
+      background: #f5f5f5;
+    }
+
+    .stage-growing .flower-visual {
+      background: #e8f0e8;
+    }
+
+    .stage-blooming .flower-visual {
+      background: linear-gradient(135deg, #F5A623 0%, #E8B4B8 100%);
+    }
+
+    .flower-stage-label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .flower-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      color: #222;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ====== 空状态 ====== */
+    .empty-state {
+      text-align: center;
+      padding: 48px 32px;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 8px;
+    }
+
+    .empty-desc {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .empty-cta {
+      background: #4A7C59;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-size: 15px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* ====== 底部操作栏 ====== */
+    .bottom-actions {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 375px;
+      background: #fff;
+      border-top: 1px solid #e8e8e8;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 16px 24px;
+    }
+
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .action-btn:active {
+      background: #f5f5f5;
+    }
+
+    .action-icon {
+      font-size: 24px;
+      position: relative;
+    }
+
+    .badge {
+      position: absolute;
+      top: -4px;
+      right: -8px;
+      background: #C0392B;
+      color: #fff;
+      font-size: 10px;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    .action-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .action-sub {
+      font-size: 10px;
+      color: #888;
+    }
+
+    /* ====== Tab 栏（模拟） ====== */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 375px;
+      background: #fff;
+      border-top: 1px solid #e8e8e8;
+      display: flex;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 0;
+      gap: 2px;
+      background: none;
+      border: none;
+    }
+
+    .tab-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .tab-text {
+      font-size: 10px;
+      color: #888;
+    }
+
+    .tab-item.active .tab-text {
+      color: #4A7C59;
+      font-weight: 600;
+    }
+
+    /* ====== 成长片段 ====== */
+    .growth-snippet {
+      margin: 0 16px 12px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .snippet-label {
+      font-size: 12px;
+      color: #888;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .snippet-text {
+      font-size: 14px;
+      color: #222;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ====== 最近决策列表 ====== */
+    .recent-list {
+      padding: 0 16px;
+    }
+
+    .recent-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .recent-stage-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .recent-item-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .recent-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .recent-item-date {
+      font-size: 12px;
+      color: #888;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .recent-item-arrow {
+      color: #ccc;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部状态栏 -->
+  <div class="top-bar">
+    <div class="user-info">
+      <div class="avatar">👤</div>
+      <div class="streak">🔥 连续 <span class="streak-num">7</span> 天记录</div>
+    </div>
+  </div>
+
+  <!-- 统计区 -->
+  <div class="stats-card">
+    <div class="stat-item">
+      <span class="stat-num">3</span>
+      <span class="stat-label">正在生长</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">2</span>
+      <span class="stat-label">等待复盘</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">5</span>
+      <span class="stat-label">已经盛开</span>
+    </div>
+  </div>
+
+  <!-- 提醒卡片 -->
+  <div class="reminder-card">
+    <div class="reminder-dot"></div>
+    <span class="reminder-text">2 朵花等你回来看看</span>
+    <span class="reminder-arrow">›</span>
+  </div>
+
+  <!-- 成长片段 -->
+  <div class="growth-snippet">
+    <span class="snippet-label">最近成长片段</span>
+    <span class="snippet-text">"原来我之前担心的事情，大多数都没有发生"</span>
+  </div>
+
+  <!-- 花朵网格标题 -->
+  <div class="section-title">我的花园</div>
+
+  <!-- 花朵网格 -->
+  <div class="flower-grid">
+    <div class="flower-card stage-growing">
+      <div class="flower-visual">🌿</div>
+      <span class="flower-stage-label">正在生长</span>
+      <span class="flower-title">是否换工作</span>
+    </div>
+
+    <div class="flower-card stage-seed">
+      <div class="flower-visual">🌱</div>
+      <span class="flower-stage-label">种子阶段</span>
+      <span class="flower-title">买哪款理财产品</span>
+    </div>
+
+    <div class="flower-card stage-blooming">
+      <div class="flower-visual">🌸</div>
+      <span class="flower-stage-label">已经盛开</span>
+      <span class="flower-title">去年换工作的决定</span>
+    </div>
+
+    <div class="flower-card stage-growing">
+      <div class="flower-visual">🌿</div>
+      <span class="flower-stage-label">正在生长</span>
+      <span class="flower-title">学习新技能的选择</span>
+    </div>
+  </div>
+
+  <!-- 最近决策 -->
+  <div class="section-title">最近决策</div>
+  <div class="recent-list">
+    <div class="recent-item">
+      <span class="recent-stage-icon">🌿</span>
+      <div class="recent-item-body">
+        <span class="recent-item-title">是否换工作</span>
+        <span class="recent-item-date">正在生长 · 已记录行动 3 次</span>
+      </div>
+      <span class="recent-item-arrow">›</span>
+    </div>
+
+    <div class="recent-item">
+      <span class="recent-stage-icon">🌱</span>
+      <div class="recent-item-body">
+        <span class="recent-item-title">买哪款理财产品</span>
+        <span class="recent-item-date">种子阶段 · 等待第一次行动</span>
+      </div>
+      <span class="recent-item-arrow">›</span>
+    </div>
+  </div>
+
+  <!-- 底部操作栏 -->
+  <div class="bottom-actions">
+    <button class="action-btn">
+      <span class="action-icon">🌱</span>
+      <span class="action-label">种花</span>
+      <span class="action-sub">记录新决策</span>
+    </button>
+
+    <button class="action-btn">
+      <span class="action-icon">
+        💧
+        <span class="badge">2</span>
+      </span>
+      <span class="action-label">浇水</span>
+      <span class="action-sub">复盘决策</span>
+    </button>
+
+    <button class="action-btn">
+      <span class="action-icon">🧭</span>
+      <span class="action-label">锦囊</span>
+      <span class="action-sub">辅助分析</span>
+    </button>
+  </div>
+
+  <!-- Tab 栏（模拟） -->
+  <div class="tab-bar">
+    <button class="tab-item active">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="#4A7C59">
+        <path d="M8 19 L8 16 Q8 15 9 15 L15 15 Q16 15 16 16 L16 19 Q16 20 15 20 L9 20 Q8 20 8 19Z"/>
+        <line x1="12" y1="15" x2="12" y2="9" stroke="#4A7C59" stroke-width="1"/>
+        <circle cx="12" cy="7" r="2" fill="#4A7C59"/>
+        <circle cx="14" cy="8" r="2" fill="#4A7C59"/>
+        <circle cx="14" cy="10" r="2" fill="#4A7C59"/>
+      </svg>
+      <span class="tab-text">花园</span>
+    </button>
+
+    <button class="tab-item">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5">
+        <path d="M7 8 L7 19 Q7 20 8 20 L16 20 Q17 20 17 19 L17 8 Q17 7 16 7 L8 7 Q7 7 7 8Z"/>
+        <path d="M10 4 Q12 2 14 4"/>
+      </svg>
+      <span class="tab-text">锦囊</span>
+    </button>
+
+    <button class="tab-item">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21 Q4 16 12 16 Q20 16 20 21"/>
+      </svg>
+      <span class="tab-text">我的</span>
+    </button>
+  </div>
+
+  <script>
+    // 简单的交互效果
+    document.querySelectorAll('.flower-card').forEach(card => {
+      card.addEventListener('click', function() {
+        console.log('点击花朵卡片');
+      });
+    });
+
+    document.querySelector('.reminder-card').addEventListener('click', function() {
+      console.log('点击提醒卡片 - 去浇水');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<view class="analyze-page">
+  <view class="analyze-body">
+    <view class="framework-title">二选一 · 利弊清单 + 10-10-10 法则</view>
+    <view class="framework-desc">逐步列出每个选项的优缺点，并给重要性打分，帮你更清晰地看到全貌。</view>
+
+    <view class="analyze-step" wx:for="{{steps}}" wx:key="num">
+      <view class="step-header">
+        <view class="step-num {{index < 2 ? 'done' : ''}}">{{item.num}}</view>
+        <text class="step-title">{{item.title}}</text>
+      </view>
+      <textarea placeholder="{{item.placeholder}}" bindinput="onStepInput" data-index="{{index}}" />
+      <text class="step-hint" wx:if="{{item.hint}}">{{item.hint}}</text>
+    </view>
+
+    <view class="analyze-step">
+      <view class="step-header">
+        <view class="step-num">5</view>
+        <text class="step-title">重要性打分</text>
+      </view>
+      <text class="step-desc">给每个选项的整体重要性打分，1 分最低，5 分最高。</text>
+
+      <view class="score-row">
+        <view class="score-group">
+          <text class="score-label">选项 A</text>
+          <view class="score-options">
+            <view class="score-btn {{scoreA === s ? 'active' : ''}}" wx:for="{{scores}}" wx:for-item="s" wx:key="*this" bindtap="onSelectScore" data-target="A" data-value="{{s}}">{{s}}</view>
+          </view>
+        </view>
+        <view class="score-group">
+          <text class="score-label">选项 B</text>
+          <view class="score-options">
+            <view class="score-btn {{scoreB === s ? 'active' : ''}}" wx:for="{{scores}}" wx:for-item="s" wx:key="*this" bindtap="onSelectScore" data-target="B" data-value="{{s}}">{{s}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <button class="btn-primary" bindtap="onGenerateResult">生成决策参考卡片</button>
+  </view>
+</view>

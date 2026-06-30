@@ -1,0 +1,375 @@
+/* Review page styles - converted from miniprogram review.wxss */
+
+.review-body {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* ====== Decision summary card ====== */
+.decision-summary {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 20px;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary-stage-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.summary-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.summary-meta {
+  font-size: 11px;
+  color: #888888;
+  display: block;
+}
+
+/* ====== Review type indicator ====== */
+.review-type-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  background: rgba(74, 124, 89, 0.06);
+  border-radius: 8px;
+  border-left: 3px solid #4a7c59;
+}
+
+.review-type-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a7c59;
+}
+
+.review-type-hint {
+  font-size: 11px;
+  color: #888888;
+}
+
+/* ====== Review questions ====== */
+.review-question {
+  margin-bottom: 20px;
+}
+
+.review-q-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.review-q-label .required {
+  color: #555555;
+  font-size: 12px;
+}
+
+.review-q-hint {
+  font-size: 11px;
+  color: #b0b0b0;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* ====== Result rating options ====== */
+.review-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.review-option {
+  padding: 12px 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 13px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.review-option.selected {
+  border-color: #555555;
+  background: #e0e0e0;
+}
+
+.review-option:active {
+  background: #e0e0e0;
+}
+
+/* ====== Review not found ====== */
+.review-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 0;
+}
+
+.not-found-icon {
+  font-size: 48px;
+  opacity: 0.5;
+  margin-bottom: 16px;
+}
+
+.not-found-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 6px;
+}
+
+.not-found-desc {
+  font-size: 12px;
+  color: #888888;
+  margin-bottom: 24px;
+}
+
+.not-found-btn {
+  background: #555555;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 12px 32px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+}
+
+.not-found-btn:active {
+  opacity: 0.8;
+  transform: scale(0.97);
+}
+
+/* ====== Follow-up bottom sheet modal ====== */
+.followup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.followup-modal {
+  width: 100%;
+  max-width: var(--app-max-width, 420px);
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
+  padding: 24px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.followup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.followup-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.followup-sub {
+  font-size: 12px;
+  color: #888888;
+}
+
+.followup-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.followup-option {
+  padding: 14px 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #222222;
+  background: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.followup-option:active {
+  background: #f0f0f0;
+}
+
+.followup-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.followup-input {
+  flex: 1;
+  height: 40px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: #fafafa;
+  outline: none;
+}
+
+.followup-input:focus {
+  border-color: #4a7c59;
+}
+
+.followup-custom-btn {
+  padding: 10px 16px;
+  background: #222222;
+  color: #ffffff;
+  font-size: 13px;
+  border-radius: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+}
+
+.followup-custom-btn:active {
+  opacity: 0.8;
+}
+
+.followup-cancel {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #b0b0b0;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.followup-cancel:active {
+  color: #222222;
+}
+
+/* ====== Review history ====== */
+.review-history {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.history-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.history-item {
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.history-round {
+  font-size: 13px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.history-date {
+  font-size: 11px;
+  color: #888888;
+}
+
+.history-rating {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.result-good {
+  background: #e8f0e8;
+  color: #2d5a3d;
+}
+
+.history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-label {
+  font-size: 12px;
+  color: #888888;
+}
+
+.history-text {
+  font-size: 13px;
+  color: #222222;
+  line-height: 1.6;
+}
+
+.history-followup {
+  background: #e8f0e8;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #2d5a3d;
+  margin-top: 2px;
+}
+
+.history-summary {
+  background: #fff8ec;
+  border: 1px solid #f4dfbd;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 12px;
+  color: #7a5a35;
+  line-height: 1.6;
+}

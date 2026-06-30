@@ -1,0 +1,70 @@
+<view class="theme-page">
+  <!-- 空状态 -->
+  <view class="theme-empty" wx:if="{{isEmpty}}">
+    <text class="empty-icon">🌿</text>
+    <text class="empty-text">还没有种下任何决策</text>
+    <text class="empty-hint">去花园开始你的第一颗种子吧</text>
+  </view>
+
+  <view wx:if="{{!isEmpty}}">
+    <!-- 主题标签栏 -->
+    <view class="garden-tabs">
+      <view
+        class="tab-item {{g.key === selectedGarden ? 'active' : ''}}"
+        wx:for="{{gardens}}"
+        wx:key="key"
+        bindtap="onSelectGarden"
+        data-key="{{g.key}}"
+      >
+        <text class="tab-icon">{{g.icon}}</text>
+        <text class="tab-label">{{g.label}}</text>
+        <text class="tab-count">{{g.decisions.length}}</text>
+      </view>
+    </view>
+
+    <!-- 选中花圃的概要 -->
+    <view class="garden-summary" wx:if="{{gardens.length > 0}}">
+      <block wx:for="{{gardens}}" wx:key="key">
+        <view wx:if="{{g.key === selectedGarden}}" class="summary-bar">
+          <view class="summary-item">
+            <text class="summary-value">{{g.decisions.length}}</text>
+            <text class="summary-label">总决策</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-value">{{g.growingCount}}</text>
+            <text class="summary-label">生长中</text>
+          </view>
+          <view class="summary-item">
+            <text class="summary-value">{{g.bloomedCount}}</text>
+            <text class="summary-label">已盛开</text>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 决策列表 -->
+    <view class="decision-list">
+      <view
+        class="decision-card"
+        wx:for="{{selectedDecisions}}"
+        wx:key="id"
+        bindtap="onGoDecision"
+        data-id="{{item.id}}"
+      >
+        <view class="card-left">
+          <text class="card-stage-icon">{{item.stageIcon}}</text>
+        </view>
+        <view class="card-body">
+          <text class="card-title">{{item.title}}</text>
+          <view class="card-meta">
+            <text class="card-stage-label">{{item.stageLabel}}</text>
+            <text class="card-time">{{item.relativeTime}}</text>
+          </view>
+        </view>
+        <view class="card-arrow">
+          <text>›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

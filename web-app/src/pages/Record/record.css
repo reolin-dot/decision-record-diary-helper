@@ -1,0 +1,407 @@
+/* Record page styles - converted from miniprogram record.wxss */
+
+.record-page {
+  background: #f5f5f5;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ====== Header ====== */
+.record-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.record-back-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--color-text-primary);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  transition: background 0.2s;
+  cursor: pointer;
+  padding: 0;
+}
+
+.record-back-btn:active {
+  background: #f5f5f5;
+}
+
+.record-header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.record-header-action {
+  width: 32px;
+  font-size: 13px;
+  color: var(--color-accent);
+  text-align: right;
+  font-weight: 500;
+}
+
+/* ====== Progress bar ====== */
+.progress-bar {
+  display: flex;
+  gap: 6px;
+  padding: 16px 16px 8px;
+  background: #ffffff;
+}
+
+.progress-step {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-border-light);
+  transition: background 0.3s ease;
+}
+
+.progress-step.done {
+  background: var(--color-accent);
+}
+
+.progress-step.current {
+  background: var(--color-accent);
+  opacity: 0.5;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding: 4px 16px 12px;
+  background: #ffffff;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* ====== Body ====== */
+.record-body {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.step-content {
+  animation: fadeInUp 0.3s ease;
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+/* ====== Mood chips ====== */
+.mood-chip-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mood-chip {
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  font-size: 13px;
+  background: #ffffff;
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.mood-chip:active {
+  transform: scale(0.96);
+}
+
+.mood-chip.selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* ====== Option list ====== */
+.option-list {
+  margin-bottom: 12px;
+}
+
+.option-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s ease;
+}
+
+.option-card:active {
+  transform: scale(0.99);
+}
+
+.option-letter {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  min-width: 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-input {
+  flex: 1;
+  border: none;
+  font-size: 14px;
+  background: transparent;
+  color: var(--color-text-primary);
+  padding: 0;
+  outline: none;
+}
+
+.add-option-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.add-option-btn:active {
+  background: var(--color-accent-light);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.add-option-icon {
+  font-size: 16px;
+}
+
+/* ====== Choice list (radio) ====== */
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.choice-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.choice-item:active {
+  transform: scale(0.99);
+}
+
+.choice-item.selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.choice-radio {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.choice-item.selected .choice-radio {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.choice-radio-inner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.choice-letter {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  min-width: 16px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choice-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+/* ====== Time chips ====== */
+.time-chip-grid {
+  display: flex;
+  gap: 10px;
+}
+
+.time-chip {
+  flex: 1;
+  padding: 16px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.time-chip:active {
+  transform: scale(0.96);
+}
+
+.time-chip.selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.time-chip-value {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: block;
+  color: var(--color-text-primary);
+}
+
+.time-chip.selected .time-chip-value {
+  color: var(--color-accent);
+}
+
+.time-chip-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  display: block;
+}
+
+.time-chip.selected .time-chip-label {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.date-picker-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.date-picker-input:focus {
+  border-color: var(--color-accent);
+}
+
+/* ====== Summary ====== */
+.review-summary {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-top: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.review-summary-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+.review-summary-item {
+  display: flex;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 0.5px solid var(--color-border-light);
+}
+
+.review-summary-item:last-child {
+  border-bottom: none;
+}
+
+.review-summary-label {
+  color: var(--color-text-secondary);
+  min-width: 60px;
+  font-weight: 500;
+}
+
+.review-summary-value {
+  color: var(--color-text-primary);
+  flex: 1;
+  font-weight: 500;
+}
+
+/* ====== Footer ====== */
+.record-footer {
+  padding: 12px 16px 28px;
+  background: #ffffff;
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}

@@ -22,8 +22,9 @@ pnpm-debug.log*
 
 # Dependencies and build artifacts
 node_modules/
-miniprogram_npm/
+web-app/node_modules/
 dist/
+web-app/dist/
 build/
 coverage/
 .cache/
@@ -33,22 +34,15 @@ coverage/
 
 # WeChat DevTools local/generated files
 *.wxapkg
-miniprogram/project.private.config.json
 project.private.config.*.json
+miniprogram/project.private.config.json
+archive/**/project.private.config.json
 
 # Local agent/tool scratch space
 .workbuddy/
+.qoder/
 spark-output/
 null
-
-# Temporary prototypes or copied experiment workspaces
-v2-test/
-*-test/
-
-# One-off local design previews and source inspiration assets
-design-preview-*.html
-决策成长日记-体验走查报告.html
-拼多多果园图.jpg
 
 # Temporary files and backups
 *.tmp

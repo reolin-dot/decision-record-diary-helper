@@ -1,0 +1,221 @@
+/* Watering page styles - converted from miniprogram watering.wxss */
+
+.watering-body {
+  padding: 16px;
+  padding-bottom: 100px;
+}
+
+.watering-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.6;
+  display: block;
+}
+
+/* ====== Review list ====== */
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-item {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.review-item:active {
+  transform: scale(0.98);
+  border-color: var(--color-accent);
+}
+
+.review-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-item-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.review-item-meta {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.review-item-status {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: var(--color-warning, #ff9800);
+  color: #ffffff;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.review-item-status.completed {
+  background: var(--color-accent);
+}
+
+.watering-hero {
+  background: linear-gradient(145deg, rgba(74, 124, 89, 0.12), #ffffff);
+  border: 1px solid rgba(74, 124, 89, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.watering-hero-title {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.reminder-groups,
+.reminder-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reminder-group {
+  margin-bottom: 18px;
+}
+
+.reminder-group-head {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.reminder-group-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.reminder-group-desc,
+.optional-desc,
+.watering-empty-sub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.reminder-item {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.reminder-item-kicker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+}
+
+.reminder-tone {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.reminder-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.reminder-actions button {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--color-text-primary);
+  font-size: 12px;
+  padding: 8px 6px;
+  cursor: pointer;
+}
+
+.reminder-actions button:first-child {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.optional-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.optional-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.review-item-status.optional {
+  background: rgba(74, 124, 89, 0.12);
+  color: var(--color-accent);
+}
+
+.remaining-text {
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+/* ====== Empty state ====== */
+.watering-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.watering-empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.watering-empty-text {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}

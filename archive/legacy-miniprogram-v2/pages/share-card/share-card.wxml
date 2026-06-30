@@ -1,0 +1,84 @@
+<view class="share-page">
+  <!-- 卡片预览区域 -->
+  <view class="card-preview" wx:if="{{cardData}}">
+    <view class="share-card">
+      <!-- 卡片头部 -->
+      <view class="card-header">
+        <view class="card-brand">
+          <text class="brand-icon">🌸</text>
+          <text class="brand-name">决策成长日记</text>
+        </view>
+      </view>
+
+      <!-- 卡片主体 -->
+      <view class="card-main">
+        <text class="card-title">{{cardData.title}}</text>
+        <text class="card-subtitle" wx:if="{{cardData.subtitle}}">{{cardData.subtitle}}</text>
+
+        <!-- 统计数据（月度报告/通用卡片） -->
+        <view class="card-stats" wx:if="{{cardData.stats}}">
+          <view class="stat-item">
+            <text class="stat-value">{{cardData.stats.total}}</text>
+            <text class="stat-label">决策数</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value">{{cardData.stats.bloomed}}</text>
+            <text class="stat-label">已盛开</text>
+          </view>
+          <view class="stat-item" wx:if="{{cardData.stats.topCategory}}">
+            <text class="stat-value">{{cardData.stats.topCategory}}</text>
+            <text class="stat-label">最常出现</text>
+          </view>
+        </view>
+
+        <!-- 标签（风格测试） -->
+        <view class="card-tags" wx:if="{{cardData.tags && cardData.tags.length > 0}}">
+          <text class="tag" wx:for="{{cardData.tags}}" wx:key="*this">{{item}}</text>
+        </view>
+
+        <!-- 可编辑的高亮文字 -->
+        <view class="card-highlight" wx:if="{{cardData.highlight}}">
+          <view class="highlight-display" wx:if="{{!previewMode}}">
+            <textarea
+              class="highlight-input"
+              value="{{editableText}}"
+              bindinput="onTextEdit"
+              placeholder="编辑你想分享的文字..."
+              maxlength="200"
+              auto-height
+            />
+          </view>
+          <view class="highlight-readonly" wx:else>
+            <text class="highlight-quote">"{{editableText}}"</text>
+          </view>
+        </view>
+
+        <!-- 来源标注 -->
+        <text class="card-source" wx:if="{{cardData.source}}">—— {{cardData.source}}</text>
+      </view>
+
+      <!-- 卡片底部 -->
+      <view class="card-footer">
+        <text class="footer-text">每一个选择，都是一次成长</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作区域 -->
+  <view class="share-actions" wx:if="{{cardData}}">
+    <button class="action-btn edit-btn" bindtap="onTogglePreview">
+      {{previewMode ? '编辑文案' : '预览效果'}}
+    </button>
+    <button class="action-btn save-btn" bindtap="onSaveImage">
+      保存到相册
+    </button>
+    <button class="action-btn wechat-share-btn" open-type="share">
+      分享给朋友
+    </button>
+  </view>
+
+  <!-- 隐私提示 -->
+  <view class="privacy-hint" wx:if="{{cardData}}">
+    <text>分享卡片不会暴露具体决策内容，你可以自由编辑文案</text>
+  </view>
+</view>

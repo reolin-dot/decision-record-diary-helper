@@ -1,0 +1,208 @@
+/* pages/share-card/share-card.wxss */
+
+.share-page {
+  background: #f0f4f8;
+  min-height: 100vh;
+  padding: 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ====== 卡片预览 ====== */
+.card-preview {
+  width: 100%;
+  max-width: 640rpx;
+  margin-bottom: 40rpx;
+}
+
+.share-card {
+  background: #ffffff;
+  border-radius: 32rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 卡片头部 */
+.card-header {
+  padding: 24rpx 32rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card-brand {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.brand-icon {
+  font-size: 32rpx;
+}
+
+.brand-name {
+  font-size: 24rpx;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+/* 卡片主体 */
+.card-main {
+  padding: 40rpx 32rpx;
+}
+
+.card-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.card-subtitle {
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 1.6;
+  display: block;
+  margin-bottom: 24rpx;
+}
+
+/* 统计数据 */
+.card-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 24rpx 0;
+  border-top: 2rpx solid #f0f0f0;
+  border-bottom: 2rpx solid #f0f0f0;
+  margin-bottom: 24rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.stat-value {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #888888;
+}
+
+/* 标签 */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.tag {
+  padding: 8rpx 20rpx;
+  background: #f0f4f8;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #555555;
+}
+
+/* 高亮文字 */
+.card-highlight {
+  margin: 24rpx 0;
+  padding: 24rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  border-left: 6rpx solid #667eea;
+}
+
+.highlight-input {
+  width: 100%;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #333333;
+  background: transparent;
+  border: none;
+  padding: 0;
+  min-height: 80rpx;
+}
+
+.highlight-readonly {
+  padding: 8rpx 0;
+}
+
+.highlight-quote {
+  font-size: 30rpx;
+  font-style: italic;
+  line-height: 1.6;
+  color: #333333;
+}
+
+/* 来源 */
+.card-source {
+  font-size: 22rpx;
+  color: #999999;
+  display: block;
+  margin-top: 12rpx;
+}
+
+/* 卡片底部 */
+.card-footer {
+  padding: 24rpx 32rpx;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.footer-text {
+  font-size: 22rpx;
+  color: #999999;
+}
+
+/* ====== 操作按钮 ====== */
+.share-actions {
+  width: 100%;
+  max-width: 640rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.action-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 24rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border: none;
+}
+
+.edit-btn {
+  background: #ffffff;
+  color: #333333;
+  border: 2rpx solid #d0d0d0;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+}
+
+.wechat-share-btn {
+  background: #07c160;
+  color: #ffffff;
+}
+
+/* ====== 隐私提示 ====== */
+.privacy-hint {
+  width: 100%;
+  max-width: 640rpx;
+  text-align: center;
+}
+
+.privacy-hint text {
+  font-size: 22rpx;
+  color: #bbbbbb;
+}

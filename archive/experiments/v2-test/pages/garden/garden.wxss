@@ -1,0 +1,474 @@
+/* pages/garden/garden.wxss */
+
+.garden-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #e8f0e8 0%, #d4e4d0 30%, #c8dcc4 60%, #b8d0b0 100%);
+  overflow-y: auto;
+}
+
+/* ====== 顶部信息栏 ====== */
+.garden-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 32rpx 0;
+}
+
+.garden-user-info {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.garden-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 4rpx solid #d0d0d0;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.garden-streak {
+  font-size: 24rpx;
+  color: #888888;
+  background: rgba(255,255,255,0.7);
+  padding: 8rpx 20rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid #e8e8e8;
+}
+
+.garden-streak .streak-num {
+  color: #222222;
+  font-weight: 700;
+}
+
+/* ====== 花园场景区 ====== */
+.garden-scene {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24rpx 32rpx 0;
+  position: relative;
+}
+
+/* ====== 花园状态统计 ====== */
+.garden-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24rpx;
+  padding: 28rpx 0;
+  width: 100%;
+  margin-bottom: 24rpx;
+}
+
+.garden-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.stat-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #222222;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #888888;
+}
+
+.garden-stat-divider {
+  width: 2rpx;
+  height: 48rpx;
+  background: #e0e0e0;
+}
+
+/* ====== 待复盘提醒（优化定位） ====== */
+.garden-reminder {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2rpx solid #d0d0d0;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.garden-reminder:active {
+  background: rgba(255, 255, 255, 1);
+}
+
+.reminder-dot {
+  display: inline-block;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #4a7c59;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.reminder-text {
+  flex: 1;
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.reminder-arrow {
+  color: #b0b0b0;
+  font-size: 28rpx;
+  margin-left: 8rpx;
+}
+
+/* ====== 最近成长片段 ====== */
+.garden-growth-snippet {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.75);
+  border-left: 6rpx solid #4a7c59;
+  border-radius: 0 16rpx 16rpx 0;
+  padding: 24rpx 28rpx;
+  margin-bottom: 24rpx;
+}
+
+.snippet-label {
+  font-size: 20rpx;
+  color: #888888;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.snippet-text {
+  font-size: 24rpx;
+  color: #333333;
+  line-height: 1.6;
+  display: block;
+  font-style: italic;
+}
+
+/* ====== 花朵网格 ====== */
+.flower-grid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.flower-card {
+  width: calc(50% - 10rpx);
+  background: rgba(255, 255, 255, 0.9);
+  border: 2rpx solid #d0d0d0;
+  border-radius: 20rpx;
+  padding: 24rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  box-sizing: border-box;
+}
+
+.flower-card:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+.flower-visual {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 每个阶段的背景色 */
+.flower-visual.stage-seed { background: #f0ebe3; }
+.flower-visual.stage-sprout { background: #e0f0e0; }
+.flower-visual.stage-leaf { background: #d4ebd0; }
+.flower-visual.stage-first_bloom { background: #fce4d6; }
+.flower-visual.stage-full_bloom { background: #fde8e8; }
+
+.flower-emoji {
+  font-size: 56rpx;
+}
+
+.flower-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  width: 100%;
+}
+
+.flower-stage-label {
+  font-size: 20rpx;
+  color: #4a7c59;
+  font-weight: 600;
+}
+
+.flower-title {
+  font-size: 24rpx;
+  color: #222222;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+/* ====== 本月进度 ====== */
+.garden-monthly {
+  font-size: 22rpx;
+  color: #888888;
+  text-align: center;
+  padding: 16rpx 0;
+}
+
+/* ====== 三大操作按钮 ====== */
+.garden-actions {
+  display: flex;
+  justify-content: center;
+  gap: 48rpx;
+  padding: 48rpx 32rpx 32rpx;
+}
+
+.garden-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.garden-action-btn:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+.garden-action-icon {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  border: 4rpx solid #d0d0d0;
+  background: rgba(255,255,255,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  position: relative;
+}
+
+.garden-action-label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #222222;
+}
+
+.garden-action-sub {
+  font-size: 20rpx;
+  color: #888888;
+  margin-top: -8rpx;
+}
+
+/* 角标数字 */
+.garden-action-icon .badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 40rpx;
+  height: 40rpx;
+  border-radius: 20rpx;
+  background: #555555;
+  color: #ffffff;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  padding: 0 8rpx;
+}
+
+/* ====== 最近决策列表 ====== */
+.recent-section {
+  padding: 32rpx;
+  padding-bottom: 80rpx;
+}
+
+.recent-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: rgba(255,255,255,0.85);
+  border: 2rpx solid #d0d0d0;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+}
+
+.recent-item:active {
+  opacity: 0.8;
+}
+
+.recent-stage-icon {
+  font-size: 36rpx;
+  flex-shrink: 0;
+}
+
+.recent-item-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  min-width: 0;
+}
+
+.recent-item-title {
+  font-size: 26rpx;
+  color: #222222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-item-date {
+  font-size: 22rpx;
+  color: #888888;
+}
+
+.recent-item-arrow {
+  color: #b0b0b0;
+  font-size: 28rpx;
+  flex-shrink: 0;
+}
+
+/* ====== 空花园 / 新用户引导 ====== */
+.empty-garden {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0 0;
+}
+
+.empty-illustration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 48rpx;
+}
+
+.empty-icon-large {
+  font-size: 120rpx;
+  opacity: 0.7;
+}
+
+.empty-ground {
+  width: 200rpx;
+  height: 40rpx;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  margin-top: -8rpx;
+  border: 2rpx solid rgba(255,255,255,0.5);
+}
+
+.empty-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+  padding: 0 48rpx;
+}
+
+.empty-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 16rpx;
+  text-align: center;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.empty-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-bottom: 56rpx;
+  width: 100%;
+  padding: 0 48rpx;
+  box-sizing: border-box;
+}
+
+.empty-step {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: rgba(255,255,255,0.7);
+  border: 2rpx solid #d0d0d0;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+}
+
+.empty-step .step-num {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #555555;
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.empty-step .step-text {
+  font-size: 26rpx;
+  color: #333333;
+}
+
+.empty-cta {
+  background: #555555;
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 600;
+  padding: 28rpx 80rpx;
+  border-radius: 48rpx;
+  letter-spacing: 2rpx;
+}
+
+.empty-cta:active {
+  opacity: 0.8;
+  transform: scale(0.97);
+}

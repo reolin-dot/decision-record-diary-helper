@@ -1,0 +1,225 @@
+/* DecisionList page styles - converted from miniprogram decision-list.wxss */
+
+.dl-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #f5f5f5;
+  padding-bottom: 20px;
+}
+
+/* ====== Search bar ====== */
+.dl-search {
+  padding: 10px 16px;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dl-search-inner {
+  display: flex;
+  align-items: center;
+  background: #f5f5f5;
+  border-radius: 20px;
+  padding: 6px 12px;
+  gap: 6px;
+}
+
+.dl-search-icon {
+  font-size: 14px;
+}
+
+.dl-search-input {
+  flex: 1;
+  font-size: 14px;
+  color: #222222;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.dl-search-clear {
+  font-size: 14px;
+  color: #aaaaaa;
+  padding: 4px;
+  cursor: pointer;
+}
+
+/* ====== Tab filters ====== */
+.dl-tabs {
+  display: flex;
+  background: #ffffff;
+  padding: 0 16px;
+  gap: 4px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dl-tab {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #888888;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dl-tab-active {
+  color: #222222;
+  font-weight: 600;
+}
+
+.dl-tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  border-radius: 1.5px;
+  background: #222222;
+}
+
+/* ====== List ====== */
+.dl-list {
+  padding: 10px 16px;
+}
+
+.dl-item {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dl-item:active {
+  transform: scale(0.98);
+  background: #fafafa;
+}
+
+.dl-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.dl-item-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222222;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.dl-item-stage {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.dl-stage-seed {
+  background: #f0f9f0;
+  color: #2e7d32;
+}
+
+.dl-stage-sprout {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.dl-stage-leaf {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.dl-stage-first_bloom,
+.dl-stage-first-bloom {
+  background: #fce4ec;
+  color: #c62828;
+}
+
+.dl-stage-full_bloom,
+.dl-stage-full-bloom,
+.dl-stage-bloom {
+  background: #fce4ec;
+  color: #c62828;
+}
+
+.dl-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.dl-item-date {
+  font-size: 12px;
+  color: #aaaaaa;
+}
+
+.dl-item-watering {
+  font-size: 11px;
+  color: #4caf50;
+  background: #f0f9f0;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+.dl-item-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dl-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dl-dot-pending {
+  background: #ff9800;
+}
+
+.dl-dot-reviewed {
+  background: #4caf50;
+}
+
+.dl-status-text {
+  font-size: 11px;
+  color: #888888;
+}
+
+/* ====== Empty state ====== */
+.dl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.dl-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.dl-empty-text {
+  font-size: 15px;
+  color: #888888;
+  margin-bottom: 6px;
+}
+
+.dl-empty-hint {
+  font-size: 12px;
+  color: #aaaaaa;
+}

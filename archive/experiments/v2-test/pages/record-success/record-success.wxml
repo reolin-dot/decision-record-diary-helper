@@ -1,0 +1,9 @@
+<!-- pages/record-success/record-success.wxml -->
+<view class="success-screen">
+  <view class="success-icon">🌱</view>
+  <view class="success-title">种子已种下！</view>
+  <view class="success-desc">
+    <text decode>你已经把选择放到了纸面上。\n接下来开始行动，它会继续长叶、开花。</text>
+  </view>
+  <button class="btn-primary" style="max-width:400rpx;" bindtap="onBackToGarden">返回花园</button>
+</view>

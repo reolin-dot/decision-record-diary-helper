@@ -1,0 +1,138 @@
+<!-- pages/style-test/style-test.wxml -->
+<view class="style-test-page">
+  <block wx:if="{{showResult}}">
+    <view class="result-header">
+      <text class="result-icon">🎯</text>
+      <text class="result-title">你的决策风格：{{styleType || '理性分析型'}}</text>
+      <text class="result-desc" decode>这不是给你贴标签，而是帮你看见自己的决策习惯。\n之后记录和复盘时，可以更有意识地训练自己。</text>
+    </view>
+    <view class="result-body">
+      <view class="style-tags">
+        <view class="style-tag" wx:for="{{styleTags}}" wx:key="*this">
+          <text>{{item}}</text>
+        </view>
+      </view>
+
+      <!-- 优势维度 -->
+      <view class="insight-card insight-strength" wx:if="{{strength}}">
+        <text class="insight-icon">✦</text>
+        <view class="insight-content">
+          <text class="insight-label">你的优势</text>
+          <text class="insight-text">{{strength}}</text>
+        </view>
+      </view>
+
+      <!-- 可能盲区 -->
+      <view class="insight-card insight-blindspot" wx:if="{{blindSpot}}">
+        <text class="insight-icon">⚡</text>
+        <view class="insight-content">
+          <text class="insight-label">可能盲区</text>
+          <text class="insight-text">{{blindSpot}}</text>
+        </view>
+      </view>
+
+      <view class="tip-card">
+        <text class="tip-title">综合建议</text>
+        <text class="tip-content">{{styleTip}}</text>
+      </view>
+
+      <!-- 记录决策时的建议 -->
+      <view class="suggestion-card" wx:if="{{recordSuggestion}}">
+        <text class="suggestion-label">📝 记录决策时</text>
+        <text class="suggestion-text">{{recordSuggestion}}</text>
+      </view>
+
+      <!-- 复盘时的建议 -->
+      <view class="suggestion-card" wx:if="{{reviewSuggestion}}">
+        <text class="suggestion-label">🔄 复盘时</text>
+        <text class="suggestion-text">{{reviewSuggestion}}</text>
+      </view>
+
+      <view class="score-list" wx:if="{{dimensionScores.length > 0}}">
+        <text class="tip-title">维度得分</text>
+        <view class="score-item" wx:for="{{dimensionScores}}" wx:key="name">
+          <text class="score-name">{{item.name}}</text>
+          <view class="score-bar">
+            <view class="score-fill" style="width: {{item.score * 20}}%;"></view>
+          </view>
+          <text class="score-value">{{item.score}}</text>
+        </view>
+      </view>
+      <view class="result-note">
+        <text>测试结果仅供参考，可随时在个人中心重新测试。</text>
+      </view>
+    </view>
+    <view class="bottom-bar">
+      <button class="btn-primary" bindtap="onStartRecord">开始记录决策</button>
+      <view class="skip-link" bindtap="onBackToGarden">返回花园</view>
+    </view>
+  </block>
+
+  <block wx:elif="{{!selectedTest}}">
+    <view class="test-header">
+      <text class="test-icon">🤔</text>
+      <text class="test-title">发现你的决策风格</text>
+      <text class="test-desc" decode>先选一套题，再用 1-5 分作答。\n推荐从标准版开始。</text>
+    </view>
+
+    <view class="test-list">
+      <view class="test-group" wx:for="{{testGroups}}" wx:key="key" wx:for-item="group">
+        <view class="group-header">
+          <text class="group-label">{{group.label}}</text>
+          <text class="group-desc">{{group.desc}}</text>
+        </view>
+        <view class="test-card {{selectedTestId === item.id ? 'selected' : ''}} {{item.id === 'standard_24_a' ? 'recommended' : ''}}" wx:for="{{group.tests}}" wx:key="id" data-id="{{item.id}}" bindtap="onSelectTest">
+          <view class="test-card-header">
+            <view class="test-card-title-row">
+              <text class="test-card-title">{{item.title}}</text>
+              <text class="recommend-badge" wx:if="{{item.id === 'standard_24_a'}}">推荐</text>
+            </view>
+            <text class="test-card-meta">{{item.questionCount}} 题 · 约 {{item.estimatedMinutes}} 分钟</text>
+          </view>
+          <text class="test-card-intro">{{item.intro}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-bar">
+      <button class="btn-primary {{!selectedTestId ? 'disabled' : ''}}" bindtap="onStartTest">
+        <text>开始测试</text>
+      </button>
+      <view class="skip-link" bindtap="onSkip">跳过测试，直接使用</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="test-header">
+      <text class="test-icon">🤔</text>
+      <text class="test-title">{{selectedTest.title}}</text>
+      <text class="test-desc">{{selectedTest.intro}}</text>
+    </view>
+
+    <view class="test-progress">
+      <view class="dot {{index < currentQuestion ? 'done' : ''}} {{index === currentQuestion ? 'current' : ''}}" wx:for="{{questionDots}}" wx:key="*this"></view>
+    </view>
+
+    <view class="test-body">
+      <text class="question-num">第 {{currentQuestion + 1}} 题 / 共 {{totalQuestions}} 题</text>
+      <text class="question-text">{{questions[currentQuestion].text}}</text>
+      <text class="question-dimension">{{questions[currentQuestion].dimension}}</text>
+
+      <view class="test-options">
+        <view class="test-option {{selectedScore === item.value ? 'selected' : ''}}" wx:for="{{scaleOptions}}" wx:key="value" bindtap="onSelectScore" data-value="{{item.value}}">
+          <view class="option-radio"></view>
+          <view class="option-content">
+            <text class="option-label">{{item.value}} 分 · {{item.label}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-bar">
+      <button class="btn-primary {{!selectedScore ? 'disabled' : ''}}" bindtap="onNext">
+        <text>{{currentQuestion === totalQuestions - 1 ? '查看我的决策风格' : '下一题'}}</text>
+      </button>
+      <view class="skip-link" bindtap="onSkip">跳过测试，直接使用</view>
+    </view>
+  </block>
+</view>

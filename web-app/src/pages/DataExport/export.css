@@ -1,0 +1,241 @@
+/* Data export page styles */
+
+.export-page {
+  background: #f5f5f5;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 16px;
+  padding-bottom: 80px;
+}
+
+.export-section {
+  margin-bottom: 16px;
+}
+
+.export-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e8e8e8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.option-card.selected {
+  border-color: var(--color-accent);
+  background: rgba(74, 124, 89, 0.04);
+}
+
+.option-card:active {
+  transform: scale(0.98);
+}
+
+.option-icon {
+  font-size: 20px;
+  width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.option-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.option-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.option-desc {
+  font-size: 12px;
+  color: #888888;
+}
+
+.option-check {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* Export button */
+.export-action {
+  margin: 20px 0;
+}
+
+.export-btn {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: var(--color-accent);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.export-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.export-btn.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.import-section {
+  margin-top: 20px;
+}
+
+.import-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px;
+  background: #ffffff;
+  border: 1px dashed #d0d0d0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.import-card.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.import-card input {
+  display: none;
+}
+
+.import-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Result card */
+.export-result {
+  margin-top: 16px;
+}
+
+.export-result-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+  overflow: hidden;
+}
+
+.result-info {
+  display: flex;
+  padding: 14px 16px;
+  gap: 24px;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.result-label {
+  font-size: 12px;
+  color: #888888;
+}
+
+.result-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.result-preview {
+  border-top: 1px solid #f0f0f0;
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.preview-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666666;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.preview-content {
+  font-size: 12px;
+  color: #999999;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 160px;
+  overflow-y: auto;
+  display: block;
+}
+
+.result-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  flex: 1;
+  height: 42px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-btn:active {
+  transform: scale(0.98);
+  background: #f5f5f5;
+}
+
+/* Hint */
+.export-hint {
+  margin-top: 20px;
+  padding: 12px 14px;
+  background: rgba(74, 124, 89, 0.06);
+  border-radius: 10px;
+}
+
+.export-hint p {
+  font-size: 12px;
+  color: #888888;
+  line-height: 1.6;
+  margin: 0;
+}

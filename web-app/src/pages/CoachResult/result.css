@@ -1,0 +1,249 @@
+/* CoachResult page styles - converted from miniprogram coach-result.wxss */
+
+.result-body {
+  padding: 16px;
+  padding-bottom: 100px;
+  flex: 1;
+}
+
+.coach-result-hero {
+  background: linear-gradient(145deg, rgba(74, 124, 89, 0.12), rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(74, 124, 89, 0.12);
+  border-radius: 16px;
+  padding: 18px 16px;
+  margin-bottom: 12px;
+}
+
+.coach-result-kicker {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+}
+
+.coach-result-title {
+  font-size: 22px;
+  line-height: 1.25;
+  color: #222222;
+  margin: 0 0 8px;
+}
+
+.coach-result-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #666666;
+  margin: 0;
+}
+
+.result-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 16px 12px;
+  margin-bottom: 12px;
+}
+
+.result-card-title {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.result-comparison {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.result-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.result-col-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 4px;
+  text-align: center;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.result-item {
+  display: block;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #888888;
+  padding: 4px 0;
+}
+
+.result-item.pro {
+  color: #2e7d32;
+}
+
+.result-item.con {
+  color: #c62828;
+}
+
+.result-empty {
+  display: block;
+  font-size: 12px;
+  color: #999999;
+  line-height: 1.6;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.result-score {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e8e8e8;
+  text-align: center;
+}
+
+.result-score .score-label {
+  display: block;
+  font-size: 13px;
+  color: #888888;
+  margin-bottom: 8px;
+}
+
+.coach-result-section {
+  margin: 12px 0;
+}
+
+.coach-result-section-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 8px;
+}
+
+.coach-result-answer {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 13px 12px;
+  margin-bottom: 8px;
+}
+
+.coach-result-answer-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #444444;
+  margin-bottom: 8px;
+}
+
+.coach-result-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.coach-result-line {
+  font-size: 13px;
+  line-height: 1.65;
+  color: #666666;
+}
+
+.coach-result-line::before {
+  content: '•';
+  color: var(--color-accent);
+  margin-right: 6px;
+}
+
+.coach-result-empty {
+  background: #ffffff;
+  border: 1px dashed #d0d0d0;
+  border-radius: 12px;
+  padding: 14px;
+  color: #888888;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.coach-result-next {
+  background: #fff8ec;
+  border: 1px solid #f4dfbd;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.coach-result-next-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #8a5a1f;
+  margin-bottom: 6px;
+}
+
+.coach-result-next-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #7a5a35;
+}
+
+.score-values {
+  display: flex;
+  gap: 12px;
+}
+
+.score-item {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #222222;
+}
+
+.score-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #555555;
+}
+
+.disclaimer {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  color: #888888;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.save-draft-btn {
+  width: 100%;
+  padding: 14px;
+  border: 1px dashed #d0d0d0;
+  border-radius: 12px;
+  background: transparent;
+  color: #888888;
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.save-draft-btn:active {
+  background: #f5f5f5;
+}

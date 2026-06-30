@@ -1,0 +1,83 @@
+/* pages/coach/coach.wxss */
+
+.coach-page {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.coach-header {
+  padding: 48rpx 32rpx 32rpx;
+  background: var(--color-surface);
+  border-bottom: 1rpx solid var(--color-border-light);
+}
+
+.coach-title {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 16rpx;
+}
+
+.coach-desc {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.coach-body {
+  padding: 24rpx 32rpx;
+}
+
+.dilemma-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24rpx;
+  padding: 28rpx 24rpx;
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  margin-bottom: 20rpx;
+}
+
+.dilemma-card:active {
+  background: var(--color-bg);
+}
+
+.dilemma-icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.dilemma-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.dilemma-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.dilemma-desc {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+}
+
+.dilemma-arrow {
+  font-size: 36rpx;
+  color: var(--color-text-placeholder);
+  flex-shrink: 0;
+}

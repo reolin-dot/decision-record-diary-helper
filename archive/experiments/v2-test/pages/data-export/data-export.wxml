@@ -1,0 +1,65 @@
+<view class="export-page">
+  <!-- 导出选项 -->
+  <view class="export-section">
+    <text class="section-title">选择导出内容</text>
+    <view class="option-list">
+      <view
+        class="option-card {{item.key === selectedOption ? 'selected' : ''}}"
+        wx:for="{{exportOptions}}"
+        wx:key="key"
+        bindtap="onSelectOption"
+        data-key="{{item.key}}"
+      >
+        <view class="option-icon">{{item.icon}}</view>
+        <view class="option-info">
+          <text class="option-label">{{item.label}}</text>
+          <text class="option-desc">{{item.desc}}</text>
+        </view>
+        <view class="option-check" wx:if="{{item.key === selectedOption}}">✓</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 导出按钮 -->
+  <view class="export-action">
+    <button
+      class="export-btn {{isExporting ? 'loading' : ''}}"
+      bindtap="onExport"
+      disabled="{{isExporting}}"
+    >
+      {{isExporting ? '导出中...' : '开始导出'}}
+    </button>
+  </view>
+
+  <!-- 导出结果 -->
+  <view class="export-result" wx:if="{{exportResult}}">
+    <text class="section-title">导出完成</text>
+    <view class="result-card">
+      <view class="result-info">
+        <view class="result-item">
+          <text class="result-label">格式</text>
+          <text class="result-value">{{exportResult.format}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">条目数</text>
+          <text class="result-value">{{exportResult.itemCount}}</text>
+        </view>
+      </view>
+      <view class="result-preview" bindtap="onCopyPreview">
+        <text class="preview-title">数据预览（点击复制）</text>
+        <text class="preview-content">{{exportResult.preview}}</text>
+      </view>
+    </view>
+
+    <view class="result-actions">
+      <button class="action-btn share-file-btn" bindtap="onShareFile">
+        发送给朋友
+      </button>
+    </view>
+  </view>
+
+  <!-- 说明 -->
+  <view class="export-hint">
+    <text>导出的数据为 JSON 格式，可用于备份或在其他工具中分析。</text>
+  </view>
+</view>

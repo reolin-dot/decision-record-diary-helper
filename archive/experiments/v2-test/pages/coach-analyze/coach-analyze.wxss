@@ -1,0 +1,146 @@
+/* pages/coach-analyze/coach-analyze.wxss */
+
+.analyze-page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.analyze-body {
+  flex: 1;
+  padding: 32rpx;
+}
+
+.framework-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12rpx;
+}
+
+.framework-desc {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 32rpx;
+}
+
+.analyze-step {
+  background: var(--color-surface);
+  border: 1rpx solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: 28rpx 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.step-num {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 1rpx solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 24rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-num.done {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.step-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.step-desc {
+  display: block;
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  margin-bottom: 20rpx;
+}
+
+.analyze-step textarea {
+  width: 100%;
+  min-height: 160rpx;
+  padding: 20rpx 24rpx;
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 28rpx;
+  font-family: inherit;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.analyze-step textarea::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.step-hint {
+  display: block;
+  font-size: 22rpx;
+  color: var(--color-text-placeholder);
+  margin-top: 8rpx;
+}
+
+/* Score section */
+.score-row {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 20rpx;
+}
+
+.score-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.score-label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.score-options {
+  display: flex;
+  gap: 12rpx;
+}
+
+.score-btn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 1rpx solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 26rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-btn.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}

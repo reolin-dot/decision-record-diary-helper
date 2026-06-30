@@ -1,0 +1,179 @@
+/* pages/data-export/data-export.wxss */
+
+.export-page {
+  background: #f0f4f8;
+  min-height: 100vh;
+  padding: 32rpx;
+}
+
+/* ====== 通用分区 ====== */
+.export-section {
+  margin-bottom: 32rpx;
+}
+
+.section-title {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+/* ====== 导出选项 ====== */
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 28rpx 24rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  border: 2rpx solid #e8e8e8;
+}
+
+.option-card.selected {
+  border-color: #667eea;
+  background: #f8f9ff;
+}
+
+.option-icon {
+  font-size: 40rpx;
+  width: 64rpx;
+  text-align: center;
+}
+
+.option-info {
+  flex: 1;
+}
+
+.option-label {
+  font-size: 30rpx;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.option-desc {
+  font-size: 24rpx;
+  color: #888888;
+}
+
+.option-check {
+  font-size: 32rpx;
+  color: #667eea;
+  font-weight: 700;
+}
+
+/* ====== 导出按钮 ====== */
+.export-action {
+  margin-bottom: 32rpx;
+}
+
+.export-btn {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 24rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+}
+
+.export-btn.loading {
+  opacity: 0.7;
+}
+
+/* ====== 导出结果 ====== */
+.export-result {
+  margin-bottom: 32rpx;
+}
+
+.result-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.result-info {
+  display: flex;
+  padding: 24rpx 32rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.result-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.result-label {
+  font-size: 22rpx;
+  color: #888888;
+}
+
+.result-value {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.result-preview {
+  padding: 24rpx 32rpx;
+}
+
+.preview-title {
+  font-size: 22rpx;
+  color: #888888;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.preview-content {
+  font-size: 22rpx;
+  font-family: monospace;
+  color: #555555;
+  line-height: 1.5;
+  word-break: break-all;
+  max-height: 300rpx;
+  overflow: hidden;
+}
+
+/* ====== 结果操作 ====== */
+.result-actions {
+  margin-top: 24rpx;
+}
+
+.action-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 24rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border: none;
+}
+
+.share-file-btn {
+  background: #07c160;
+  color: #ffffff;
+}
+
+/* ====== 提示 ====== */
+.export-hint {
+  text-align: center;
+  padding: 24rpx 0;
+}
+
+.export-hint text {
+  font-size: 22rpx;
+  color: #bbbbbb;
+}

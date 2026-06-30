@@ -1,0 +1,102 @@
+<view class="page-container">
+  <!-- ====== 决策未找到 ====== -->
+  <view class="not-found" wx:if="{{!decision}}">
+    <text class="not-found-icon">🔍</text>
+    <text class="not-found-title">决策未找到</text>
+    <text class="not-found-desc">这条决策可能已被删除或链接无效</text>
+    <view class="not-found-btn" bindtap="onGoBack">
+      <text>返回花园</text>
+    </view>
+  </view>
+
+  <!-- ====== 决策详情内容 ====== -->
+  <view class="detail-body" wx:else>
+    <!-- 花朵阶段头部 -->
+    <view class="detail-hero">
+      <view class="hero-flower stage-{{decision.stage}}">
+        <text class="hero-emoji">{{stageMeta.icon}}</text>
+      </view>
+      <text class="hero-stage-label">{{stageMeta.label}}</text>
+      <text class="hero-stage-desc">{{stageMeta.description}}</text>
+      <text class="hero-title">{{decision.title}}</text>
+      <view class="hero-tags">
+        <text class="hero-category" wx:if="{{categoryMeta}}">{{categoryMeta.icon}} {{categoryMeta.label}}</text>
+        <text class="hero-mood" wx:if="{{decision.mood}}">{{decision.mood}}</text>
+      </view>
+      <text class="hero-date">{{decision.createdAt}}</text>
+    </view>
+
+    <!-- 背景 -->
+    <view class="detail-section" wx:if="{{decision.background}}">
+      <text class="section-label">当时背景</text>
+      <text class="section-text">{{decision.background}}</text>
+    </view>
+
+    <!-- 选项列表 -->
+    <view class="detail-section" wx:if="{{decision.options && decision.options.length > 0}}">
+      <text class="section-label">当时的选项</text>
+      <view class="options-list">
+        <view class="option-item {{index === decision.choice ? 'option-chosen' : ''}}" wx:for="{{decision.options}}" wx:key="*this">
+          <text class="option-text">{{item}}</text>
+          <text class="option-chosen-tag" wx:if="{{index === decision.choice}}">最终选择</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 选择理由 -->
+    <view class="detail-section" wx:if="{{decision.reason}}">
+      <text class="section-label">选择理由</text>
+      <text class="section-text">{{decision.reason}}</text>
+    </view>
+
+    <!-- 预期结果 -->
+    <view class="detail-section" wx:if="{{decision.expectation}}">
+      <text class="section-label">预期结果</text>
+      <text class="section-text">{{decision.expectation}}</text>
+    </view>
+
+    <!-- 行动状态 -->
+    <view class="detail-section">
+      <text class="section-label">行动状态</text>
+      <view class="action-status">
+        <view class="status-dot {{decision.actionStarted ? 'status-active' : ''}}"></view>
+        <text class="status-text">{{decision.actionStarted ? '已经开始行动' : '还未开始行动'}}</text>
+      </view>
+    </view>
+
+    <!-- 复盘历史 -->
+    <view class="detail-section" wx:if="{{decision.wateringHistory && decision.wateringHistory.length > 0}}">
+      <text class="section-label">复盘历史</text>
+      <view class="review-history">
+        <view class="history-item" wx:for="{{decision.wateringHistory}}" wx:key="date">
+          <view class="history-header">
+            <text class="history-round">第 {{index + 1}} 次复盘</text>
+            <text class="history-date">{{item.date}}</text>
+          </view>
+          <view class="history-type-tag">{{item.type === 'result' ? '结果复盘' : '当下复盘'}} · {{item.rating}}</view>
+          <view wx:if="{{item.reflection}}" class="history-field">
+            <text class="history-field-label">实际变化</text>
+            <text class="history-field-text">{{item.reflection}}</text>
+          </view>
+          <view wx:if="{{item.lesson}}" class="history-field">
+            <text class="history-field-label">收获经验</text>
+            <text class="history-field-text">{{item.lesson}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮区 -->
+    <view class="detail-actions">
+      <button class="btn-action btn-secondary" wx:if="{{canStartAction}}" bindtap="onMarkActionStarted">
+        我开始行动了
+      </button>
+      <button class="btn-action btn-primary" wx:if="{{canReview}}" bindtap="onGoReview">
+        {{reviewType === 'result' ? '去结果复盘' : '去当下复盘'}}
+      </button>
+      <view class="btn-back" bindtap="onGoBack">
+        <text>返回花园</text>
+      </view>
+    </view>
+  </view>
+</view>

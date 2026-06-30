@@ -1,0 +1,136 @@
+<view class="report-page">
+  <!-- 月份选择器 -->
+  <view class="month-selector" wx:if="{{availableMonths.length > 0}}">
+    <view
+      class="month-chip {{item === currentMonth ? 'active' : ''}}"
+      wx:for="{{availableMonths}}"
+      wx:key="*this"
+      bindtap="onMonthChange"
+      data-month="{{item}}"
+    >
+      <text>{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="report-empty" wx:if="{{isEmpty}}">
+    <text class="empty-icon">📊</text>
+    <text class="empty-text">本月还没有决策记录</text>
+    <text class="empty-hint">去花园种下一颗种子吧</text>
+  </view>
+
+  <!-- 报告内容 -->
+  <view class="report-content" wx:if="{{report && !isEmpty}}">
+    <!-- 月度总结卡片 -->
+    <view class="report-hero">
+      <view class="hero-month">{{currentMonth}}</view>
+      <view class="hero-title">月度成长报告</view>
+      <view class="hero-summary">{{report.summary}}</view>
+    </view>
+
+    <!-- 阶段统计 -->
+    <view class="report-section">
+      <text class="section-title">本月花朵状态</text>
+      <view class="stage-grid">
+        <view class="stage-item">
+          <text class="stage-icon">🌱</text>
+          <text class="stage-count">{{report.stats.stageCounts.seed}}</text>
+          <text class="stage-label">种子</text>
+        </view>
+        <view class="stage-item">
+          <text class="stage-icon">🌿</text>
+          <text class="stage-count">{{report.stats.stageCounts.sprout}}</text>
+          <text class="stage-label">发芽</text>
+        </view>
+        <view class="stage-item">
+          <text class="stage-icon">🍃</text>
+          <text class="stage-count">{{report.stats.stageCounts.leaf}}</text>
+          <text class="stage-label">长叶</text>
+        </view>
+        <view class="stage-item">
+          <text class="stage-icon">🌼</text>
+          <text class="stage-count">{{report.stats.stageCounts.first_bloom}}</text>
+          <text class="stage-label">初开</text>
+        </view>
+        <view class="stage-item">
+          <text class="stage-icon">🌸</text>
+          <text class="stage-count">{{report.stats.stageCounts.full_bloom}}</text>
+          <text class="stage-label">盛开</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 分类分布 -->
+    <view class="report-section" wx:if="{{report.patterns.categoryDistribution.length > 0}}">
+      <text class="section-title">决策类型分布</text>
+      <view class="category-list">
+        <view class="category-item" wx:for="{{report.patterns.categoryDistribution}}" wx:key="key">
+          <view class="category-info">
+            <text class="category-icon">{{item.icon}}</text>
+            <text class="category-label">{{item.label}}</text>
+          </view>
+          <view class="category-bar-wrap">
+            <view class="category-bar" style="width: {{item.percent}}%"></view>
+          </view>
+          <text class="category-count">{{item.count}} 次</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 情绪分布 -->
+    <view class="report-section" wx:if="{{report.patterns.moodDistribution.length > 0}}">
+      <text class="section-title">做选择时的心情</text>
+      <view class="mood-tags">
+        <view class="mood-tag" wx:for="{{report.patterns.moodDistribution}}" wx:key="mood">
+          <text class="mood-name">{{item.mood}}</text>
+          <text class="mood-count">{{item.count}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 复盘率 -->
+    <view class="report-section">
+      <text class="section-title">复盘情况</text>
+      <view class="review-stats">
+        <view class="review-stat">
+          <text class="review-value">{{report.patterns.reviewRate}}%</text>
+          <text class="review-label">当下复盘完成率</text>
+        </view>
+        <view class="review-stat">
+          <text class="review-value">{{report.patterns.resultReviewRate}}%</text>
+          <text class="review-label">结果复盘完成率</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 洞察文案 -->
+    <view class="report-section" wx:if="{{report.patterns.insights.length > 0}}">
+      <text class="section-title">给你的洞察</text>
+      <view class="insight-cards">
+        <view class="insight-card" wx:for="{{report.patterns.insights}}" wx:key="*this">
+          <text class="insight-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 成长片段 -->
+    <view class="report-section" wx:if="{{report.snippets.length > 0}}">
+      <text class="section-title">本月成长片段</text>
+      <view class="snippet-list">
+        <view class="snippet-item" wx:for="{{report.snippets}}" wx:key="date">
+          <view class="snippet-quote">"{{item.lesson}}"</view>
+          <view class="snippet-meta">
+            <text class="snippet-source">—— {{item.decisionTitle}}</text>
+            <text class="snippet-date">{{item.date}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="report-actions">
+      <button class="action-btn share-btn" bindtap="onShareReport">生成分享卡片</button>
+      <button class="action-btn garden-btn" bindtap="onGoThemeGarden">查看主题花圃</button>
+    </view>
+  </view>
+</view>
