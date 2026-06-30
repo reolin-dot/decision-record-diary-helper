@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>体验走查 — 决策成长日记</title>
+<style>
+  :root {
+    --bg: #f7f7f7; --surface: #ffffff; --text: #1a1a1a; --text2: #555; --text3: #888;
+    --border: #e5e5e5; --accent: #4a7c59; --accent-light: #e8f0ea;
+    --blocker: #c0392b; --blocker-bg: #fdecea;
+    --major: #e67e22; --major-bg: #fef5e7;
+    --minor: #2980b9; --minor-bg: #ebf5fb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  .container { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* Header */
+  .report-header { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: #fff; border-radius: 16px; padding: 48px 40px; margin-bottom: 32px; }
+  .report-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .report-header .subtitle { font-size: 15px; opacity: 0.8; margin-bottom: 24px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 24px; font-size: 13px; opacity: 0.7; }
+  .meta-row span { display: flex; align-items: center; gap: 6px; }
+
+  /* Summary cards */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .summary-card { background: var(--surface); border-radius: 12px; padding: 24px; border: 1px solid var(--border); text-align: center; }
+  .summary-card .num { font-size: 36px; font-weight: 700; }
+  .summary-card .label { font-size: 13px; color: var(--text3); margin-top: 4px; }
+  .summary-card.blocker .num { color: var(--blocker); }
+  .summary-card.major .num { color: var(--major); }
+  .summary-card.minor .num { color: var(--minor); }
+
+  /* Section */
+  .section { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); padding: 32px; margin-bottom: 24px; }
+  .section h2 { font-size: 20px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+  .section h3 { font-size: 16px; font-weight: 600; margin: 20px 0 12px; color: var(--text2); }
+
+  /* Dimension table */
+  .dim-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 8px; }
+  .dim-table th { text-align: left; padding: 10px 12px; background: #f9f9f9; font-weight: 600; color: var(--text2); border-bottom: 2px solid var(--border); font-size: 13px; }
+  .dim-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .dim-table tr:last-child td { border-bottom: none; }
+  .dim-bar { height: 6px; border-radius: 3px; background: #eee; min-width: 8px; }
+  .dim-bar.has-findings { background: var(--major); }
+
+  /* Opportunity cards */
+  .opp-card { border-radius: 10px; padding: 24px; margin-bottom: 16px; border-left: 4px solid; }
+  .opp-card.high { background: var(--blocker-bg); border-color: var(--blocker); }
+  .opp-card.medium { background: var(--major-bg); border-color: var(--major); }
+  .opp-card.low { background: var(--minor-bg); border-color: var(--minor); }
+  .opp-card .opp-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .opp-card .opp-rationale { font-size: 14px; color: var(--text2); margin-bottom: 12px; }
+  .opp-card .opp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opp-card .opp-tag { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: rgba(0,0,0,0.06); color: var(--text2); }
+  .opp-priority { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; color: #fff; margin-left: 8px; vertical-align: middle; }
+  .opp-priority.high { background: var(--blocker); }
+  .opp-priority.medium { background: var(--major); }
+  .opp-priority.low { background: var(--minor); }
+
+  /* Finding items */
+  .finding { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: box-shadow 0.2s; }
+  .finding:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .finding-header { display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; cursor: pointer; user-select: none; }
+  .finding-header .sev-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; color: #fff; text-transform: uppercase; margin-top: 2px; }
+  .sev-blocker { background: var(--blocker); }
+  .sev-major { background: var(--major); }
+  .sev-minor { background: var(--minor); }
+  .finding-header .finding-title { flex: 1; font-size: 14px; font-weight: 600; line-height: 1.5; }
+  .finding-header .chevron { flex-shrink: 0; font-size: 18px; color: var(--text3); transition: transform 0.2s; margin-top: 2px; }
+  .finding.open .chevron { transform: rotate(90deg); }
+  .finding-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border); margin: 0 20px; padding-top: 16px; }
+  .finding.open .finding-body { display: block; }
+  .finding-body .fb-row { margin-bottom: 12px; }
+  .finding-body .fb-label { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .finding-body .fb-value { font-size: 14px; color: var(--text2); line-height: 1.6; }
+  .finding-body .fb-effort { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: 20px; background: #f0f0f0; color: var(--text2); }
+
+  /* Next steps */
+  .next-steps { background: linear-gradient(135deg, var(--accent-light) 0%, #f0f7f1 100%); border-radius: 12px; padding: 32px; border: 1px solid #c8dcc4; }
+  .next-steps h2 { font-size: 18px; color: var(--accent); border-bottom-color: #c8dcc4; }
+  .next-steps ol { padding-left: 20px; }
+  .next-steps li { margin-bottom: 12px; font-size: 14px; color: var(--text2); line-height: 1.7; }
+  .next-steps li strong { color: var(--text); }
+
+  /* Footer */
+  .report-footer { text-align: center; font-size: 12px; color: var(--text3); padding: 40px 0 0; }
+
+  /* Toggle all */
+  .toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  .toolbar button { font-size: 13px; padding: 6px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); cursor: pointer; }
+  .toolbar button:hover { background: #f5f5f5; }
+
+  /* Bug tag */
+  .bug-tag { font-size: 11px; background: var(--blocker); color: #fff; padding: 1px 8px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+
+  @media (max-width: 640px) {
+    .container { padding: 16px 12px 60px; }
+    .report-header { padding: 32px 24px; }
+    .report-header h1 { font-size: 22px; }
+    .section { padding: 20px 16px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="report-header">
+    <h1>体验走查报告 — 决策成长日记</h1>
+    <p class="subtitle">基于 Nielsen 十原则 + 响应式/性能维度，对微信小程序全 10 个页面的代码级启发式评估</p>
+    <div class="meta-row">
+      <span>走查对象：代码仓库（10 个页面）</span>
+      <span>走查模式：自动代码走查</span>
+      <span>日期：2026-06-23</span>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-grid">
+    <div class="summary-card blocker">
+      <div class="num">3</div>
+      <div class="label">Blocker 阻断级</div>
+    </div>
+    <div class="summary-card major">
+      <div class="num">14</div>
+      <div class="label">Major 重要</div>
+    </div>
+    <div class="summary-card minor">
+      <div class="num">19</div>
+      <div class="label">Minor 次要</div>
+    </div>
+    <div class="summary-card">
+      <div class="num" style="color:var(--accent)">5</div>
+      <div class="label">改版机会点</div>
+    </div>
+  </div>
+
+  <!-- Dimension distribution -->
+  <div class="section">
+    <h2>各维度 Findings 分布</h2>
+    <table class="dim-table">
+      <thead><tr><th>维度</th><th>数量</th><th>分布</th></tr></thead>
+      <tbody>
+        <tr><td>1. 系统状态可见性</td><td>4</td><td><div class="dim-bar has-findings" style="width:80px"></div></td></tr>
+        <tr><td>2. 系统与现实匹配</td><td>2</td><td><div class="dim-bar has-findings" style="width:40px"></div></td></tr>
+        <tr><td>3. 用户控制与自由</td><td>5</td><td><div class="dim-bar has-findings" style="width:100px"></div></td></tr>
+        <tr><td>4. 一致性与标准</td><td>4</td><td><div class="dim-bar has-findings" style="width:80px"></div></td></tr>
+        <tr><td>5. 错误预防</td><td>4</td><td><div class="dim-bar has-findings" style="width:80px"></div></td></tr>
+        <tr><td>6. 识别优于回忆</td><td>3</td><td><div class="dim-bar has-findings" style="width:60px"></div></td></tr>
+        <tr><td>7. 灵活性与效率</td><td>3</td><td><div class="dim-bar has-findings" style="width:60px"></div></td></tr>
+        <tr><td>8. 美学与极简</td><td>2</td><td><div class="dim-bar has-findings" style="width:40px"></div></td></tr>
+        <tr><td>9. 错误恢复</td><td>1</td><td><div class="dim-bar has-findings" style="width:20px"></div></td></tr>
+        <tr><td>10. 帮助与文档</td><td>3</td><td><div class="dim-bar has-findings" style="width:60px"></div></td></tr>
+        <tr><td>11. 响应式适配</td><td>3</td><td><div class="dim-bar has-findings" style="width:60px"></div></td></tr>
+        <tr><td>12. 性能感知</td><td>2</td><td><div class="dim-bar has-findings" style="width:40px"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Opportunities -->
+  <div class="section">
+    <h2>改版机会点（按优先级排序）</h2>
+
+    <div class="opp-card high">
+      <div class="opp-title">1. 修复阻断级代码缺陷 <span class="opp-priority high">高优先级</span></div>
+      <div class="opp-rationale">发现 3 个代码级 Bug，直接导致 3 个页面功能不可用或渲染异常。这是改版的先决条件，不修这些其他优化毫无意义。</div>
+      <div class="opp-tags">
+        <span class="opp-tag">audit-01 浇水页</span>
+        <span class="opp-tag">audit-02 成功页</span>
+        <span class="opp-tag">audit-12 CSS变量</span>
+      </div>
+    </div>
+
+    <div class="opp-card high">
+      <div class="opp-title">2. 补齐用户控制能力 <span class="opp-priority high">高优先级</span></div>
+      <div class="opp-rationale">用户无法编辑/删除已记录的决策，无法撤销已完成的复盘，缺少草稿保存能力。决策日记类产品的核心价值是"反复回顾"，不能编辑会严重降低长期使用意愿。</div>
+      <div class="opp-tags">
+        <span class="opp-tag">audit-07 编辑删除</span>
+        <span class="opp-tag">audit-08 复盘撤销</span>
+        <span class="opp-tag">audit-09 草稿确认</span>
+        <span class="opp-tag">audit-19 日期校验</span>
+      </div>
+    </div>
+
+    <div class="opp-card medium">
+      <div class="opp-title">3. 建立统一设计系统 <span class="opp-priority medium">中优先级</span></div>
+      <div class="opp-rationale">4 个页面用 CSS 变量但未定义，其余页面用硬编码色值。按钮主色 #555555 缺乏品牌识别度，全灰阶配色让"花园"主题感知弱化。建议在 app.wxss 统一定义 Design Tokens。</div>
+      <div class="opp-tags">
+        <span class="opp-tag">audit-12 CSS变量</span>
+        <span class="opp-tag">audit-13 跨页色值</span>
+        <span class="opp-tag">audit-14 按钮语义</span>
+        <span class="opp-tag">audit-27 视觉层次</span>
+      </div>
+    </div>
+
+    <div class="opp-card medium">
+      <div class="opp-title">4. 强化花园隐喻的数据连接 <span class="opp-priority medium">中优先级</span></div>
+      <div class="opp-rationale">花园页是首页但只展示统计数字，用户看不到自己的"种子"（决策列表）。plant-visual 是一个静态虚线框+emoji，缺乏成长感。建议让花园真正展示用户的决策及其成长阶段。</div>
+      <div class="opp-tags">
+        <span class="opp-tag">audit-04 花园数据</span>
+        <span class="opp-tag">audit-05 空花园</span>
+        <span class="opp-tag">audit-21 阶段可视化</span>
+      </div>
+    </div>
+
+    <div class="opp-card low">
+      <div class="opp-title">5. 完善新手引导与功能入口 <span class="opp-priority low">低优先级</span></div>
+      <div class="opp-rationale">个人中心 4 个设置项全部不可用（假功能），缺少首次使用引导，锦囊页无框架预览。这些不影响核心流程但会给用户留下"半成品"的印象。</div>
+      <div class="opp-tags">
+        <span class="opp-tag">audit-30 假功能入口</span>
+        <span class="opp-tag">audit-32 新手引导</span>
+        <span class="opp-tag">audit-11 框架预览</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Findings -->
+  <div class="section">
+    <h2>完整 Findings 清单</h2>
+    <div class="toolbar">
+      <button onclick="toggleAll()">全部展开 / 收起</button>
+    </div>
+
+    <h3>维度 1：系统状态可见性</h3>
+
+    <div class="finding" id="audit-01">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-blocker">BLOCKER</span>
+        <span class="finding-title">浇水页（watering）JS 与 WXML 数据绑定不匹配，页面永远显示空状态 <span class="bug-tag">BUG</span></span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">watering.wxml 使用 <code>{{pendingDecisions}}</code> 数组和 <code>onGoReview</code> 事件渲染待复盘决策列表，但 watering.js 的 data 中只有 <code>decision: null</code>（单个对象），方法名是 <code>onSkipWatering</code> / <code>onSubmitWatering</code>。结果是 WXML 的 <code>wx:for</code> 遍历 undefined，<code>pendingDecisions.length === 0</code> 恒为 true，页面永远只显示"暂无待复盘的决策"。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/watering/watering.js (data.decision) vs watering.wxml (pendingDecisions)</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">统一 JS 和 WXML：将 watering.js 的 data 改为 <code>pendingDecisions: []</code>，onLoad 中筛选所有 status==='pending' 的决策，添加 <code>onGoReview</code> 方法跳转到 review 页。或者将 WXML 改为单条决策展示模式（取决于产品意图）。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（约 30 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-02">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-blocker">BLOCKER</span>
+        <span class="finding-title">记录成功页（record-success）按钮事件处理器不存在 <span class="bug-tag">BUG</span></span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">record-success.wxml 中按钮绑定了 <code>bindtap="onBackToGarden"</code>，但 record-success.js 中只定义了 <code>onGoHome</code> 和 <code>onRecordAgain</code>，没有 <code>onBackToGarden</code> 方法。用户点击"返回花园"按钮无任何响应。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record-success/record-success.wxml 第 8 行 vs record-success.js</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">将 JS 中的 <code>onGoHome</code> 重命名为 <code>onBackToGarden</code>，或者将 WXML 中的 <code>bindtap</code> 改为 <code>onGoHome</code>。推荐前者，方法名更语义化。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（2 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-03">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">决策保存后无加载状态反馈，直接跳转成功页</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">record.js 的 onComplete() 中，saveDecision() 执行后立即 navigateTo 到成功页，没有任何 loading 状态。当前是本地存储所以感知不到延迟，但未来切换后端 API 后，用户会在保存瞬间看到空白或卡在表单页。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record/record.js → onComplete() 和 onSkipReview()</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">在 saveDecision() 前显示 <code>wx.showLoading({ title: '保存中...' })</code>，完成后 <code>wx.hideLoading()</code>，再跳转。为后续 API 迁移预留体验一致性。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（10 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-04">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">花园首页只展示统计数字，不展示任何具体决策内容</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">花园作为 App 首页（landing page），plant-visual 区域只显示"已种下 X 颗种子 · Y 朵开花"的文字统计。用户打开 App 后看不到自己最近的决策、看不到成长变化，首页信息价值过低。作为"花园"隐喻的核心页面，却最缺乏生命力。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/garden/garden.wxml → plant-visual 区域</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">在 plant-visual 中展示最近 3-5 条决策的缩略卡片（标题 + 阶段图标 seed/sprout/bloom），让用户在首页就能看到自己的"花园"里有什么。也可以按阶段分区域展示。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（2-3 小时，含设计和开发）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 2：系统与现实世界匹配</h3>
+
+    <div class="finding" id="audit-05">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">花园空状态没有针对性的引导，新用户看到通用框架</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">新用户首次打开 App，花园页面的 plant-visual 展示的是虚线框 + "你的决策花园" + "已种下 0 颗种子 · 0 朵开花"。没有区分"有数据"和"无数据"两种状态的展示方式。空状态应该是最好的引导时机，告诉用户"点击种花开始你的第一个决策"。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/garden/garden.wxml → plant-visual（无 wx:if 区分空状态）</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">当 stats.totalDecisions === 0 时，plant-visual 显示不同的空状态内容，如"种下你的第一颗决策种子吧"配合指向"种花"按钮的引导箭头。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-06">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">锦囊图标 📦 与"锦囊"概念不匹配</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">花园页底部三个操作按钮中，锦囊用的是 📦（纸箱）emoji。"锦囊"在中国文化中是"锦囊妙计"的含义，视觉上应传递"智慧/策略"的感觉，纸箱 emoji 反而给人"收纳/包裹"的联想。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/garden/garden.wxml → garden-actions 第三个按钮</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">替换为更贴合的 emoji，如 🧭（指南针/方向）或 💡（灵感/策略），或使用自定义图标。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（5 分钟）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 3：用户控制与自由</h3>
+
+    <div class="finding" id="audit-07">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">已记录的决策无法编辑或删除</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">决策保存后进入 globalData 和 Storage，但整个 App 没有任何入口允许用户修改标题、选项、选择理由等信息，也没有删除功能。用户写错了只能"将错就错"。对于日记类产品，回顾时修正记录是非常自然的需求。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">全局 — garden、watering、review 页均无编辑/删除入口</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">至少在两个位置提供编辑入口：1) 复盘页（review）展示决策详情时允许修改；2) 个人中心或花园提供决策列表页，支持编辑和删除。删除操作需要二次确认弹窗。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（4-6 小时，含列表页和编辑功能）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-08">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">复盘完成后无法修改或撤销复盘结果</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">review.js 的 onCompleteReview() 中，提交后 500ms 自动跳转回花园页，没有任何"修改"或"撤销"的机会。如果用户手误选错了结果评级（如本想选"符合预期"却点了"非常糟糕"），无法修正。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/review/review.js → onCompleteReview() 第 58-61 行</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">方案一：跳转前增加 3 秒倒计时，期间显示"撤销"按钮。方案二：跳转后在花园页显示 toast "复盘已完成"，附带"查看/修改"的入口链接。方案三：在决策详情页允许重新复盘。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（1-2 小时）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-09">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">记录流程中途退出无草稿保存确认</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">用户在 4 步记录向导中填到第 3 步时，如果按手机返回键或点击左上角返回，会逐步回退到第 1 步再退出。全程没有"是否保存草稿"或"已填内容将丢失"的确认提示。填了 3 步的内容一键消失。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record/record.js → onBack() 第 31-36 行</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">当 step > 1 且已有输入内容时，onBack() 在第 1 步退出前弹出 <code>wx.showModal</code> 确认："当前记录尚未保存，确认退出吗？"提供"继续编辑"和"放弃"两个选项。可选增加草稿自动保存。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-10">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">锦囊分析流程中途无法切换困境类型</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">从锦囊页选择"二选一困难"进入 coach-analyze 后，如果想换成"职业选择"类型，只能按系统返回键回到锦囊页再重新选择。没有流程内的"切换类型"入口。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/coach-analyze/coach-analyze.wxml（无切换入口）</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">在 coach-analyze 页面顶部添加当前困境类型标签，点击可弹出类型选择器快速切换。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-11">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">锦囊页不展示分析框架预览，用户不知道该期待什么</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">锦囊页只列出 5 种困境类型（二选一困难、职业选择等）和简短描述，用户点击后才能看到具体分析框架（如"利弊清单 + 10-10-10 法则"）。选择前完全不知道会得到什么样的分析工具。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/coach/coach.wxml → dilemma-card</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">在每个困境类型卡片上增加一行小字预览分析框架名称，如"二选一困难 → 利弊清单 + 10-10-10 法则"。或在卡片上添加"查看框架"的小链接。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（15 分钟）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 4：一致性与标准</h3>
+
+    <div class="finding" id="audit-12">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-blocker">BLOCKER</span>
+        <span class="finding-title">Coach、coach-analyze、style-test 页面使用未定义的 CSS 变量 <span class="bug-tag">BUG</span></span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">coach.wxss 大量使用 <code>var(--color-bg)</code>、<code>var(--color-surface)</code>、<code>var(--color-border-light)</code>、<code>var(--color-text-primary)</code>、<code>var(--radius-md)</code> 等 CSS 自定义属性，但 app.wxss 和所有页面级 wxss 中均未定义这些变量。这意味着这 3 个页面的背景色、边框色、圆角等样式属性全部取浏览器默认值（通常是透明/0），页面渲染严重异常。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/coach/coach.wxss、pages/coach-analyze/coach-analyze.wxss、pages/style-test/style-test.wxss</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">在 app.wxss 的 page 选择器中统一定义所有 CSS 变量：<code>--color-bg: #f5f5f5; --color-surface: #ffffff; --color-border-light: #e8e8e8; --color-text-primary: #222222; --color-text-secondary: #888888; --color-text-placeholder: #b0b0b0; --color-accent: #555555; --color-accent-light: #e0e0e0; --radius-sm: 16rpx; --radius-md: 24rpx;</code></div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（15 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-13">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">样式方案不一致：部分页面用 CSS 变量，其余用硬编码色值</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">garden、record、review、profile、watering 等页面直接写死 <code>#222222</code>、<code>#555555</code> 等色值；coach、coach-analyze、style-test 页面使用 CSS 变量。两种方案共存导致全局换肤/主题切换时需要改两套代码，维护成本高。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">全项目 — 约 60% 硬编码 vs 40% CSS 变量</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">统一为 CSS 变量方案：在 app.wxss 定义 Design Tokens，所有页面的色值引用改为 <code>var(--xxx)</code>。或者反过来，把 coach 等页面的 CSS 变量替换为硬编码值。推荐前者。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（2-3 小时，逐页替换）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-14">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">主按钮颜色 #555555 无品牌识别度，缺乏语义含义</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">全局 .btn-primary 的背景色是 <code>#555555</code>（深灰），与"花园"主题毫无关联。在一个以绿色渐变（#e8f0e8 → #b8d0b0）代表"成长/花园"的 App 中，按钮用灰色显得脱节。coach-result 页是唯一使用语义色（绿色=利、红色=弊）的页面，但主按钮仍为灰色。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">app.wxss → .btn-primary background: #555555</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">将主按钮色调整为与花园主题一致的绿色系，如 <code>#4a7c59</code> 或 <code>#5a8a6a</code>，保持与 garden 渐变的视觉关联。选中态和交互态同步调整。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（15 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-15">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">TabBar 图标使用 PNG 而非 SVG，高倍屏可能模糊</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">TabBar 的 6 个图标（3 个 tab × active/inactive 各一个）均为 PNG 格式。在高 DPI 设备上可能出现锯齿或模糊。微信小程序支持 SVG 格式的 iconPath。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">images/tab-*.png（6 个文件）</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">将 TabBar 图标替换为 SVG 格式，或使用 iconfont 方案。确保在不同设备上清晰显示。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（1-2 小时，含图标重绘）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 5：错误预防</h3>
+
+    <div class="finding" id="audit-16">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">"跳过测试"无任何确认，4 步决策信息直接丢失</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">record.js 第 4 步的"跳过，直接保存"（onSkipReview）直接将当前已填内容保存为决策并跳转，不弹出任何确认。如果用户只是想看看第 4 步长什么样而点了"跳过"，会意外保存一条不完整的决策。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record/record.wxml → 第 4 步的 skip-link</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">点击"跳过"时弹出确认："跳过后将保存当前已填内容，未填部分将留空。确认跳过吗？"提供"继续填写"和"确认跳过"两个选项。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（15 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-17">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">表单字段无实时字数反馈，只在超限时报错</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">决策标题（50 字）、背景（500 字）、复盘反思（200 字）等字段设置了 maxlength，但用户填写时看不到"已输入 X/Y 字"的实时计数。只有到达上限后输入法自动截断，用户不知道为什么打不上去了。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">record.wxml 各 input/textarea、review.wxml 各 textarea</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">在每个有 maxlength 的输入框右下角添加字数计数器 <code>{{value.length}}/{{maxLength}}</code>，接近上限时变色提醒。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-18">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">选项列表上限 6 个无解释，用户可能不理解为什么不能继续添加</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">record 第 2 步选项列表上限 6 个，到达后"添加选项"按钮隐藏，但没有任何提示说明为什么不能再添加了。用户可能以为出了 Bug。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record/record.wxml → 第 2 步，wx:if="{{options.length < 6}}"</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">到达 6 个时，不隐藏按钮，而是将按钮变为灰色并显示文字"最多添加 6 个选项"。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（10 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-19">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">自定义复盘日期不校验过去日期</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">record 第 4 步的日期选择器允许用户选择过去的日期作为复盘日。一个复盘日在过去的决策没有实际意义，且可能导致 watering 页的筛选逻辑异常。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record/record.wxml → picker mode="date"（无 start 属性限制）</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">给 picker 添加 <code>start="{{today}}"</code> 属性，限制只能选择今天及以后的日期。选择后立即显示确认文案"复盘日：YYYY-MM-DD（X 天后）"。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（10 分钟）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 6：识别优于回忆</h3>
+
+    <div class="finding" id="audit-20">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">没有决策列表页，用户无法浏览自己的历史决策</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">整个 App 没有一个地方能让用户看到所有已记录决策的完整列表。花园页只有统计数字，watering 页只展示"待复盘"的决策。用户如果想找 2 周前记录的某个决策，无处可寻。这严重违背"识别优于回忆"原则。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">全局 — 无决策列表/历史页面</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">新增"决策历史"页面或在花园页增加"查看全部决策"入口，支持按时间排序和搜索。列表项显示标题、记录日期、当前阶段（seed/sprout/bloom）和复盘状态。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（3-4 小时）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-21">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">决策阶段（seed/sprout/bloom）没有可视化展示</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">数据结构中每个决策有 stage 字段（seed/sprout/bloom），review.js 中也有根据评级更新 stage 的逻辑。但整个 App 没有任何地方可视化展示这些阶段的区别——用户不知道自己有哪些"开花"的决策、哪些还是"种子"。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">全局 — stage 字段存在于数据层但未在 UI 呈现</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">在决策列表和花园页中，用不同图标/颜色区分三个阶段：🌱 seed、🌿 sprout、🌸 bloom。让"花园"隐喻真正落地到视觉上。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（1-2 小时，依赖决策列表页）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-22">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">决策风格测试结果缺少内联解释，用户需依赖记忆理解标签含义</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">style-test 结果页展示"理性分析型"等标签和"数据驱动"、"逻辑优先"等 tag，但标签旁没有简短解释。用户在个人中心看到风格标签时，可能已经忘了测试时的具体含义。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/style-test/style-test.wxml → 结果视图的 style-tags 区域</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">点击标签展开简短解释卡片，或在标签下方添加一行说明文字。个人中心页的风格标签也应有点击查看详情功能。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 7：灵活性与效率</h3>
+
+    <div class="finding" id="audit-23">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">每次记录新决策都被强制经过决策风格测试</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">garden.js 的 onPlantFlower() 逻辑：<code>if (!app.globalData.hasStyleTest)</code> 则跳转 style-test。但 hasStyleTest 的判断依赖 globalData，如果用户清除缓存或数据丢失，会被迫重做测试。而且测试完成后想再测一次只能从个人中心入口进。主流程缺少"跳过"的灵活度。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/garden/garden.js → onPlantFlower() 第 31-36 行</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">将 hasStyleTest 状态持久化到 Storage（当前已部分实现）。首次测试的跳过链接应该也记录"已跳过"状态，避免反复弹出。老用户应有快速入口直达记录页。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-24">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">个人中心设置项全部不可用，属于虚假功能入口</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">个人中心"设置"区域列出 4 个选项（复盘提醒设置、重新测试决策风格、决策数据统计、通用设置），但只有"重新测试决策风格"真正可用（通过 style-test 跳转）。其余 3 个点击后无任何响应或仅显示 toast。用户看到入口却不能用，体验比没有入口更差。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/profile/profile.wxml → settings-list</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">短期：隐藏未实现的设置项，或添加"即将上线"标签。中期：至少实现"决策数据统计"（数据已有，只需展示页面）和"复盘提醒设置"（调用微信订阅消息 API）。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（隐藏）/ major-rework（实现功能）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-25">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">复盘问题固定 3 个，无法根据个人情况调整</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">review 页面固定 3 个复盘问题（结果如何、与期望的差异、下次怎么做），其中后两个标为选填。但对于简单决策，用户可能只想回答第 1 题就完成；对于复杂决策，可能想增加"当时的情绪状态"等维度。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/review/review.wxml（固定 3 个问题区块）</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">短期：允许用户只填第 1 题即可完成复盘（目前是必填项，已满足）。长期：提供"详细复盘"和"快速复盘"两种模式。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（1-2 小时）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 8：美学与极简设计</h3>
+
+    <div class="finding" id="audit-26">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">全局灰阶配色与"花园成长"主题严重脱节</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">除了花园页和成功页有绿色渐变外，其余所有页面都是纯灰阶（#222 到 #fff）。一个以"花园""种子""开花"为核心隐喻的 App，视觉上却像一份灰度线框图。用户进入记录、复盘、锦囊等核心功能页面时，花园的沉浸感完全断裂。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">全局 — record、review、coach、profile、watering 页面</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">从花园页的绿色渐变中提取主题色系，作为全局 accent color 应用到：按钮、选中态、进度条、TabBar 激活色、section 标题装饰线等。保持大面积留白，但用绿色点缀传递"成长"感。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（3-4 小时，含设计定义和逐页替换）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-27">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">花园页 plant-visual 大量留白仅展示 emoji 和两行文字</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">plant-visual 占据 360×400rpx 的中心区域（约占屏幕 40%），但内容只有一个 🌸 emoji（96rpx）、一行标题和一行统计。视觉密度过低，大面积绿色渐变背景显得空洞。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/garden/garden.wxml → plant-visual</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">丰富 plant-visual 的内容密度：添加最近的决策缩略卡片、或根据决策数量展示不同成长阶段的植物插画（种子→幼苗→开花→大树），让中心区域真正成为"花园"的视觉焦点。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（2-3 小时，含插画资源）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 9：错误恢复</h3>
+
+    <div class="finding" id="audit-28">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">表单校验仅用 toast 提示，无法定位问题字段</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">record.js 的 validateCurrentStep() 用 <code>wx.showToast({ title: '先写一个决策标题', icon: 'none' })</code> 提示错误，toast 2 秒后消失。没有滚动到错误字段、没有字段级红色边框或内联错误文案。如果用户在第 1 步同时漏填了标题和背景（虽然背景是选填），toast 只能显示第一条错误。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record/record.js → validateCurrentStep()</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">将 toast 替换为内联错误提示：在对应输入框下方显示红色错误文案，输入框边框变红，页面自动滚动到错误位置。同时展示多条错误。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（1-2 小时）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 10：帮助与文档</h3>
+
+    <div class="finding" id="audit-29">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">无首次使用引导，新用户对"种花""浇水"隐喻无上下文</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">新用户首次打开 App 看到花园页，只有"种花""浇水""锦囊"三个按钮和"你的决策花园"的标题。没有任何引导说明这些隐喻代表什么。虽然有决策风格测试作为 onboarding，但测试本身也没解释为什么先做测试才能记录。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/garden/garden.wxml（无 onboarding overlay）</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">首次进入花园时展示 3 步引导浮层：1)"种花 = 记录一个新决策" 2)"浇水 = 到时间后复盘你的决策" 3)"锦囊 = 遇到难题时用分析工具帮你梳理"。每步可跳过。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（1-2 小时）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-30">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-major">MAJOR</span>
+        <span class="finding-title">个人中心 3 个设置项为假功能入口，点击无响应</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">"复盘提醒设置""决策数据统计""通用设置"三个设置项有完整的 UI（图标+标签+箭头），但点击后无任何响应。这不仅是"缺功能"的问题，更是"给用户虚假期望"的体验问题。用户会反复点击以为是自己操作不对。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/profile/profile.wxml → settings-item 第 1、3、4 项</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">立即处理：隐藏未实现的设置项，或标注"即将上线"灰色不可点击状态。优先级排序：先做"决策数据统计"（复用已有数据），再做"复盘提醒设置"。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（隐藏）/ medium（实现功能）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-31">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">成就徽章无说明，用户不知道如何解锁</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">个人中心展示 6 个成就徽章（首次记录、连续 7 天、首次开花、决策大树、锦囊达人、月度复盘王），已解锁的正常显示，未解锁的半透明。但没有任何地方告诉用户每个徽章的解锁条件是什么。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/profile/profile.wxml → achievement-grid</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">点击未解锁徽章弹出提示"完成 XXX 即可解锁"。或在徽章卡片底部添加进度条（如"连续记录 3/7 天"）。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 11：响应式适配</h3>
+
+    <div class="finding" id="audit-32">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">个人中心统计栏 4 列等分，小屏手机可能挤压文字</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">profile-stats 使用 <code>display:flex</code> 4 列等分，每列包含 44rpx 的数字和 22rpx 的标签。在 320px 宽的小屏手机（如 iPhone SE）上，每列只有约 80px 宽度，"复盘完成率"等 4 字标签可能折行显示。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/profile/profile.wxss → .profile-stats flex 布局</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">改为 2×2 网格布局（<code>flex-wrap: wrap</code>），每列占 50% 宽度。或使用 <code>min-width</code> 确保不会过度压缩。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（15 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-33">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">成就徽章使用固定 rpx 尺寸，大屏手机一行可能只放 3 个</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">.achievement-badge 固定 144rpx 宽，加上 20rpx gap，在 750rpx 设计稿宽度下一行最多放 4 个（144×4+20×3=636rpx < 686rpx 可用宽度）。但 6 个徽章会排成 4+2 的不对称布局。如果屏幕更窄，可能变成 3+3。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/profile/profile.wxss → .achievement-grid flex-wrap 布局</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">使用 <code>width: calc(33.33% - 14rpx)</code> 确保始终 3 列，或使用 CSS Grid <code>grid-template-columns: repeat(3, 1fr)</code> 保持布局一致。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（10 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-34">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">记录向导的选项卡片缺少删除按钮的触摸反馈</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">record 第 2 步中，当选项超过 2 个时可以删除选项（通过某个操作），但删除按钮的触摸目标可能偏小（取决于实际实现）。在移动端操作频繁的页面中，误触删除的风险较高。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/record/record.wxml → 第 2 步选项卡片</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">确保删除按钮触摸区域 ≥ 44×44px（88rpx），添加删除确认或 undo toast。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（15 分钟）</span></div>
+      </div>
+    </div>
+
+    <h3>维度 12：性能感知</h3>
+
+    <div class="finding" id="audit-35">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">花园页每次 onShow 都全量刷新数据</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">garden.js 的 onShow() 每次页面显示时调用 refreshData()，遍历全部 decisions 数组并 filter。当前 mock 数据量小无感知，但用户积累几百条决策后（加上未来 API 请求），每次切换 Tab 都触发全量计算会影响流畅度。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/garden/garden.js → onShow() + refreshData()</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">添加脏数据标记（dirty flag），只在数据实际变更时刷新。或使用事件驱动模式：record/review 操作后发事件通知 garden 更新，而非每次 onShow 都全量计算。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">quick-win（30 分钟）</span></div>
+      </div>
+    </div>
+
+    <div class="finding" id="audit-36">
+      <div class="finding-header" onclick="toggle(this)">
+        <span class="sev-badge sev-minor">MINOR</span>
+        <span class="finding-title">决策列表无分页/虚拟滚动，数据量增长后可能卡顿</span>
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="finding-body">
+        <div class="fb-row"><div class="fb-label">问题描述</div><div class="fb-value">watering 页使用 <code>wx:for="{{pendingDecisions}}"</code> 一次性渲染所有待复盘决策。如果用户积累了 50+ 条待复盘决策，一次性渲染会造成明显的白屏时间。未来 API 模式下需要分页加载。</div></div>
+        <div class="fb-row"><div class="fb-label">出现位置</div><div class="fb-value">pages/watering/watering.wxml → wx:for</div></div>
+        <div class="fb-row"><div class="fb-label">修复建议</div><div class="fb-value">使用微信小程序的 <code>&lt;scroll-view&gt;</code> 组件 + 触底加载更多（onReachBottom），每次加载 10-20 条。为后端迁移预留分页接口设计。</div></div>
+        <div class="fb-row"><div class="fb-label">修复成本</div><span class="fb-effort">medium（1 小时）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="next-steps">
+    <h2>下一步建议</h2>
+    <ol>
+      <li><strong>立即修复 3 个 Blocker</strong>：浇水页数据绑定、成功页事件处理器、CSS 变量定义。这些是功能 Bug，修复成本极低（总计 < 1 小时），但对用户体验影响巨大。</li>
+      <li><strong>高优先级补齐用户控制</strong>：添加决策编辑/删除功能、复盘撤销能力、退出确认弹窗。这些是"日记类产品"的核心体验闭环，缺失会直接影响长期留存。</li>
+      <li><strong>建立 Design Token 体系</strong>：在 app.wxss 统一定义 CSS 变量，逐页替换硬编码色值。同时将主按钮色从灰色调整为花园主题绿色。为后续迭代打下可维护的样式基础。</li>
+      <li><strong>新增决策列表/历史页</strong>：这是花园隐喻落地的关键拼图——用户需要看到自己的"花园"里到底有哪些种子、哪些开花了。</li>
+      <li><strong>隐藏或标注未完成功能</strong>：设置页的假入口、成就徽章的解锁条件缺失，这些"半成品"信号会让用户对产品质量产生质疑。先隐藏再逐步开放。</li>
+    </ol>
+  </div>
+
+  <div class="report-footer">
+    <p>基于 Nielsen 十原则启发式评估 · 决策成长日记微信小程序 · 2026-06-23</p>
+    <p>本报告为代码级静态走查，建议配合 5-10 人真实用户测试验证关键发现</p>
+  </div>
+
+</div>
+
+<script>
+function toggle(el) {
+  el.closest('.finding').classList.toggle('open');
+}
+function toggleAll() {
+  const findings = document.querySelectorAll('.finding');
+  const anyOpen = Array.from(findings).some(f => f.classList.contains('open'));
+  findings.forEach(f => {
+    if (anyOpen) f.classList.remove('open');
+    else f.classList.add('open');
+  });
+}
+</script>
+</body>
+</html>
