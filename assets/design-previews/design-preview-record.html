@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>决策成长日记 - 记录页设计稿</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+      background: #f5f5f5;
+      color: #222222;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* ====== 顶部导航 ====== */
+    .nav-bar {
+      background: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e8e8e8;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-back {
+      font-size: 20px;
+      color: #222;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .nav-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .nav-placeholder {
+      width: 28px;
+    }
+
+    /* ====== 进度指示器 ====== */
+    .progress-bar {
+      background: #fff;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .progress-step {
+      flex: 1;
+      height: 4px;
+      background: #e8e8e8;
+      border-radius: 2px;
+    }
+
+    .progress-step.active {
+      background: #4A7C59;
+    }
+
+    .progress-step.completed {
+      background: #4A7C59;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: #888;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    /* ====== 表单区域 ====== */
+    .form-container {
+      padding: 16px;
+    }
+
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .form-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .required {
+      color: #888;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #4A7C59;
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: #b0b0b0;
+      margin-top: 8px;
+    }
+
+    /* ====== 选项卡片 ====== */
+    .option-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .option-card {
+      background: #f9f9f9;
+      border: 1.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      font-size: 13px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .option-card.selected {
+      background: #e8f0e8;
+      border-color: #4A7C59;
+      color: #4A7C59;
+      font-weight: 600;
+    }
+
+    .option-card:active {
+      transform: scale(0.96);
+    }
+
+    /* ====== 底部按钮栏 ====== */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 375px;
+      background: #fff;
+      padding: 12px 16px 24px;
+      border-top: 1px solid #e8e8e8;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      padding: 14px;
+      border: 1.5px solid #d0d0d0;
+      border-radius: 12px;
+      background: #fff;
+      color: #222;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #4A7C59;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .btn-primary:disabled {
+      background: #e8e8e8;
+      color: #b0b0b0;
+    }
+
+    /* ====== 装饰元素 ====== */
+    .illustration {
+      text-align: center;
+      font-size: 48px;
+      margin: 24px 0;
+    }
+
+    /* ====== 成功动画 ====== */
+    .success-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .success-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .success-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #4A7C59;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <div class="nav-bar">
+    <button class="nav-back">‹</button>
+    <span class="nav-title">种下新决策</span>
+    <div class="nav-placeholder"></div>
+  </div>
+
+  <!-- 进度指示器 -->
+  <div class="progress-bar">
+    <div class="progress-step completed"></div>
+    <div class="progress-step completed"></div>
+    <div class="progress-step active"></div>
+    <div class="progress-step"></div>
+    <span class="progress-text">步骤 3/4</span>
+  </div>
+
+  <!-- 表单区域 -->
+  <div class="form-container">
+    <!-- 问题输入 -->
+    <div class="form-card">
+      <div class="form-label">
+        你要做的决策是什么？
+        <span class="required">（必填）</span>
+      </div>
+      <input type="text" class="form-input" placeholder="用一句话描述你的问题" value="是否接受新工作的offer">
+      <div class="form-hint">清晰的问题，更容易找到答案</div>
+    </div>
+
+    <!-- 选项 -->
+    <div class="form-card">
+      <div class="form-label">
+        你有哪些选择？
+        <span class="required">（必填）</span>
+      </div>
+      <textarea class="form-input form-textarea" placeholder="列出你的选项，每个选项一行">接受新工作
+留在原公司
+暂时休息一段时间</textarea>
+      <div class="form-hint">写下所有可能的选项，不要急于排除</div>
+    </div>
+
+    <!-- 决策类型 -->
+    <div class="form-card">
+      <div class="form-label">
+        这是什么类型的决策？
+      </div>
+      <div class="option-grid">
+        <div class="option-card selected">职业发展</div>
+        <div class="option-card">财务投资</div>
+        <div class="option-card">人际关系</div>
+        <div class="option-card">健康生活</div>
+        <div class="option-card">学习成长</div>
+        <div class="option-card">其他</div>
+      </div>
+    </div>
+
+    <!-- 期望结果 -->
+    <div class="form-card">
+      <div class="form-label">
+        你希望达到什么结果？
+      </div>
+      <textarea class="form-input form-textarea" placeholder="描述你理想中的结果是什么样的"></textarea>
+      <div class="form-hint">明确期望，更容易判断决策是否成功</div>
+    </div>
+  </div>
+
+  <!-- 底部按钮栏 -->
+  <div class="bottom-bar">
+    <button class="btn-secondary">上一步</button>
+    <button class="btn-primary">下一步</button>
+  </div>
+
+  <script>
+    // 选项卡片点击交互
+    document.querySelectorAll('.option-card').forEach(card => {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+  </script>
+</body>
+</html>

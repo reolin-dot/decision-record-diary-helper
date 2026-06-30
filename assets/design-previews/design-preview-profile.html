@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>决策成长日记 - 个人中心设计稿</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+      background: #f5f5f5;
+      color: #222222;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* ====== 顶部用户信息区 ====== */
+    .profile-header {
+      background: linear-gradient(135deg, #4A7C59 0%, #3A6247 100%);
+      padding: 32px 16px 24px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 12px;
+      border: 3px solid rgba(255,255,255,0.3);
+    }
+
+    .profile-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-bio {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    /* ====== 统计卡片 ====== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: #e8e8e8;
+      margin: -12px 16px 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+
+    .stat-card {
+      background: #fff;
+      padding: 16px 8px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 24px;
+      font-weight: 700;
+      color: #4A7C59;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    /* ====== 成就徽章 ====== */
+    .achievement-section {
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #222;
+    }
+
+    .achievement-list {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .achievement-badge {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      border: 2px solid #e8e8e8;
+    }
+
+    .achievement-badge.earned {
+      background: #e8f0e8;
+      border-color: #4A7C59;
+    }
+
+    /* ====== 设置列表 ====== */
+    .settings-list {
+      padding: 0 16px;
+    }
+
+    .settings-group {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .settings-item {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f5f5f5;
+      transition: background 0.2s;
+    }
+
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+
+    .settings-item:active {
+      background: #f9f9f9;
+    }
+
+    .settings-icon {
+      font-size: 20px;
+      width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .settings-label {
+      flex: 1;
+      font-size: 14px;
+      color: #222;
+    }
+
+    .settings-value {
+      font-size: 13px;
+      color: #888;
+      margin-right: 4px;
+    }
+
+    .settings-arrow {
+      color: #ccc;
+      font-size: 16px;
+    }
+
+    /* ====== 退出按钮 ====== */
+    .logout-btn {
+      margin: 16px;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      color: #C0392B;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      display: block;
+      width: calc(100% - 32px);
+    }
+
+    /* ====== 版本号 ====== */
+    .version {
+      text-align: center;
+      font-size: 12px;
+      color: #b0b0b0;
+      padding: 16px;
+    }
+
+    /* ====== 装饰元素 ====== */
+    .garden-decoration {
+      position: absolute;
+      top: -50px;
+      right: -30px;
+      font-size: 120px;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部用户信息区 -->
+  <div class="profile-header">
+    <div class="profile-avatar">🌻</div>
+    <div class="profile-name">决策园丁</div>
+    <div class="profile-bio">已记录 10 个决策 · 连续 7 天</div>
+  </div>
+
+  <!-- 统计卡片 -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-num">10</span>
+      <span class="stat-label">总决策</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">7</span>
+      <span class="stat-label">连续天数</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">3</span>
+      <span class="stat-label">收获</span>
+    </div>
+  </div>
+
+  <!-- 成就徽章 -->
+  <div class="achievement-section">
+    <div class="section-title">成就徽章</div>
+    <div class="achievement-list">
+      <div class="achievement-badge earned">🌱</div>
+      <div class="achievement-badge earned">🌿</div>
+      <div class="achievement-badge earned">🌸</div>
+      <div class="achievement-badge">🏆</div>
+      <div class="achievement-badge">💎</div>
+      <div class="achievement-badge">🔥</div>
+    </div>
+  </div>
+
+  <!-- 设置列表 -->
+  <div class="settings-list">
+    <div class="settings-group">
+      <div class="settings-item">
+        <span class="settings-icon">📊</span>
+        <span class="settings-label">成长报告</span>
+        <span class="settings-value">查看</span>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item">
+        <span class="settings-icon">🔔</span>
+        <span class="settings-label">提醒设置</span>
+        <span class="settings-value">每天 20:00</span>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item">
+        <span class="settings-icon">🎨</span>
+        <span class="settings-label">主题设置</span>
+        <span class="settings-value">默认</span>
+        <span class="settings-arrow">›</span>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-item">
+        <span class="settings-icon">📖</span>
+        <span class="settings-label">使用指南</span>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item">
+        <span class="settings-icon">💬</span>
+        <span class="settings-label">意见反馈</span>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item">
+        <span class="settings-icon">ℹ️</span>
+        <span class="settings-label">关于我们</span>
+        <span class="settings-value">v1.0.0</span>
+        <span class="settings-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 退出按钮 -->
+  <button class="logout-btn">退出登录</button>
+
+  <!-- 版本号 -->
+  <div class="version">决策成长日记 v1.0.0</div>
+
+  <script>
+    // 设置项点击
+    document.querySelectorAll('.settings-item').forEach(item => {
+      item.addEventListener('click', function() {
+        const label = this.querySelector('.settings-label').textContent;
+        console.log('点击设置项:', label);
+      });
+    });
+  </script>
+</body>
+</html>
