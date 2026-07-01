@@ -16,11 +16,12 @@ const EXPORT_OPTIONS = [
 
 const DEEPSEEK_CHAT_URL = 'https://chat.deepseek.com/'
 
-function buildFullExport(decisions) {
+function buildFullExport(decisions, decisionStyle) {
   return {
     exportDate: new Date().toISOString(),
     exportType: 'full',
     totalDecisions: decisions.length,
+    decisionStyle: decisionStyle || null,
     decisions: decisions.map(d => ({
       id: d.id,
       title: d.title,
@@ -42,7 +43,7 @@ function buildFullExport(decisions) {
   }
 }
 
-function buildLessonsExport(decisions) {
+function buildLessonsExport(decisions, decisionStyle) {
   const lessons = []
   decisions.forEach(d => {
     if (d.wateringHistory && d.wateringHistory.length > 0) {
@@ -56,12 +57,13 @@ function buildLessonsExport(decisions) {
   return {
     exportDate: new Date().toISOString(),
     exportType: 'lessons',
+    decisionStyle: decisionStyle || null,
     totalLessons: lessons.length,
     lessons,
   }
 }
 
-function buildStatsExport(decisions) {
+function buildStatsExport(decisions, decisionStyle) {
   const stageCounts = { seed: 0, sprout: 0, leaf: 0, first_bloom: 0, full_bloom: 0 }
   const categoryCounts = {}
   let reviewedCount = 0
@@ -77,6 +79,7 @@ function buildStatsExport(decisions) {
   return {
     exportDate: new Date().toISOString(),
     exportType: 'stats',
+    decisionStyle: decisionStyle || null,
     totalDecisions: decisions.length,
     reviewRate: decisions.length > 0 ? Math.round(reviewedCount / decisions.length * 100) + '%' : '0%',
     stageCounts,
@@ -134,14 +137,14 @@ export default function DataExport() {
 
     let data
     if (selected === 'all') {
-      data = buildFullExport(decisions)
+      data = buildFullExport(decisions, decisionStyle)
     } else if (selected === 'reviewed') {
       const reviewed = decisions.filter(d => d.firstReviewDone || d.resultReviewDone)
-      data = buildFullExport(reviewed)
+      data = buildFullExport(reviewed, decisionStyle)
     } else if (selected === 'lessons') {
-      data = buildLessonsExport(decisions)
+      data = buildLessonsExport(decisions, decisionStyle)
     } else {
-      data = buildStatsExport(decisions)
+      data = buildStatsExport(decisions, decisionStyle)
     }
 
     setTimeout(() => {
@@ -211,7 +214,7 @@ export default function DataExport() {
       try {
         const payload = JSON.parse(reader.result)
         const decisionsPayload = Array.isArray(payload.decisions)
-          ? { decisions: payload.decisions }
+          ? { ...payload, decisions: payload.decisions }
           : payload
         const ok = storage.importAll(decisionsPayload, 'merge')
         if (!ok) {
