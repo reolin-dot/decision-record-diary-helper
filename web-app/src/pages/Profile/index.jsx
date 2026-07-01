@@ -6,7 +6,7 @@ import './profile.css'
 const SETTINGS = [
   { icon: '💧', label: '提醒中心', action: 'watering' },
   { icon: '💡', label: '成长片段', action: 'growthSnippets' },
-  { icon: '📤', label: '数据导出', action: 'dataExport' },
+  { icon: '🤖', label: '数据导出与 AI 分析', action: 'dataExport' },
   { icon: '📝', label: '重新测试决策风格', action: 'styleTest' },
   { icon: '📊', label: '决策记录', action: 'decisionList' },
   { icon: '⚙️', label: '通用设置', action: 'general' },

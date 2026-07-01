@@ -4,6 +4,7 @@ import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import storage from '../../storage/LocalStorageAdapter.js'
+import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
 import './export.css'
 
 const EXPORT_OPTIONS = [
@@ -12,6 +13,8 @@ const EXPORT_OPTIONS = [
   { key: 'lessons', label: '成长片段合集', desc: '导出所有复盘中的经验总结', icon: '💡' },
   { key: 'stats', label: '统计摘要', desc: '导出决策统计数据', icon: '📊' },
 ]
+
+const DEEPSEEK_CHAT_URL = 'https://chat.deepseek.com/'
 
 function buildFullExport(decisions) {
   return {
@@ -93,14 +96,37 @@ function downloadJSON(data, filename) {
   URL.revokeObjectURL(url)
 }
 
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch (err) {
+      console.warn('[DataExport] navigator clipboard failed, using fallback:', err)
+    }
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', '')
+  textarea.style.position = 'fixed'
+  textarea.style.left = '-9999px'
+  document.body.appendChild(textarea)
+  textarea.select()
+  const ok = document.execCommand('copy')
+  document.body.removeChild(textarea)
+  return ok
+}
+
 export default function DataExport() {
   const navigate = useNavigate()
-  const { decisions, reloadFromStorage } = useApp()
+  const { decisions, decisionStyle, reloadFromStorage } = useApp()
   const toast = useToast()
   const modal = useModal()
   const [selected, setSelected] = useState('all')
   const [exporting, setExporting] = useState(false)
   const [importing, setImporting] = useState(false)
+  const [openingDeepSeek, setOpeningDeepSeek] = useState(false)
   const [result, setResult] = useState(null)
 
   const handleExport = () => {
@@ -143,6 +169,23 @@ export default function DataExport() {
       }).catch(() => {
         toast.show('复制失败')
       })
+    }
+  }
+
+  const handleOpenDeepSeek = async () => {
+    setOpeningDeepSeek(true)
+    window.open(DEEPSEEK_CHAT_URL, '_blank', 'noopener,noreferrer')
+
+    try {
+      const payload = buildDeepSeekPayload({ decisions, decisionStyle })
+      const prompt = buildDeepSeekPrompt(payload)
+      await copyText(prompt)
+      toast.show('已复制分析包，打开 DeepSeek 后直接粘贴发送')
+    } catch (err) {
+      console.error('[DataExport] DeepSeek package failed:', err)
+      toast.show('复制失败，请检查浏览器剪贴板权限')
+    } finally {
+      setOpeningDeepSeek(false)
     }
   }
 
@@ -224,6 +267,25 @@ export default function DataExport() {
         >
           {exporting ? '导出中...' : '开始导出'}
         </button>
+      </div>
+
+      <div className="deepseek-section">
+        <span className="export-section-title">DeepSeek 分析</span>
+        <div className="deepseek-card">
+          <div className="deepseek-copy">
+            <span className="deepseek-title">一键生成 AI 可读分析包</span>
+            <span className="deepseek-desc">
+              会把决策性格测试、本地决策和复盘整理成结构化提示词，复制后打开 DeepSeek。
+            </span>
+          </div>
+          <button
+            className={`deepseek-btn ${openingDeepSeek ? 'loading' : ''}`}
+            onClick={handleOpenDeepSeek}
+            disabled={openingDeepSeek}
+          >
+            {openingDeepSeek ? '准备中...' : '复制并打开'}
+          </button>
+        </div>
       </div>
 
       {result && (
