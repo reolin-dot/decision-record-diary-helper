@@ -428,7 +428,7 @@ export default function Review() {
             <div className="followup-header">
               <span className="followup-title">浇水已记录</span>
               <span className="followup-sub">
-                结果还没完全明朗的话，可以继续跟进；已经清楚了，就让它盛开。
+                {reviewPrompts.followUpHint}
               </span>
             </div>
             <div className="followup-options">

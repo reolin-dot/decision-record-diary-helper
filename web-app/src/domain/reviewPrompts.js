@@ -29,6 +29,9 @@ function sourcePrompts(decision = {}, reviewType) {
       lessonLabel: '下次情绪很强时，你想先做什么？',
       lessonHint: '写一个能帮你降噪的小动作。',
       lessonPlaceholder: '例如：先等一晚 / 找人复述事实 / 写下最坏情况...',
+      followUpHint: isResult
+        ? '如果情绪和事实都清楚了，可以完成；如果还在波动，就留一次跟进。'
+        : '情绪还没降下来时，留一次跟进比急着下结论更稳。',
     }
   }
 
@@ -44,6 +47,9 @@ function sourcePrompts(decision = {}, reviewType) {
       lessonLabel: '下一步还能再小一点吗？',
       lessonHint: '把下一步写到今天或明天能开始的程度。',
       lessonPlaceholder: '例如：只打开文档 / 只发一条消息 / 只查一个信息...',
+      followUpHint: isResult
+        ? '如果小行动已经带来结果，可以完成；如果只是刚启动，就继续跟一次。'
+        : '只要最小行动还没稳定发生，就值得再跟进一次。',
     }
   }
 
@@ -59,6 +65,9 @@ function sourcePrompts(decision = {}, reviewType) {
       lessonLabel: '下次还需要验证什么？',
       lessonHint: '别列太多，优先写一个最关键问题。',
       lessonPlaceholder: '例如：先问清楚成本 / 先试一次 / 先看真实反馈...',
+      followUpHint: isResult
+        ? '如果关键未知项已经验证，可以完成；如果还有一个最影响判断的信息，就继续跟进。'
+        : '信息还不够清楚时，只留一个最关键验证点继续跟。',
     }
   }
 
@@ -74,6 +83,9 @@ function sourcePrompts(decision = {}, reviewType) {
       lessonLabel: '下次做类似选择，要保留或调整哪个判断标准？',
       lessonHint: '写一条能复用的选择标准。',
       lessonPlaceholder: '例如：我会更早确认... / 我不会只看...',
+      followUpHint: isResult
+        ? '如果选择的代价和收益都看清了，可以完成；如果仍在摇摆，就再观察一次。'
+        : '选项差异还没清楚时，继续跟一次比重新纠结更有用。',
     }
   }
 
@@ -89,6 +101,7 @@ function sourcePrompts(decision = {}, reviewType) {
       lessonLabel: '这句话下次可以怎么用？',
       lessonHint: '把经验改写成一个具体提醒。',
       lessonPlaceholder: '例如：下次我会先...',
+      followUpHint: '如果这条经验已经能指导下次行动，可以完成；如果还只是感受，就再沉淀一次。',
     }
   }
 
@@ -129,6 +142,9 @@ export function buildReviewPrompts({ decision = {}, decisionStyle = null, review
       : (isResult ? '结果更明朗了，把经验收回来。' : '记录现在看到的新事实。'),
     sourceLabel: source.sourceLabel || '',
     styleReminder: reminder,
+    followUpHint: source.followUpHint || (isResult
+      ? '结果还没完全明朗的话，可以继续跟进；已经清楚了，就让它盛开。'
+      : '如果还需要观察，就留一次跟进；如果已经看清下一步，可以直接完成。'),
     statusLabel: isResult ? '最终结果现在更接近哪种状态？' : '现在这件事推进到哪里了？',
     statusOptions: source.statusOptions || defaultStatusOptions(reviewType),
     reflectionLabel: source.reflectionLabel || (isResult ? '实际发生的事实是什么？' : '你现在看见了什么新信息或阻力？'),
