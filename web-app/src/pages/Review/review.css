@@ -81,6 +81,31 @@
   box-shadow: var(--shadow-card);
 }
 
+.review-source-guidance {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: #fff8ec;
+  border: 1px solid #f4dfbd;
+  border-left: 3px solid #d99a42;
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+}
+
+.review-source-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #9a6a2f;
+}
+
+.review-source-text {
+  font-size: 13px;
+  color: #7a5a35;
+  line-height: 1.55;
+}
+
 .review-style-label {
   font-size: 12px;
   font-weight: 700;

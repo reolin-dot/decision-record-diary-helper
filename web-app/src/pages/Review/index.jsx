@@ -4,6 +4,7 @@ import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
 import { getStageMeta, DECISION_STAGES } from '../../domain/decisionStages.js'
 import { getReviewStyleGuidance } from '../../domain/decisionStyleGuidance.js'
+import { buildReviewPrompts } from '../../domain/reviewPrompts.js'
 import { formatDate, addDays } from '../../utils/util.js'
 import './review.css'
 
@@ -269,6 +270,7 @@ export default function Review() {
 
   const reviewTypeName = reviewType === 'result' ? '结果复盘' : '当下复盘'
   const styleGuidance = getReviewStyleGuidance(decisionStyle)
+  const reviewPrompts = buildReviewPrompts({ decision, decisionStyle, reviewType })
 
   return (
     <div className="page-container">
@@ -341,18 +343,23 @@ export default function Review() {
         {canReview && (
           <div className="review-type-indicator">
             <span className="review-type-tag">{reviewTypeName}</span>
-            {reviewType === 'current' ? (
-              <span className="review-type-hint">记录当下看到的信息，为后续复盘积累素材</span>
-            ) : (
-              <span className="review-type-hint">结果逐渐明朗了，沉淀这次的经验</span>
-            )}
+            <span className="review-type-hint">{reviewPrompts.intro}</span>
+          </div>
+        )}
+
+        {canReview && reviewPrompts.sourceLabel && (
+          <div className="review-source-guidance">
+            <span className="review-source-label">{reviewPrompts.sourceLabel}</span>
+            <span className="review-source-text">
+              这次复盘会顺着当时的分析方式追问，不需要重新从头想。
+            </span>
           </div>
         )}
 
         {canReview && styleGuidance && (
           <div className="review-style-guidance">
             <span className="review-style-label">{styleGuidance.label}</span>
-            <span className="review-style-text">{styleGuidance.text}</span>
+            <span className="review-style-text">{reviewPrompts.styleReminder || styleGuidance.text}</span>
           </div>
         )}
 
@@ -360,7 +367,7 @@ export default function Review() {
         {canReview && (
           <div className="review-question">
             <span className="review-q-label">
-              1. {reviewType === 'result' ? '最终结果现在更接近哪种状态？' : '现在这件事推进到哪里了？'}
+              1. {reviewPrompts.statusLabel}
               <span className="required"> *必答</span>
             </span>
             <div className="review-options">
@@ -381,20 +388,12 @@ export default function Review() {
         {canReview && (
           <div className="review-question">
             <span className="review-q-label">
-              2. {reviewType === 'current' ? '你现在看见了什么新信息或阻力？' : '实际发生的事实是什么？'}
+              2. {reviewPrompts.reflectionLabel}
             </span>
-            <span className="review-q-hint">
-              {reviewType === 'current'
-                ? '可以写事实，也可以写感受，不需要判定好坏。'
-                : '先写事实，不急着评价自己。'}
-            </span>
+            <span className="review-q-hint">{reviewPrompts.reflectionHint}</span>
             <textarea
               className="form-input form-textarea"
-              placeholder={
-                reviewType === 'current'
-                  ? '写下目前看到的变化...'
-                  : '写下实际发生了什么...'
-              }
+              placeholder={reviewPrompts.reflectionPlaceholder}
               maxLength={200}
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
@@ -406,20 +405,12 @@ export default function Review() {
         {canReview && (
           <div className="review-question">
             <span className="review-q-label">
-              3. {reviewType === 'current' ? '下一步可以做一个什么小动作？' : '当初的判断哪些被验证了？下次会保留或调整什么？'}
+              3. {reviewPrompts.lessonLabel}
             </span>
-            <span className="review-q-hint">
-              {reviewType === 'current'
-                ? '小到今天或明天可以开始就好。'
-                : '这次经验可以带走什么？'}
-            </span>
+            <span className="review-q-hint">{reviewPrompts.lessonHint}</span>
             <textarea
               className="form-input form-textarea"
-              placeholder={
-                reviewType === 'current'
-                  ? '写下可以带走的一点新信息...'
-                  : '写下可以保留或调整的做法...'
-              }
+              placeholder={reviewPrompts.lessonPlaceholder}
               maxLength={200}
               value={lesson}
               onChange={(e) => setLesson(e.target.value)}
