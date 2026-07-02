@@ -3,6 +3,7 @@ import storage from '../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS } from '../storage/storageKeys.js'
 import { runMigrations } from '../domain/migrations.js'
 import { buildStats } from '../domain/stats.js'
+import { buildAiInsight, getLatestAiInsights } from '../domain/aiInsights.js'
 import * as decisionModel from '../domain/decisionModel.js'
 
 const AppContext = createContext(null)
@@ -24,6 +25,8 @@ function appReducer(state, action) {
       return { ...state, decisions: action.payload }
     case 'UPDATE_STYLE':
       return { ...state, decisionStyle: action.payload, hasStyleTest: true }
+    case 'UPDATE_AI_INSIGHTS':
+      return { ...state, aiInsights: action.payload }
     case 'SET_STYLE_SKIPPED':
       return { ...state, hasStyleTest: true, styleTestSkipped: true }
     case 'UPDATE_STATS':
@@ -41,6 +44,7 @@ function loadStoredState() {
   const hasLaunched = storage.get(STORAGE_KEYS.HAS_LAUNCHED, false)
   const decisions = decisionModel.getActiveDecisions()
   const decisionStyle = decisionModel.loadDecisionStyle()
+  const aiInsights = getLatestAiInsights(storage.get(STORAGE_KEYS.AI_INSIGHTS, []))
   const styleSkipped = storage.get(STORAGE_KEYS.STYLE_TEST_SKIPPED, false)
   const stats = buildStats(decisions)
 
@@ -49,6 +53,7 @@ function loadStoredState() {
     isNewUser: !hasLaunched,
     decisions,
     decisionStyle,
+    aiInsights,
     hasStyleTest: !!(decisionStyle || styleSkipped),
     styleTestSkipped: !!styleSkipped,
     stats,
@@ -61,6 +66,7 @@ export function AppProvider({ children }) {
     isNewUser: false,
     decisions: [],
     decisionStyle: null,
+    aiInsights: [],
     hasStyleTest: false,
     styleTestSkipped: false,
     userInfo: { name: '决策者', avatar: '' },
@@ -115,6 +121,19 @@ export function AppProvider({ children }) {
     dispatch({ type: 'SET_STYLE_SKIPPED' })
   }, [])
 
+  const saveAiInsight = useCallback((input) => {
+    const insight = buildAiInsight(input)
+    if (!insight.content) return false
+
+    const existing = storage.get(STORAGE_KEYS.AI_INSIGHTS, [])
+    const next = getLatestAiInsights([insight, ...existing])
+    const ok = storage.set(STORAGE_KEYS.AI_INSIGHTS, next)
+    if (ok) {
+      dispatch({ type: 'UPDATE_AI_INSIGHTS', payload: next })
+    }
+    return ok
+  }, [])
+
   // Refresh stats from current decisions
   const refreshStats = useCallback(() => {
     const decisions = decisionModel.getActiveDecisions()
@@ -133,6 +152,7 @@ export function AppProvider({ children }) {
     saveDecision,
     createDecision,
     saveDecisionStyle,
+    saveAiInsight,
     skipStyleTest,
     refreshStats,
     reloadFromStorage,

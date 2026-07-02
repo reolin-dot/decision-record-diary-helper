@@ -167,6 +167,124 @@
   pointer-events: none;
 }
 
+.insight-save-card {
+  margin-top: 10px;
+  padding: 14px 12px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insight-save-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.insight-title-input,
+.insight-content-input {
+  width: 100%;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fbfbfb;
+  color: #222222;
+  font-size: 14px;
+  line-height: 1.5;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.insight-title-input {
+  height: 42px;
+  padding: 0 12px;
+}
+
+.insight-content-input {
+  min-height: 132px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+.insight-title-input:focus,
+.insight-content-input:focus {
+  border-color: rgba(74, 124, 89, 0.55);
+  background: #ffffff;
+}
+
+.insight-save-btn {
+  height: 42px;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-accent);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.insight-save-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.insight-list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insight-list-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #666666;
+}
+
+.insight-item {
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+}
+
+.insight-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.insight-item-title {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.insight-item-date {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #999999;
+}
+
+.insight-item-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #777777;
+  white-space: pre-wrap;
+}
+
 .import-section {
   margin-top: 20px;
 }

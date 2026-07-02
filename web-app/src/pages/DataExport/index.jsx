@@ -16,12 +16,13 @@ const EXPORT_OPTIONS = [
 
 const DEEPSEEK_CHAT_URL = 'https://chat.deepseek.com/'
 
-function buildFullExport(decisions, decisionStyle) {
+function buildFullExport(decisions, decisionStyle, aiInsights = []) {
   return {
     exportDate: new Date().toISOString(),
     exportType: 'full',
     totalDecisions: decisions.length,
     decisionStyle: decisionStyle || null,
+    aiInsights,
     decisions: decisions.map(d => ({
       id: d.id,
       title: d.title,
@@ -123,7 +124,7 @@ async function copyText(text) {
 
 export default function DataExport() {
   const navigate = useNavigate()
-  const { decisions, decisionStyle, reloadFromStorage } = useApp()
+  const { decisions, decisionStyle, aiInsights, saveAiInsight, reloadFromStorage } = useApp()
   const toast = useToast()
   const modal = useModal()
   const [selected, setSelected] = useState('all')
@@ -131,16 +132,18 @@ export default function DataExport() {
   const [importing, setImporting] = useState(false)
   const [openingDeepSeek, setOpeningDeepSeek] = useState(false)
   const [result, setResult] = useState(null)
+  const [insightTitle, setInsightTitle] = useState('')
+  const [insightContent, setInsightContent] = useState('')
 
   const handleExport = () => {
     setExporting(true)
 
     let data
     if (selected === 'all') {
-      data = buildFullExport(decisions, decisionStyle)
+      data = buildFullExport(decisions, decisionStyle, aiInsights)
     } else if (selected === 'reviewed') {
       const reviewed = decisions.filter(d => d.firstReviewDone || d.resultReviewDone)
-      data = buildFullExport(reviewed, decisionStyle)
+      data = buildFullExport(reviewed, decisionStyle, aiInsights)
     } else if (selected === 'lessons') {
       data = buildLessonsExport(decisions, decisionStyle)
     } else {
@@ -190,6 +193,28 @@ export default function DataExport() {
     } finally {
       setOpeningDeepSeek(false)
     }
+  }
+
+  const handleSaveInsight = () => {
+    if (!insightContent.trim()) {
+      toast.show('先粘贴 DeepSeek 的分析结果')
+      return
+    }
+
+    const ok = saveAiInsight({
+      title: insightTitle,
+      content: insightContent,
+      source: 'deepseek',
+    })
+
+    if (!ok) {
+      toast.show('保存失败，请稍后重试')
+      return
+    }
+
+    setInsightTitle('')
+    setInsightContent('')
+    toast.show('已保存为成长洞察', { type: 'success' })
   }
 
   const handleImportFile = async (e) => {
@@ -289,6 +314,42 @@ export default function DataExport() {
             {openingDeepSeek ? '准备中...' : '复制并打开'}
           </button>
         </div>
+
+        <div className="insight-save-card">
+          <span className="insight-save-title">保存 AI 返回的成长洞察</span>
+          <input
+            className="insight-title-input"
+            placeholder="标题，可不填"
+            value={insightTitle}
+            onChange={(e) => setInsightTitle(e.target.value)}
+            maxLength={40}
+          />
+          <textarea
+            className="insight-content-input"
+            placeholder="从 DeepSeek 复制分析结果，粘贴到这里保存"
+            value={insightContent}
+            onChange={(e) => setInsightContent(e.target.value)}
+            maxLength={4000}
+          />
+          <button className="insight-save-btn" onClick={handleSaveInsight}>
+            保存洞察
+          </button>
+        </div>
+
+        {aiInsights.length > 0 && (
+          <div className="insight-list">
+            <span className="insight-list-title">已保存的成长洞察</span>
+            {aiInsights.slice(0, 3).map(item => (
+              <div key={item.id} className="insight-item">
+                <div className="insight-item-head">
+                  <span className="insight-item-title">{item.title}</span>
+                  <span className="insight-item-date">{(item.createdAt || '').slice(0, 10)}</span>
+                </div>
+                <span className="insight-item-content">{item.content}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {result && (

@@ -5,6 +5,7 @@ export const STORAGE_KEYS = {
   HAS_LAUNCHED: 'hasLaunched',
   DECISIONS: 'decisions',
   DECISION_STYLE: 'decisionStyle',
+  AI_INSIGHTS: 'aiInsights',
   STYLE_TEST_SKIPPED: 'styleTestSkipped',
   USER_PROFILE: 'userProfile',
   SYNC_CONFIG: 'syncConfig',
