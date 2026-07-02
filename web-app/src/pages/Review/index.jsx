@@ -120,7 +120,9 @@ export default function Review() {
       date: formatDate(new Date()),
       rating: resultRating,
       reflection,
+      reflectionLabel: reviewPrompts.reflectionLabel,
       lesson,
+      lessonLabel: reviewPrompts.lessonLabel,
       summary: buildReviewSummary(decision.firstReviewDone ? 'result' : 'current', resultRating, lesson),
       type: decision.firstReviewDone ? 'result' : 'current',
     }
@@ -307,13 +309,13 @@ export default function Review() {
                 </span>
                 {item.reflection && (
                   <div className="history-section">
-                    <span className="history-label">实际结果与期望的差异</span>
+                    <span className="history-label">{item.reflectionLabel || '实际结果与期望的差异'}</span>
                     <span className="history-text">{item.reflection}</span>
                   </div>
                 )}
                 {item.lesson && (
                   <div className="history-section">
-                    <span className="history-label">收获与下次做法</span>
+                    <span className="history-label">{item.lessonLabel || '收获与下次做法'}</span>
                     <span className="history-text">{item.lesson}</span>
                   </div>
                 )}
