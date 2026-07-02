@@ -13,10 +13,14 @@ function styleText(style) {
 
 function sourcePrompts(decision = {}, reviewType) {
   const kitId = decision.coachSource?.kitId
+  const isResult = reviewType === 'result'
 
   if (kitId === 'emotion') {
     return {
       sourceLabel: '来自情绪降噪锦囊',
+      statusOptions: isResult
+        ? ['事实更清楚了', '情绪影响变小了', '仍然有波动', '和预期不同', '需要调整']
+        : ['情绪降下来了', '事实更清楚了', '仍然很纠结', '需要暂停', '可以推进一点'],
       reflectionLabel: reviewType === 'result'
         ? '现在回看，哪些是事实，哪些是当时的情绪？'
         : '现在情绪和事实的关系变清楚了吗？',
@@ -31,6 +35,9 @@ function sourcePrompts(decision = {}, reviewType) {
   if (kitId === 'action') {
     return {
       sourceLabel: '来自行动启动锦囊',
+      statusOptions: isResult
+        ? ['小行动带来结果', '方向基本正确', '还没看到结果', '阻力比预期大', '需要换做法']
+        : ['最小行动已发生', '开始了一点', '还没开始', '遇到阻力', '需要再小一点'],
       reflectionLabel: '那个最小行动发生了吗？',
       reflectionHint: '发生了就写反馈，没发生就写真正卡住的地方。',
       reflectionPlaceholder: '例如：做了 5 分钟，发现... / 还没做，因为...',
@@ -43,6 +50,9 @@ function sourcePrompts(decision = {}, reviewType) {
   if (kitId === 'info') {
     return {
       sourceLabel: '来自信息验证锦囊',
+      statusOptions: isResult
+        ? ['关键未知项已验证', '信息支持原判断', '信息推翻原判断', '仍不确定', '需要继续验证']
+        : ['已验证一个信息', '找到新线索', '仍缺关键信息', '信息太杂', '需要低成本试错'],
       reflectionLabel: '关键未知项现在更清楚了吗？',
       reflectionHint: '只写真正影响判断的信息。',
       reflectionPlaceholder: '例如：我确认了... 还有... 不确定',
@@ -55,6 +65,9 @@ function sourcePrompts(decision = {}, reviewType) {
   if (kitId === 'choice') {
     return {
       sourceLabel: '来自纠结选择锦囊',
+      statusOptions: isResult
+        ? ['选择基本符合预期', '比预期更好', '代价比预期大', '还不确定', '下次要调标准']
+        : ['更倾向原选择', '发现新标准', '选项差异变清楚', '仍然摇摆', '需要再观察'],
       reflectionLabel: '当时比较的选项，现在哪个事实更清楚了？',
       reflectionHint: '回看选项，而不是重新责备自己。',
       reflectionPlaceholder: '例如：A 的稳定性确实... B 的成长空间其实...',
@@ -67,6 +80,9 @@ function sourcePrompts(decision = {}, reviewType) {
   if (kitId === 'review') {
     return {
       sourceLabel: '来自复盘提炼锦囊',
+      statusOptions: isResult
+        ? ['经验仍然成立', '经验需要修正', '发现新证据', '还不确定', '可以复用']
+        : ['经验更清楚了', '需要补充事实', '发现新角度', '暂时不确定', '可以带走一句话'],
       reflectionLabel: '这次经验现在还成立吗？',
       reflectionHint: '看看当时提炼的经验有没有被新事实修正。',
       reflectionPlaceholder: '例如：这条经验仍然成立，因为...',
@@ -94,6 +110,12 @@ function styleReminder(style) {
   return cleanText(style?.reviewSuggestion)
 }
 
+function defaultStatusOptions(reviewType) {
+  return reviewType === 'result'
+    ? ['比预期更好', '基本符合预期', '还不确定', '和预期不同', '需要调整']
+    : ['刚开始推进', '有了新信息', '遇到阻力', '方向需要微调', '暂时暂停']
+}
+
 export function buildReviewPrompts({ decision = {}, decisionStyle = null, reviewType = 'current' } = {}) {
   const source = sourcePrompts(decision, reviewType) || {}
   const isResult = reviewType === 'result'
@@ -108,6 +130,7 @@ export function buildReviewPrompts({ decision = {}, decisionStyle = null, review
     sourceLabel: source.sourceLabel || '',
     styleReminder: reminder,
     statusLabel: isResult ? '最终结果现在更接近哪种状态？' : '现在这件事推进到哪里了？',
+    statusOptions: source.statusOptions || defaultStatusOptions(reviewType),
     reflectionLabel: source.reflectionLabel || (isResult ? '实际发生的事实是什么？' : '你现在看见了什么新信息或阻力？'),
     reflectionHint: source.reflectionHint || (isResult ? '先写事实，不急着评价自己。' : '可以写事实，也可以写感受，不需要判定好坏。'),
     reflectionPlaceholder: source.reflectionPlaceholder || (isResult ? '写下实际发生了什么...' : '写下目前看到的变化...'),

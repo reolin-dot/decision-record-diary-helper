@@ -8,9 +8,6 @@ import { buildReviewPrompts } from '../../domain/reviewPrompts.js'
 import { formatDate, addDays } from '../../utils/util.js'
 import './review.css'
 
-const CURRENT_OPTIONS = ['刚开始推进', '有了新信息', '遇到阻力', '方向需要微调', '暂时暂停']
-const RESULT_OPTIONS = ['比预期更好', '基本符合预期', '还不确定', '和预期不同', '需要调整']
-
 const FOLLOW_UP_OPTIONS = [
   { key: 'done', label: '完成了，不再提醒' },
   { key: '1', label: '再进行 1 次跟进复盘' },
@@ -44,10 +41,6 @@ export default function Review() {
   const pendingResultRef = useRef(null)
   // Ref to prevent re-showing form after a successful review (before navigate)
   const justReviewedRef = useRef(false)
-
-  function getReviewOptions() {
-    return reviewType === 'result' ? RESULT_OPTIONS : CURRENT_OPTIONS
-  }
 
   function buildReviewSummary(type, rating, lessonText) {
     if (type === 'result') {
@@ -371,7 +364,7 @@ export default function Review() {
               <span className="required"> *必答</span>
             </span>
             <div className="review-options">
-              {getReviewOptions().map((item) => (
+              {reviewPrompts.statusOptions.map((item) => (
                 <div
                   key={item}
                   className={`review-option ${resultRating === item ? 'selected' : ''}`}
