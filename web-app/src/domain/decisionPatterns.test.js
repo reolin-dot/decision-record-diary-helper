@@ -9,6 +9,17 @@ test('returns no cards before decisions exist', () => {
   assert.equal(patterns.overview, '还没有足够记录形成模式')
 })
 
+test('marks low-data patterns as early observations', () => {
+  const patterns = buildDecisionPatterns({
+    decisions: [
+      { id: '1', title: '要不要换岗位', category: 'career', createdAt: '2026-07-02' },
+    ],
+  })
+
+  assert.equal(patterns.heading, '初步观察')
+  assert.match(patterns.patternCards[0].body, /观察线索/)
+})
+
 test('finds the most common recent decision label', () => {
   const patterns = buildDecisionPatterns({
     decisions: [
@@ -19,6 +30,7 @@ test('finds the most common recent decision label', () => {
   })
 
   assert.equal(patterns.patternCards[0].title, '职业选择')
+  assert.equal(patterns.heading, '决策模式')
   assert.match(patterns.patternCards[0].body, /2 条/)
   assert.equal(patterns.patternCards[0].actionPath, '/decision/1')
 })

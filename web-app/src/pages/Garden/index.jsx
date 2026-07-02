@@ -161,7 +161,7 @@ export default function Garden() {
           {decisionPatterns.patternCards.length > 0 && (
             <div className="pattern-panel">
               <div className="pattern-head">
-                <span className="pattern-kicker">决策模式</span>
+                <span className="pattern-kicker">{decisionPatterns.heading || '决策模式'}</span>
                 <span className="pattern-summary">{decisionPatterns.overview}</span>
               </div>
               <div className="pattern-card-list">

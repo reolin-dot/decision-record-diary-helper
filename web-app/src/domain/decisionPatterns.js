@@ -84,6 +84,7 @@ export function buildDecisionPatterns({
 
   if (active.length === 0) {
     return {
+      heading: '决策模式',
       overview: '还没有足够记录形成模式',
       patternCards: [],
       riskSignals: [],
@@ -95,13 +96,16 @@ export function buildDecisionPatterns({
   const [topLabel, topLabelCount] = topCount(recent.map(decisionLabel))
   const latestInsight = aiInsights.find(item => item && !item._deleted)
   const focusDecision = recent.find(decision => decisionLabel(decision) === topLabel)
+  const isEarlySignal = active.length < 3
 
   const patternCards = [
     {
       id: 'focus',
       label: '最近常出现',
       title: topLabel,
-      body: `最近 ${recent.length} 条里有 ${topLabelCount} 条和它有关，先观察这类选择的共同触发点。`,
+      body: isEarlySignal
+        ? '记录还不多，先把这类选择当作一个观察线索。'
+        : `最近 ${recent.length} 条里有 ${topLabelCount} 条和它有关，先观察这类选择的共同触发点。`,
       evidence: focusDecision?.title || '',
       actionLabel: '看证据',
       actionPath: focusDecision?.id ? `/decision/${focusDecision.id}` : '/decision-list',
@@ -119,7 +123,10 @@ export function buildDecisionPatterns({
   ]
 
   return {
-    overview: `已从 ${active.length} 条决策里整理出 ${patternCards.length} 个观察点`,
+    heading: isEarlySignal ? '初步观察' : '决策模式',
+    overview: isEarlySignal
+      ? `先从 ${active.length} 条决策里看一点线索`
+      : `已从 ${active.length} 条决策里整理出 ${patternCards.length} 个观察点`,
     patternCards,
     riskSignals: [patternCards[1]],
     nextChecklist: [patternCards[2].body],
