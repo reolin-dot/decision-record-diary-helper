@@ -5,6 +5,9 @@ import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import { formatDate, generateId, getReviewDate } from '../../utils/util.js'
 import { DECISION_STAGES } from '../../domain/decisionStages.js'
+import { buildMoodValue, parseMoodValue, toggleMood } from '../../domain/moods.js'
+import { getRecordStyleGuidance } from '../../domain/decisionStyleGuidance.js'
+import { DECISION_TEMPLATES, getDecisionTemplate, shouldApplyStarterOptions } from '../../domain/decisionTemplates.js'
 import './record.css'
 
 const MOODS = ['焦虑', '纠结', '冲动', '平静', '其他']
@@ -18,7 +21,7 @@ export default function Record() {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
-  const { decisions, saveDecision, createDecision } = useApp()
+  const { decisions, decisionStyle, saveDecision } = useApp()
   const toast = useToast()
   const modal = useModal()
 
@@ -28,9 +31,11 @@ export default function Record() {
 
   const [step, setStep] = useState(initialStep)
   const [editingDraft, setEditingDraft] = useState(false)
+  const [selectedTemplateId, setSelectedTemplateId] = useState('')
   const [title, setTitle] = useState('')
   const [background, setBackground] = useState('')
-  const [selectedMood, setSelectedMood] = useState('')
+  const [selectedMoods, setSelectedMoods] = useState([])
+  const [customMood, setCustomMood] = useState('')
   const [options, setOptions] = useState(['', ''])
   const [selectedOption, setSelectedOption] = useState(-1)
   const [choiceReason, setChoiceReason] = useState('')
@@ -40,6 +45,8 @@ export default function Record() {
   const [saving, setSaving] = useState(false)
 
   const today = formatDate(new Date())
+  const styleGuidance = getRecordStyleGuidance(decisionStyle)
+  const selectedTemplate = getDecisionTemplate(selectedTemplateId)
 
   // Load draft if draftId provided
   useEffect(() => {
@@ -52,9 +59,12 @@ export default function Record() {
       const opts = [...(draft.options || [])]
       while (opts.length < 2) opts.push('')
       setEditingDraft(true)
+      setSelectedTemplateId(draft.category || '')
       setTitle(draft.title || '')
       setBackground(draft.background || '')
-      setSelectedMood(draft.mood || '')
+      const parsedMood = parseMoodValue(draft.mood || '')
+      setSelectedMoods(parsedMood.selectedMoods)
+      setCustomMood(parsedMood.customMood)
       setOptions(opts)
       setSelectedOption(typeof draft.choice === 'number' ? draft.choice : -1)
       setChoiceReason(draft.reason || '')
@@ -72,6 +82,7 @@ export default function Record() {
 
     setTitle(coachDraft.title || '')
     setBackground(coachDraft.background || '')
+    setSelectedTemplateId(coachDraft.category || '')
     setOptions(opts)
     setChoiceReason(coachDraft.reason || '')
     setExpectation(coachDraft.expectation || '')
@@ -109,12 +120,13 @@ export default function Record() {
     }
     return {
       title: title.trim(),
+      category: selectedTemplateId,
       background: background.trim(),
       options: validOptions,
       choice: selectedOption,
       reason: choiceReason.trim(),
       expectation: expectation.trim(),
-      mood: selectedMood,
+      mood: buildMoodValue(selectedMoods, customMood),
       createdAt,
       reviewDate,
       status: isDraft ? 'draft' : 'pending',
@@ -127,7 +139,7 @@ export default function Record() {
       maxWaterings: 1,
       isDraft,
     }
-  }, [title, background, options, selectedOption, choiceReason, expectation, selectedMood, reviewPeriod, customDate])
+  }, [title, selectedTemplateId, background, options, selectedOption, choiceReason, expectation, selectedMoods, customMood, reviewPeriod, customDate])
 
   const upsertDecision = useCallback((payload) => {
     if (draftId || editingDraft) {
@@ -233,6 +245,24 @@ export default function Record() {
     if (options.length < 6) setOptions(prev => [...prev, ''])
   }
 
+  const handleSelectTemplate = (template) => {
+    setSelectedTemplateId(prev => prev === template.id ? '' : template.id)
+    setOptions(prev => {
+      if (!shouldApplyStarterOptions(prev)) return prev
+      return [...template.starterOptions]
+    })
+  }
+
+  const handleToggleMood = (mood) => {
+    setSelectedMoods(prev => {
+      const next = toggleMood(prev, mood)
+      if (mood === '其他' && prev.includes('其他')) {
+        setCustomMood('')
+      }
+      return next
+    })
+  }
+
   const handleDatePicker = (e) => {
     const val = e.target.value
     if (val < today) {
@@ -271,11 +301,43 @@ export default function Record() {
             <div className="step-title">描述你的决策</div>
             <div className="step-desc">把要做决定的事情写下来，帮自己理清思路。</div>
 
+            {styleGuidance && (
+              <div className="style-guidance-card">
+                <span className="style-guidance-label">{styleGuidance.label}</span>
+                <span className="style-guidance-text">{styleGuidance.text}</span>
+              </div>
+            )}
+
+            <div className="template-section">
+              <div className="template-section-head">
+                <span className="template-section-title">选一个轻模板 <span className="optional">选填</span></span>
+                {selectedTemplate && (
+                  <button className="template-clear" onClick={() => setSelectedTemplateId('')}>清除</button>
+                )}
+              </div>
+              <div className="template-scroll">
+                {DECISION_TEMPLATES.map(template => (
+                  <div
+                    key={template.id}
+                    className={`template-card ${selectedTemplateId === template.id ? 'selected' : ''}`}
+                    onClick={() => handleSelectTemplate(template)}
+                  >
+                    <span className="template-icon">{template.icon}</span>
+                    <span className="template-title">{template.title}</span>
+                    <span className="template-desc">{template.desc}</span>
+                  </div>
+                ))}
+              </div>
+              {selectedTemplate && (
+                <div className="template-hint">{selectedTemplate.backgroundPlaceholder}</div>
+              )}
+            </div>
+
             <div className="form-group">
               <label className="form-label">决策标题 <span className="required">必填</span></label>
               <input
                 className="form-input"
-                placeholder="例如：要不要换工作"
+                placeholder={selectedTemplate?.titlePlaceholder || '例如：要不要换工作'}
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 maxLength={50}
@@ -287,7 +349,7 @@ export default function Record() {
               <label className="form-label">背景描述 <span className="optional">选填</span></label>
               <textarea
                 className="form-input form-textarea"
-                placeholder="简单描述一下事情的来龙去脉"
+                placeholder={selectedTemplate?.backgroundPlaceholder || '简单描述一下事情的来龙去脉'}
                 value={background}
                 onChange={e => setBackground(e.target.value)}
                 maxLength={500}
@@ -300,13 +362,22 @@ export default function Record() {
                 {MOODS.map(m => (
                   <div
                     key={m}
-                    className={`mood-chip ${selectedMood === m ? 'selected' : ''}`}
-                    onClick={() => setSelectedMood(m)}
+                    className={`mood-chip ${selectedMoods.includes(m) ? 'selected' : ''}`}
+                    onClick={() => handleToggleMood(m)}
                   >
                     {m}
                   </div>
                 ))}
               </div>
+              {selectedMoods.includes('其他') && (
+                <input
+                  className="mood-custom-input"
+                  placeholder="也可以写下自己的心情"
+                  value={customMood}
+                  onChange={e => setCustomMood(e.target.value)}
+                  maxLength={20}
+                />
+              )}
             </div>
           </div>
         )}
@@ -323,7 +394,7 @@ export default function Record() {
                   <div className="option-letter">{idx + 1}</div>
                   <input
                     className="option-input"
-                    placeholder="输入选项内容"
+                    placeholder={selectedTemplate?.optionPlaceholder || '输入选项内容'}
                     value={opt}
                     onChange={e => handleOptionInput(idx, e.target.value)}
                     maxLength={100}

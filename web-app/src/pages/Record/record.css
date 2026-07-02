@@ -116,6 +116,133 @@
   line-height: 1.6;
 }
 
+.style-guidance-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(74, 124, 89, 0.18);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.style-guidance-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.style-guidance-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+/* ====== Decision templates ====== */
+.template-section {
+  margin-bottom: 18px;
+}
+
+.template-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.template-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.template-section-title .optional {
+  color: var(--color-text-placeholder);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.template-clear {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.template-clear:active {
+  background: var(--color-border-light);
+}
+
+.template-scroll {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.template-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.template-card {
+  min-width: 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 11px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.template-card:active {
+  transform: scale(0.98);
+}
+
+.template-card.selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.template-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.template-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.template-card.selected .template-title {
+  color: var(--color-accent);
+}
+
+.template-desc {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.35;
+}
+
+.template-hint {
+  margin-top: 8px;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  background: rgba(74, 124, 89, 0.08);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 /* ====== Mood chips ====== */
 .mood-chip-group {
   display: flex;
@@ -143,6 +270,24 @@
   background: var(--color-accent-light);
   color: var(--color-accent);
   font-weight: 600;
+}
+
+.mood-custom-input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: #ffffff;
+  color: var(--color-text-primary);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.mood-custom-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(74, 124, 89, 0.08);
 }
 
 /* ====== Option list ====== */

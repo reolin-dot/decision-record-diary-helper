@@ -1,4 +1,8 @@
+import { useState } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useApp } from '../../context/AppContext.jsx'
+import { useToast } from '../../components/Toast.jsx'
+import { buildCoachDecisionDraft, buildDecisionFromCoachDraft } from '../../domain/coachDecisionDrafts.js'
 import './result.css'
 
 function splitLines(value) {
@@ -26,46 +30,27 @@ function AnswerCard({ title, value }) {
   )
 }
 
-function buildCoachDraft(analysis) {
-  const steps = analysis.steps || []
-  const getValue = (idx) => steps[idx]?.value?.trim() || ''
-
-  if (analysis.kitId === 'choice') {
-    const optionA = getValue(0) || '选项 A'
-    const optionB = getValue(2) || '选项 B'
-    return {
-      title: `锦囊决策：${optionA} / ${optionB}`,
-      background: getValue(4),
-      options: [optionA, optionB],
-      reason: `来自${analysis.kitTitle || '决策锦囊'}：${analysis.nextAction || ''}`,
-      expectation: '希望通过这次记录，把锦囊里的思考变成可复盘的行动。',
-    }
-  }
-
-  const firstAnswer = getValue(0)
-  return {
-    title: `锦囊记录：${analysis.kitTitle || '决策锦囊'}`,
-    background: steps
-      .filter(step => step.value?.trim())
-      .map(step => `${step.title}\n${step.value.trim()}`)
-      .join('\n\n'),
-    options: [firstAnswer || analysis.nextAction || '先做一个小行动', '暂时不行动，继续观察'],
-    reason: analysis.nextAction || '',
-    expectation: '希望把这次锦囊里的线索，沉淀成后续可以复盘的记录。',
-  }
-}
-
 export default function CoachResult() {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
+  const { createDecision } = useApp()
+  const toast = useToast()
   const analysis = location.state || {}
 
   const scoreA = Number(analysis.scoreA || searchParams.get('scoreA')) || 3
   const scoreB = Number(analysis.scoreB || searchParams.get('scoreB')) || 3
+  const normalizedAnalysis = { ...analysis, scoreA, scoreB }
+  const suggestedDraft = buildCoachDecisionDraft(normalizedAnalysis)
   const steps = analysis.steps || []
   const isChoice = analysis.kitId === 'choice'
   const filledSteps = steps.filter(step => step.value?.trim())
+  const [saveTitle, setSaveTitle] = useState(suggestedDraft.title)
+  const [saveOptions, setSaveOptions] = useState(suggestedDraft.options)
+  const [saveChoice, setSaveChoice] = useState(suggestedDraft.choice)
+  const [saveReason, setSaveReason] = useState(suggestedDraft.reason)
+  const [saveExpectation, setSaveExpectation] = useState(suggestedDraft.expectation)
+  const [saving, setSaving] = useState(false)
 
   const optionA = {
     title: steps[0]?.value || '选项 A',
@@ -76,12 +61,43 @@ export default function CoachResult() {
     pros: splitLines(steps[3]?.value),
   }
 
-  const handleSaveDecision = () => {
-    navigate('/record?step=1&from=coach', {
-      state: {
-        coachDraft: buildCoachDraft(analysis),
-      },
+  const handleSaveOptionInput = (idx, value) => {
+    setSaveOptions(prev => {
+      const next = [...prev]
+      next[idx] = value
+      return next
     })
+  }
+
+  const handleSaveDecision = () => {
+    if (saving) return
+    if (!saveTitle.trim()) {
+      toast.show('先补一个决策标题')
+      return
+    }
+    if (saveOptions.filter(item => item.trim()).length < 2) {
+      toast.show('至少保留 2 个可复盘选项')
+      return
+    }
+
+    setSaving(true)
+    const payload = buildDecisionFromCoachDraft(suggestedDraft, {
+      title: saveTitle,
+      options: saveOptions,
+      choice: saveChoice,
+      reason: saveReason,
+      expectation: saveExpectation,
+    })
+    const decision = createDecision(payload)
+    setSaving(false)
+
+    if (!decision) {
+      toast.show('保存失败，请稍后再试')
+      return
+    }
+
+    toast.show('已保存到决策花园', { type: 'success' })
+    setTimeout(() => navigate(`/decision/${decision.id}`), 500)
   }
 
   const handleBackToCoach = () => {
@@ -168,9 +184,66 @@ export default function CoachResult() {
           锦囊只提供思考结构，不替你做判断。真正重要的是：你愿意把这次选择记录下来，并在之后温柔地复盘它。
         </div>
 
-        <button className="save-draft-btn" onClick={handleSaveDecision}>
-          保存到我的决策
-        </button>
+        <div className="coach-save-panel">
+          <div className="coach-save-head">
+            <span className="coach-save-kicker">{suggestedDraft.sourceLabel}</span>
+            <span className="coach-save-title">保存前确认</span>
+            <span className="coach-save-desc">
+              已按这个锦囊整理成可复盘的决策记录，你可以轻微改动后直接保存。
+            </span>
+          </div>
+
+          <label className="coach-save-field">
+            <span>决策标题</span>
+            <input
+              value={saveTitle}
+              onChange={(e) => setSaveTitle(e.target.value)}
+              maxLength={60}
+            />
+          </label>
+
+          <div className="coach-save-field">
+            <span>保留下来的选项</span>
+            <div className="coach-save-options">
+              {saveOptions.map((option, idx) => (
+                <div
+                  key={idx}
+                  className={`coach-save-option ${saveChoice === idx ? 'selected' : ''}`}
+                  onClick={() => setSaveChoice(idx)}
+                >
+                  <input
+                    value={option}
+                    onChange={(e) => handleSaveOptionInput(idx, e.target.value)}
+                    maxLength={80}
+                  />
+                  <span>{saveChoice === idx ? '当前选择' : '设为选择'}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <label className="coach-save-field">
+            <span>{analysis.kitId === 'action' ? '真正卡住的地方' : '保存为选择理由'}</span>
+            <textarea
+              value={saveReason}
+              onChange={(e) => setSaveReason(e.target.value)}
+              maxLength={300}
+            />
+          </label>
+
+          <label className="coach-save-field">
+            <span>{analysis.kitId === 'review' ? '这次带走的经验' : '期待或下一步'}</span>
+            <textarea
+              value={saveExpectation}
+              onChange={(e) => setSaveExpectation(e.target.value)}
+              maxLength={300}
+            />
+          </label>
+
+          <button className="save-draft-btn save-primary" onClick={handleSaveDecision} disabled={saving}>
+            {saving ? '保存中...' : '保存到我的决策'}
+          </button>
+        </div>
       </div>
 
       <div className="bottom-bar">

@@ -3,12 +3,13 @@ import { useApp } from '../../context/AppContext.jsx'
 import { getStageMeta, isBloomStage, isGrowingStage } from '../../domain/decisionStages.js'
 import { getReminders } from '../../domain/reminders.js'
 import { getLatestGrowthSnippets } from '../../domain/growthSnippets.js'
+import { buildDecisionPatterns } from '../../domain/decisionPatterns.js'
 import { formatDate } from '../../utils/util.js'
 import './garden.css'
 
 export default function Garden() {
   const navigate = useNavigate()
-  const { decisions, stats, isNewUser, hasStyleTest } = useApp()
+  const { decisions, stats, isNewUser, hasStyleTest, decisionStyle, aiInsights } = useApp()
 
   const today = formatDate(new Date())
 
@@ -28,6 +29,13 @@ export default function Garden() {
   const bloomedCount = decorated.filter(d => isBloomStage(d.stage)).length
   const growingCount = decorated.filter(d => isGrowingStage(d.stage)).length
   const latestSnippets = getLatestGrowthSnippets(decorated, 3)
+  const latestAiInsight = aiInsights?.[0] || null
+  const decisionPatterns = buildDecisionPatterns({
+    decisions: decorated,
+    decisionStyle,
+    aiInsights,
+    today,
+  })
 
   const isEmpty = decisions.length === 0
   const recentDecisions = sorted.slice(0, 5)
@@ -150,11 +158,47 @@ export default function Garden() {
             </div>
           </div>
 
+          {decisionPatterns.patternCards.length > 0 && (
+            <div className="pattern-panel">
+              <div className="pattern-head">
+                <span className="pattern-kicker">决策模式</span>
+                <span className="pattern-summary">{decisionPatterns.overview}</span>
+              </div>
+              <div className="pattern-card-list">
+                {decisionPatterns.patternCards.map(card => (
+                  <div
+                    key={card.id}
+                    className={`pattern-card pattern-${card.id}`}
+                    onClick={() => card.actionPath && navigate(card.actionPath)}
+                  >
+                    <span className="pattern-label">{card.label}</span>
+                    <span className="pattern-title">{card.title}</span>
+                    <span className="pattern-body">{card.body}</span>
+                    {card.evidence && <span className="pattern-evidence">{card.evidence}</span>}
+                    {card.actionLabel && <span className="pattern-action">{card.actionLabel} ›</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {reminderCount > 0 && (
             <div className="garden-reminder" onClick={() => navigate('/watering')}>
               <div className="reminder-dot"></div>
               <span className="reminder-text">{reminderCount} 个决策等你回来看看</span>
               <span className="reminder-arrow">›</span>
+            </div>
+          )}
+
+          {latestAiInsight && (
+            <div className="garden-ai-insight" onClick={() => navigate('/data-export')}>
+              <div className="ai-insight-head">
+                <span className="ai-insight-label">最近成长洞察</span>
+                <span className="ai-insight-date">{(latestAiInsight.createdAt || '').slice(0, 10)}</span>
+              </div>
+              <span className="ai-insight-title">{latestAiInsight.title}</span>
+              <span className="ai-insight-text">{latestAiInsight.content}</span>
+              <span className="ai-insight-link">查看已保存洞察 ›</span>
             </div>
           )}
 

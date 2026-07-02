@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
 import { getStageMeta, DECISION_STAGES } from '../../domain/decisionStages.js'
+import { getReviewStyleGuidance } from '../../domain/decisionStyleGuidance.js'
 import { formatDate, addDays } from '../../utils/util.js'
 import './review.css'
 
@@ -20,7 +21,7 @@ const FOLLOW_UP_OPTIONS = [
 export default function Review() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { decisions, saveDecision, refreshStats } = useApp()
+  const { decisions, decisionStyle, saveDecision, refreshStats } = useApp()
   const toast = useToast()
 
   const [decision, setDecision] = useState(null)
@@ -267,6 +268,7 @@ export default function Review() {
     (decision.stage === 'sprout' || decision.stage === 'seed')
 
   const reviewTypeName = reviewType === 'result' ? '结果复盘' : '当下复盘'
+  const styleGuidance = getReviewStyleGuidance(decisionStyle)
 
   return (
     <div className="page-container">
@@ -344,6 +346,13 @@ export default function Review() {
             ) : (
               <span className="review-type-hint">结果逐渐明朗了，沉淀这次的经验</span>
             )}
+          </div>
+        )}
+
+        {canReview && styleGuidance && (
+          <div className="review-style-guidance">
+            <span className="review-style-label">{styleGuidance.label}</span>
+            <span className="review-style-text">{styleGuidance.text}</span>
           </div>
         )}
 

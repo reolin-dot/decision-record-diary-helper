@@ -149,6 +149,67 @@
   font-weight: 500;
 }
 
+/* ====== AI insight ====== */
+.pf-insight-card,
+.pf-insight-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(74, 124, 89, 0.14);
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(74, 124, 89, 0.08);
+  cursor: pointer;
+}
+
+.pf-insight-card:active,
+.pf-insight-empty:active {
+  background: #f9fbf8;
+}
+
+.pf-insight-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pf-insight-title,
+.pf-insight-empty-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.pf-insight-date {
+  font-size: 11px;
+  color: #aaaaaa;
+  flex-shrink: 0;
+}
+
+.pf-insight-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 13px;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.pf-insight-action {
+  font-size: 12px;
+  color: #4a7c59;
+  font-weight: 600;
+}
+
+.pf-insight-empty-desc {
+  font-size: 13px;
+  color: #777777;
+  line-height: 1.6;
+}
+
 /* ====== Settings list ====== */
 .pf-settings-list {
   background: #ffffff;

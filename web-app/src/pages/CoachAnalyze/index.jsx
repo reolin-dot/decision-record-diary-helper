@@ -32,6 +32,8 @@ export default function CoachAnalyze() {
       state: {
         kitId: kit.id,
         kitTitle: kit.shortTitle,
+        framework: kit.framework,
+        tone: kit.tone,
         resultTitle: kit.resultTitle,
         summaryTitle: kit.summaryTitle,
         nextActionTitle: kit.nextActionTitle,

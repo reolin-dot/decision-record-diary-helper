@@ -86,6 +86,49 @@
   display: block;
 }
 
+.coach-source-section {
+  border-color: rgba(74, 124, 89, 0.16);
+}
+
+.coach-source-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.coach-source-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.coach-source-meta {
+  font-size: 12px;
+  color: #4a7c59;
+  font-weight: 600;
+}
+
+.coach-source-next {
+  font-size: 13px;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.coach-source-btn {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(74, 124, 89, 0.08);
+  color: #4a7c59;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.coach-source-btn:active {
+  background: rgba(74, 124, 89, 0.14);
+}
+
 /* ====== Options list ====== */
 .detail-options-list {
   display: flex;

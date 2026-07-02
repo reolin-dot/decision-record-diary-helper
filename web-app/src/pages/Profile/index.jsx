@@ -25,11 +25,12 @@ function computeBadges(stats) {
 
 export default function Profile() {
   const navigate = useNavigate()
-  const { stats, decisionStyle, userInfo } = useApp()
+  const { stats, decisionStyle, userInfo, aiInsights } = useApp()
   const toast = useToast()
 
   const badges = computeBadges(stats)
   const styleLabel = decisionStyle?.type || '理性型决策者'
+  const latestAiInsight = aiInsights?.[0] || null
 
   const handleTapSetting = (action) => {
     switch (action) {
@@ -101,6 +102,25 @@ export default function Profile() {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="pf-section">
+        <span className="pf-section-title">成长洞察</span>
+        {latestAiInsight ? (
+          <div className="pf-insight-card" onClick={() => navigate('/data-export')}>
+            <div className="pf-insight-head">
+              <span className="pf-insight-title">{latestAiInsight.title}</span>
+              <span className="pf-insight-date">{(latestAiInsight.createdAt || '').slice(0, 10)}</span>
+            </div>
+            <span className="pf-insight-content">{latestAiInsight.content}</span>
+            <span className="pf-insight-action">查看全部洞察 ›</span>
+          </div>
+        ) : (
+          <div className="pf-insight-empty" onClick={() => navigate('/data-export')}>
+            <span className="pf-insight-empty-title">还没有保存 AI 洞察</span>
+            <span className="pf-insight-empty-desc">可以先把本地记录复制到 DeepSeek 分析，再把结果保存回来。</span>
+          </div>
+        )}
       </div>
 
       <div className="pf-section">

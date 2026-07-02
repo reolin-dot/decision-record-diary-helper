@@ -110,6 +110,29 @@ export default function DecisionDetail() {
         <span className="hero-date">{decision.createdAt}</span>
       </div>
 
+      {decision.coachSource && (
+        <div className="detail-section coach-source-section">
+          <span className="section-label">锦囊来源</span>
+          <div className="coach-source-card">
+            <span className="coach-source-title">{decision.coachSource.kitTitle || '决策锦囊'}</span>
+            {(decision.coachSource.framework || decision.coachSource.tone) && (
+              <span className="coach-source-meta">
+                {[decision.coachSource.framework, decision.coachSource.tone].filter(Boolean).join(' · ')}
+              </span>
+            )}
+            {decision.coachSource.nextAction && (
+              <span className="coach-source-next">{decision.coachSource.nextAction}</span>
+            )}
+            <button
+              className="coach-source-btn"
+              onClick={() => navigate(`/coach-analyze?kit=${decision.coachSource.kitId}`)}
+            >
+              再打开这个锦囊
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Background */}
       {decision.background && (
         <div className="detail-section">
