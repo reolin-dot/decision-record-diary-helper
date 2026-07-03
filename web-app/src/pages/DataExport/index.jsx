@@ -137,14 +137,15 @@ export default function DataExport() {
   const [result, setResult] = useState(null)
   const [insightTitle, setInsightTitle] = useState('')
   const [insightContent, setInsightContent] = useState('')
-  const dataHealth = checkDataHealth({ decisions, aiInsights, decisionStyle })
+  const storedDecisions = storage.get(STORAGE_KEYS.DECISIONS, decisions)
+  const dataHealth = checkDataHealth({ decisions: storedDecisions, aiInsights, decisionStyle })
   const healthLabel = {
     healthy: '数据状态良好',
     warning: '有几处需要留意',
     error: '发现需要处理的问题',
   }[dataHealth.status]
   const healthItems = dataHealth.issues.length > 0 ? dataHealth.issues : dataHealth.warnings.slice(0, 3)
-  const repairPreview = repairDataHealth({ decisions })
+  const repairPreview = repairDataHealth({ decisions: storedDecisions })
   const canRepair = dataHealth.status === 'warning' && dataHealth.issues.length === 0 && repairPreview.repaired
 
   const handleExport = () => {
@@ -243,11 +244,13 @@ export default function DataExport() {
     })
     if (!confirmed) return
 
-    const result = repairDataHealth({ decisions })
+    const result = repairDataHealth({ decisions: storedDecisions })
     if (!result.repaired) {
       toast.show('没有可自动修复的问题')
       return
     }
+
+    downloadJSON(storage.exportAll(), `decision-diary-before-repair-${Date.now()}.json`)
 
     const ok = storage.set(STORAGE_KEYS.DECISIONS, result.decisions)
     if (!ok) {

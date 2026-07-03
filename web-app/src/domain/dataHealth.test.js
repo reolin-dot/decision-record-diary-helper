@@ -79,3 +79,14 @@ test('does not repair structural errors such as missing ids', () => {
   assert.equal(result.changedCount, 0)
   assert.equal(result.decisions[0].id, undefined)
 })
+
+test('preserves soft-deleted decisions during repair', () => {
+  const result = repairDataHealth({
+    decisions: [
+      { id: 'deleted', title: '已删除', _deleted: true, options: 'bad' },
+    ],
+  })
+
+  assert.equal(result.changedCount, 1)
+  assert.equal(result.decisions[0]._deleted, true)
+})
