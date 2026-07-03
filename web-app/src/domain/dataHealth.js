@@ -90,3 +90,49 @@ export function checkDataHealth({ decisions = [], aiInsights = [], decisionStyle
     },
   }
 }
+
+function repairDecision(decision) {
+  if (!decision || typeof decision !== 'object' || !decision.id) {
+    return { decision, changed: false }
+  }
+
+  const repaired = {
+    ...decision,
+    options: Array.isArray(decision.options) ? decision.options : [],
+    wateringHistory: Array.isArray(decision.wateringHistory) ? decision.wateringHistory : [],
+    maxWaterings: typeof decision.maxWaterings === 'number' ? decision.maxWaterings : 1,
+    choice: typeof decision.choice === 'number' ? decision.choice : -1,
+    actionStarted: !!decision.actionStarted,
+    firstReviewDone: !!decision.firstReviewDone,
+    resultReviewDone: !!decision.resultReviewDone,
+    isDraft: !!decision.isDraft,
+    _deleted: !!decision._deleted,
+    status: VALID_STATUSES.has(decision.status) ? decision.status : (decision.isDraft ? 'draft' : 'pending'),
+    reviewStage: VALID_REVIEW_STAGES.has(decision.reviewStage) ? decision.reviewStage : 'none',
+    stage: VALID_STAGES.has(decision.stage) ? decision.stage : 'seed',
+  }
+
+  return {
+    decision: repaired,
+    changed: JSON.stringify(repaired) !== JSON.stringify(decision),
+  }
+}
+
+export function repairDataHealth({ decisions = [] } = {}) {
+  if (!Array.isArray(decisions)) {
+    return { decisions, changedCount: 0, repaired: false }
+  }
+
+  let changedCount = 0
+  const repairedDecisions = decisions.map(decision => {
+    const result = repairDecision(decision)
+    if (result.changed) changedCount += 1
+    return result.decision
+  })
+
+  return {
+    decisions: repairedDecisions,
+    changedCount,
+    repaired: changedCount > 0,
+  }
+}

@@ -65,6 +65,23 @@
   gap: 4px;
 }
 
+.health-repair-btn {
+  align-self: flex-start;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.health-repair-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
 .export-section-title {
   font-size: 12px;
   font-weight: 700;

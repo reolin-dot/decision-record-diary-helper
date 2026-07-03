@@ -4,8 +4,9 @@ import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import storage from '../../storage/LocalStorageAdapter.js'
+import { STORAGE_KEYS } from '../../storage/storageKeys.js'
 import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
-import { checkDataHealth } from '../../domain/dataHealth.js'
+import { checkDataHealth, repairDataHealth } from '../../domain/dataHealth.js'
 import './export.css'
 
 const EXPORT_OPTIONS = [
@@ -143,6 +144,8 @@ export default function DataExport() {
     error: '发现需要处理的问题',
   }[dataHealth.status]
   const healthItems = dataHealth.issues.length > 0 ? dataHealth.issues : dataHealth.warnings.slice(0, 3)
+  const repairPreview = repairDataHealth({ decisions })
+  const canRepair = dataHealth.status === 'warning' && dataHealth.issues.length === 0 && repairPreview.repaired
 
   const handleExport = () => {
     setExporting(true)
@@ -231,6 +234,31 @@ export default function DataExport() {
     toast.show('已保存为成长洞察', { type: 'success' })
   }
 
+  const handleRepairData = async () => {
+    const confirmed = await modal.confirm({
+      title: '修复本地数据',
+      content: '只会修复低风险格式问题，例如空数组、默认状态和布尔字段。建议先导出备份。',
+      confirmText: '开始修复',
+      cancelText: '取消',
+    })
+    if (!confirmed) return
+
+    const result = repairDataHealth({ decisions })
+    if (!result.repaired) {
+      toast.show('没有可自动修复的问题')
+      return
+    }
+
+    const ok = storage.set(STORAGE_KEYS.DECISIONS, result.decisions)
+    if (!ok) {
+      toast.show('修复失败，请先导出备份')
+      return
+    }
+
+    reloadFromStorage()
+    toast.show(`已修复 ${result.changedCount} 条记录`, { type: 'success' })
+  }
+
   const handleImportFile = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -311,6 +339,11 @@ export default function DataExport() {
           </div>
         ) : (
           <span className="health-desc">本地数据格式正常，可以安心导出备份。</span>
+        )}
+        {canRepair && (
+          <button className="health-repair-btn" onClick={handleRepairData}>
+            修复可自动处理的问题
+          </button>
         )}
       </div>
 
