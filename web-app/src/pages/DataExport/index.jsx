@@ -307,13 +307,23 @@ export default function DataExport() {
           toast.show('导入失败：备份数据有严重格式问题')
           return
         }
-        const ok = storage.importAll(decisionsPayload, 'merge')
+        const repairResult = repairDataHealth({ decisions: decisionsPayload.decisions })
+        const safePayload = {
+          ...decisionsPayload,
+          decisions: repairResult.decisions,
+        }
+        downloadJSON(storage.exportAll(), `decision-diary-before-import-${Date.now()}.json`)
+        const ok = storage.importAll(safePayload, 'merge')
         if (!ok) {
           toast.show('导入失败，请检查文件格式')
           return
         }
         reloadFromStorage()
-        toast.show('导入成功，已合并到本地数据')
+        toast.show(
+          repairResult.repaired
+            ? `导入成功，已顺手修复 ${repairResult.changedCount} 条记录`
+            : '导入成功，已合并到本地数据'
+        )
         setTimeout(() => navigate('/'), 700)
       } catch (err) {
         console.error('[DataExport] import failed:', err)
