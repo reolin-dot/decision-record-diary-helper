@@ -10,6 +10,7 @@ import { checkDataHealth, repairDataHealth } from '../../domain/dataHealth.js'
 import './export.css'
 
 const EXPORT_OPTIONS = [
+  { key: 'backup', label: '完整本地备份', desc: '导出全部本地数据，适合恢复使用', icon: '🧳' },
   { key: 'all', label: '全部决策记录', desc: '导出所有决策及浇水历史', icon: '📋' },
   { key: 'reviewed', label: '已完成复盘', desc: '只导出有浇水记录的决策', icon: '✅' },
   { key: 'lessons', label: '成长片段合集', desc: '导出所有复盘中的经验总结', icon: '💡' },
@@ -152,7 +153,13 @@ export default function DataExport() {
     setExporting(true)
 
     let data
-    if (selected === 'all') {
+    if (selected === 'backup') {
+      data = {
+        ...storage.exportAll(),
+        exportType: 'local_backup',
+        dataHealth,
+      }
+    } else if (selected === 'all') {
       data = buildFullExport(decisions, decisionStyle, aiInsights, dataHealth)
     } else if (selected === 'reviewed') {
       const reviewed = decisions.filter(d => d.firstReviewDone || d.resultReviewDone)
@@ -169,11 +176,12 @@ export default function DataExport() {
     }
 
     setTimeout(() => {
+      const exportedDecisions = data.decisions || data[STORAGE_KEYS.DECISIONS]
       const itemCount =
         selected === 'lessons'
           ? data.lessons.length
-          : data.decisions
-            ? data.decisions.length
+          : exportedDecisions
+            ? exportedDecisions.length
             : 1
 
       const preview = JSON.stringify(data, null, 2).substring(0, 500) + '...'
@@ -268,7 +276,7 @@ export default function DataExport() {
 
     const confirmed = await modal.confirm({
       title: '导入备份',
-      content: '将按决策 ID 合并到当前浏览器本地数据。若存在同一条记录，会以备份中的内容为准。',
+      content: '支持完整本地备份或普通决策导出。将按决策 ID 合并；同一条记录以文件中的内容为准。',
       confirmText: '确认导入',
       cancelText: '取消',
     })
@@ -463,7 +471,7 @@ export default function DataExport() {
           <span className="option-icon">📥</span>
           <span className="import-info">
             <span className="option-label">{importing ? '导入中...' : '导入 JSON 备份'}</span>
-            <span className="option-desc">会按决策 ID 合并；建议先导出当前数据再导入</span>
+            <span className="option-desc">支持完整本地备份或普通决策导出；会按 ID 合并</span>
           </span>
           <input
             type="file"
