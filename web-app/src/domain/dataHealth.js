@@ -157,3 +157,25 @@ export function summarizeImport(payload, existingDecisions = []) {
 
   return summary
 }
+
+export function describeBackupFreshness(lastBackupAt, now = new Date()) {
+  if (!lastBackupAt) {
+    return { status: 'missing', message: '还没有完整备份记录' }
+  }
+
+  const backupTime = new Date(lastBackupAt).getTime()
+  const nowTime = now.getTime()
+  if (!Number.isFinite(backupTime) || backupTime > nowTime) {
+    return { status: 'missing', message: '还没有有效的完整备份记录' }
+  }
+
+  const days = Math.floor((nowTime - backupTime) / 86400000)
+  if (days === 0) {
+    return { status: 'fresh', message: '今天已做过完整备份' }
+  }
+  if (days <= 7) {
+    return { status: 'fresh', message: `${days} 天前做过完整备份` }
+  }
+
+  return { status: 'stale', message: `${days} 天没做完整备份了` }
+}

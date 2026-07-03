@@ -6,7 +6,12 @@ import { useModal } from '../../components/Modal.jsx'
 import storage from '../../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS } from '../../storage/storageKeys.js'
 import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
-import { checkDataHealth, repairDataHealth, summarizeImport } from '../../domain/dataHealth.js'
+import {
+  checkDataHealth,
+  describeBackupFreshness,
+  repairDataHealth,
+  summarizeImport,
+} from '../../domain/dataHealth.js'
 import './export.css'
 
 const EXPORT_OPTIONS = [
@@ -138,8 +143,10 @@ export default function DataExport() {
   const [result, setResult] = useState(null)
   const [insightTitle, setInsightTitle] = useState('')
   const [insightContent, setInsightContent] = useState('')
+  const [lastBackupAt, setLastBackupAt] = useState(storage.get(STORAGE_KEYS.LAST_BACKUP_AT, ''))
   const storedDecisions = storage.get(STORAGE_KEYS.DECISIONS, decisions)
   const dataHealth = checkDataHealth({ decisions: storedDecisions, aiInsights, decisionStyle })
+  const backupFreshness = describeBackupFreshness(lastBackupAt)
   const healthLabel = {
     healthy: '数据状态良好',
     warning: '有几处需要留意',
@@ -153,6 +160,12 @@ export default function DataExport() {
     exportType: 'local_backup',
     dataHealth,
   })
+  const markBackupExported = () => {
+    const exportedAt = new Date().toISOString()
+    storage.set(STORAGE_KEYS.LAST_BACKUP_AT, exportedAt)
+    setLastBackupAt(exportedAt)
+    return exportedAt
+  }
 
   const handleExport = () => {
     setExporting(true)
@@ -190,13 +203,18 @@ export default function DataExport() {
       setResult({ format: 'JSON', itemCount, preview, data })
       setExporting(false)
 
+      if (selected === 'backup') {
+        data[STORAGE_KEYS.LAST_BACKUP_AT] = markBackupExported()
+      }
       downloadJSON(data, `decision-diary-${selected}-${Date.now()}.json`)
       toast.show('导出成功')
     }, 600)
   }
 
   const handleQuickBackup = () => {
-    downloadJSON(buildLocalBackup(), `decision-diary-backup-${Date.now()}.json`)
+    const data = buildLocalBackup()
+    data[STORAGE_KEYS.LAST_BACKUP_AT] = markBackupExported()
+    downloadJSON(data, `decision-diary-backup-${Date.now()}.json`)
     toast.show('已导出完整本地备份', { type: 'success' })
   }
 
@@ -368,6 +386,9 @@ export default function DataExport() {
         ) : (
           <span className="health-desc">本地数据格式正常，可以安心导出备份。</span>
         )}
+        <span className={`health-backup-note backup-${backupFreshness.status}`}>
+          {backupFreshness.message}
+        </span>
         <div className="health-actions">
           <button className="health-backup-btn" onClick={handleQuickBackup}>
             立即备份

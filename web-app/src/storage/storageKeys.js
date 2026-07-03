@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   SYNC_CONFIG: 'syncConfig',
   SYNC_QUEUE: 'syncQueue',
   LAST_SYNC_TIME: 'lastSyncTime',
+  LAST_BACKUP_AT: 'lastBackupAt',
 }
 
 export const CURRENT_SCHEMA_VERSION = 1

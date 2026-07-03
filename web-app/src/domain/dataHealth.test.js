@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { checkDataHealth, repairDataHealth, summarizeImport } from './dataHealth.js'
+import { checkDataHealth, describeBackupFreshness, repairDataHealth, summarizeImport } from './dataHealth.js'
 
 test('returns healthy for normal local data', () => {
   const result = checkDataHealth({
@@ -105,5 +105,22 @@ test('summarizes import impact before merging', () => {
     aiInsights: 1,
     addedDecisions: 1,
     mergedDecisions: 1,
+  })
+})
+
+test('describes backup freshness', () => {
+  const now = new Date('2026-07-04T12:00:00.000Z')
+
+  assert.deepEqual(describeBackupFreshness('', now), {
+    status: 'missing',
+    message: '还没有完整备份记录',
+  })
+  assert.deepEqual(describeBackupFreshness('2026-07-04T01:00:00.000Z', now), {
+    status: 'fresh',
+    message: '今天已做过完整备份',
+  })
+  assert.deepEqual(describeBackupFreshness('2026-06-20T12:00:00.000Z', now), {
+    status: 'stale',
+    message: '14 天没做完整备份了',
   })
 })
