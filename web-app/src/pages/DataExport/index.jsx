@@ -148,17 +148,18 @@ export default function DataExport() {
   const healthItems = dataHealth.issues.length > 0 ? dataHealth.issues : dataHealth.warnings.slice(0, 3)
   const repairPreview = repairDataHealth({ decisions: storedDecisions })
   const canRepair = dataHealth.status === 'warning' && dataHealth.issues.length === 0 && repairPreview.repaired
+  const buildLocalBackup = () => ({
+    ...storage.exportAll(),
+    exportType: 'local_backup',
+    dataHealth,
+  })
 
   const handleExport = () => {
     setExporting(true)
 
     let data
     if (selected === 'backup') {
-      data = {
-        ...storage.exportAll(),
-        exportType: 'local_backup',
-        dataHealth,
-      }
+      data = buildLocalBackup()
     } else if (selected === 'all') {
       data = buildFullExport(decisions, decisionStyle, aiInsights, dataHealth)
     } else if (selected === 'reviewed') {
@@ -192,6 +193,11 @@ export default function DataExport() {
       downloadJSON(data, `decision-diary-${selected}-${Date.now()}.json`)
       toast.show('导出成功')
     }, 600)
+  }
+
+  const handleQuickBackup = () => {
+    downloadJSON(buildLocalBackup(), `decision-diary-backup-${Date.now()}.json`)
+    toast.show('已导出完整本地备份', { type: 'success' })
   }
 
   const handleCopyPreview = () => {
@@ -361,11 +367,16 @@ export default function DataExport() {
         ) : (
           <span className="health-desc">本地数据格式正常，可以安心导出备份。</span>
         )}
-        {canRepair && (
-          <button className="health-repair-btn" onClick={handleRepairData}>
-            修复可自动处理的问题
+        <div className="health-actions">
+          <button className="health-backup-btn" onClick={handleQuickBackup}>
+            立即备份
           </button>
-        )}
+          {canRepair && (
+            <button className="health-repair-btn" onClick={handleRepairData}>
+              修复可自动处理的问题
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="export-section">
