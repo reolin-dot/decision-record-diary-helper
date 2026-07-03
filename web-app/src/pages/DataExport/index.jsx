@@ -5,6 +5,7 @@ import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import storage from '../../storage/LocalStorageAdapter.js'
 import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
+import { checkDataHealth } from '../../domain/dataHealth.js'
 import './export.css'
 
 const EXPORT_OPTIONS = [
@@ -134,6 +135,13 @@ export default function DataExport() {
   const [result, setResult] = useState(null)
   const [insightTitle, setInsightTitle] = useState('')
   const [insightContent, setInsightContent] = useState('')
+  const dataHealth = checkDataHealth({ decisions, aiInsights, decisionStyle })
+  const healthLabel = {
+    healthy: '数据状态良好',
+    warning: '有几处需要留意',
+    error: '发现需要处理的问题',
+  }[dataHealth.status]
+  const healthItems = dataHealth.issues.length > 0 ? dataHealth.issues : dataHealth.warnings.slice(0, 3)
 
   const handleExport = () => {
     setExporting(true)
@@ -267,6 +275,26 @@ export default function DataExport() {
 
   return (
     <div className="export-page">
+      <div className={`health-card health-${dataHealth.status}`}>
+        <div className="health-head">
+          <span className="health-title">{healthLabel}</span>
+          <span className="health-count">
+            {dataHealth.summary.decisions} 条决策 · {dataHealth.summary.aiInsights} 条洞察
+          </span>
+        </div>
+        {healthItems.length > 0 ? (
+          <div className="health-list">
+            {healthItems.map((item, idx) => (
+              <span key={`${item.code}-${idx}`} className="health-item">
+                {item.message}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <span className="health-desc">本地数据格式正常，可以安心导出备份。</span>
+        )}
+      </div>
+
       <div className="export-section">
         <span className="export-section-title">选择导出内容</span>
         <div className="option-list">

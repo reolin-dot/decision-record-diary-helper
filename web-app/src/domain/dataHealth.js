@@ -1,0 +1,92 @@
+const VALID_STATUSES = new Set(['pending', 'reviewed', 'draft'])
+const VALID_REVIEW_STAGES = new Set(['none', 'current_done', 'result_done'])
+const VALID_STAGES = new Set(['seed', 'sprout', 'leaf', 'first_bloom', 'full_bloom', 'bloom'])
+
+function isDateLike(value) {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)
+}
+
+function issue(severity, code, message, decisionId = '') {
+  return { severity, code, message, decisionId }
+}
+
+function checkDecision(decision, index) {
+  const id = decision?.id || `第 ${index + 1} 条`
+  const issues = []
+  const warnings = []
+
+  if (!decision || typeof decision !== 'object') {
+    issues.push(issue('error', 'invalid_decision', `${id} 不是有效的决策记录`))
+    return { issues, warnings }
+  }
+
+  if (!decision.id) issues.push(issue('error', 'missing_id', '有一条决策缺少 ID', id))
+  if (!decision.title) warnings.push(issue('warning', 'missing_title', '有一条决策缺少标题', id))
+  if (!isDateLike(decision.createdAt)) warnings.push(issue('warning', 'missing_created_at', '决策缺少有效创建日期', id))
+  if (!Array.isArray(decision.options)) warnings.push(issue('warning', 'invalid_options', '决策选项格式异常', id))
+  if (decision.status && !VALID_STATUSES.has(decision.status)) {
+    warnings.push(issue('warning', 'invalid_status', `决策状态异常：${decision.status}`, id))
+  }
+  if (decision.reviewStage && !VALID_REVIEW_STAGES.has(decision.reviewStage)) {
+    warnings.push(issue('warning', 'invalid_review_stage', `复盘阶段异常：${decision.reviewStage}`, id))
+  }
+  if (decision.stage && !VALID_STAGES.has(decision.stage)) {
+    warnings.push(issue('warning', 'invalid_stage', `花朵阶段异常：${decision.stage}`, id))
+  }
+  if (decision.wateringHistory && !Array.isArray(decision.wateringHistory)) {
+    warnings.push(issue('warning', 'invalid_watering_history', '浇水记录格式异常', id))
+  }
+
+  return { issues, warnings }
+}
+
+export function checkDataHealth({ decisions = [], aiInsights = [], decisionStyle = null } = {}) {
+  const issues = []
+  const warnings = []
+
+  if (!Array.isArray(decisions)) {
+    issues.push(issue('error', 'invalid_decisions', '决策数据不是数组'))
+  } else {
+    const seen = new Set()
+    decisions.forEach((decision, index) => {
+      if (decision?.id) {
+        if (seen.has(decision.id)) {
+          issues.push(issue('error', 'duplicate_id', `发现重复决策 ID：${decision.id}`, decision.id))
+        }
+        seen.add(decision.id)
+      }
+
+      const result = checkDecision(decision, index)
+      issues.push(...result.issues)
+      warnings.push(...result.warnings)
+    })
+  }
+
+  if (!Array.isArray(aiInsights)) {
+    warnings.push(issue('warning', 'invalid_ai_insights', 'AI 洞察数据格式异常'))
+  } else {
+    aiInsights.forEach(item => {
+      if (item && !item.content) {
+        warnings.push(issue('warning', 'empty_ai_insight', '有一条 AI 洞察缺少正文', item.id || ''))
+      }
+    })
+  }
+
+  if (decisionStyle && typeof decisionStyle !== 'object') {
+    warnings.push(issue('warning', 'invalid_decision_style', '决策风格数据格式异常'))
+  }
+
+  const status = issues.length > 0 ? 'error' : warnings.length > 0 ? 'warning' : 'healthy'
+
+  return {
+    status,
+    issues,
+    warnings,
+    summary: {
+      decisions: Array.isArray(decisions) ? decisions.length : 0,
+      aiInsights: Array.isArray(aiInsights) ? aiInsights.length : 0,
+      issueCount: issues.length,
+      warningCount: warnings.length,
+    },
+  }
+}

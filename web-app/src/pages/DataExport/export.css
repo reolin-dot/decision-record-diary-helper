@@ -12,6 +12,59 @@
   margin-bottom: 16px;
 }
 
+.health-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 12px;
+  margin-bottom: 16px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-left: 4px solid var(--color-accent);
+  border-radius: 10px;
+}
+
+.health-warning {
+  border-left-color: #d99a42;
+}
+
+.health-error {
+  border-left-color: #d85c4a;
+}
+
+.health-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.health-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.health-count {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #888888;
+  line-height: 1.5;
+}
+
+.health-desc,
+.health-item {
+  font-size: 12px;
+  color: #777777;
+  line-height: 1.55;
+}
+
+.health-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .export-section-title {
   font-size: 12px;
   font-weight: 700;
