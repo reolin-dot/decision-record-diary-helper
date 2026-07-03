@@ -6,7 +6,7 @@ import { useModal } from '../../components/Modal.jsx'
 import storage from '../../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS } from '../../storage/storageKeys.js'
 import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
-import { checkDataHealth, repairDataHealth } from '../../domain/dataHealth.js'
+import { checkDataHealth, repairDataHealth, summarizeImport } from '../../domain/dataHealth.js'
 import './export.css'
 
 const EXPORT_OPTIONS = [
@@ -102,26 +102,6 @@ function downloadJSON(data, filename) {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
-}
-
-function summarizeImport(payload, existingDecisions = []) {
-  const existingIds = new Set(existingDecisions.map(item => item?.id).filter(Boolean))
-  const summary = {
-    decisions: payload.decisions.length,
-    aiInsights: Array.isArray(payload.aiInsights) ? payload.aiInsights.length : 0,
-    addedDecisions: 0,
-    mergedDecisions: 0,
-  }
-
-  payload.decisions.forEach(item => {
-    if (existingIds.has(item?.id)) {
-      summary.mergedDecisions += 1
-    } else {
-      summary.addedDecisions += 1
-    }
-  })
-
-  return summary
 }
 
 async function copyText(text) {
@@ -318,7 +298,7 @@ export default function DataExport() {
           decisionStyle: decisionsPayload.decisionStyle || null,
         })
         if (importHealth.status === 'error') {
-          toast.show('导入失败：备份数据有严重格式问题')
+          toast.show(`导入失败：${importHealth.issues[0]?.message || '备份数据有严重格式问题'}`)
           return
         }
         const repairResult = repairDataHealth({ decisions: decisionsPayload.decisions })
