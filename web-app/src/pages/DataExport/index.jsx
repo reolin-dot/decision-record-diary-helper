@@ -104,6 +104,26 @@ function downloadJSON(data, filename) {
   URL.revokeObjectURL(url)
 }
 
+function summarizeImport(payload, existingDecisions = []) {
+  const existingIds = new Set(existingDecisions.map(item => item?.id).filter(Boolean))
+  const summary = {
+    decisions: payload.decisions.length,
+    aiInsights: Array.isArray(payload.aiInsights) ? payload.aiInsights.length : 0,
+    addedDecisions: 0,
+    mergedDecisions: 0,
+  }
+
+  payload.decisions.forEach(item => {
+    if (existingIds.has(item?.id)) {
+      summary.mergedDecisions += 1
+    } else {
+      summary.addedDecisions += 1
+    }
+  })
+
+  return summary
+}
+
 async function copyText(text) {
   if (navigator.clipboard?.writeText) {
     try {
@@ -280,21 +300,9 @@ export default function DataExport() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const confirmed = await modal.confirm({
-      title: '导入备份',
-      content: '支持完整本地备份或普通决策导出。将按决策 ID 合并；同一条记录以文件中的内容为准。',
-      confirmText: '确认导入',
-      cancelText: '取消',
-    })
-
-    if (!confirmed) {
-      e.target.value = ''
-      return
-    }
-
     setImporting(true)
     const reader = new FileReader()
-    reader.onload = () => {
+    reader.onload = async () => {
       try {
         const payload = JSON.parse(reader.result)
         const decisionsPayload = Array.isArray(payload.decisions)
@@ -318,6 +326,19 @@ export default function DataExport() {
           ...decisionsPayload,
           decisions: repairResult.decisions,
         }
+        if (!Array.isArray(safePayload.aiInsights)) delete safePayload.aiInsights
+        if (safePayload.decisionStyle && typeof safePayload.decisionStyle !== 'object') {
+          delete safePayload.decisionStyle
+        }
+        const importSummary = summarizeImport(safePayload, storedDecisions)
+        const confirmed = await modal.confirm({
+          title: '确认导入备份',
+          content: `文件包含 ${importSummary.decisions} 条决策、${importSummary.aiInsights} 条洞察；预计新增 ${importSummary.addedDecisions} 条决策，同 ID 合并 ${importSummary.mergedDecisions} 条。导入前会自动下载当前完整备份。`,
+          confirmText: '确认导入',
+          cancelText: '取消',
+        })
+        if (!confirmed) return
+
         downloadJSON(storage.exportAll(), `decision-diary-before-import-${Date.now()}.json`)
         const ok = storage.importAll(safePayload, 'merge')
         if (!ok) {
@@ -327,8 +348,8 @@ export default function DataExport() {
         reloadFromStorage()
         toast.show(
           repairResult.repaired
-            ? `导入成功，已顺手修复 ${repairResult.changedCount} 条记录`
-            : '导入成功，已合并到本地数据'
+            ? `导入成功：新增 ${importSummary.addedDecisions} 条，合并 ${importSummary.mergedDecisions} 条；已修复 ${repairResult.changedCount} 条`
+            : `导入成功：新增 ${importSummary.addedDecisions} 条，合并 ${importSummary.mergedDecisions} 条`
         )
         setTimeout(() => navigate('/'), 700)
       } catch (err) {
