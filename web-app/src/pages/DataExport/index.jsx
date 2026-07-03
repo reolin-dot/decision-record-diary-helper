@@ -17,11 +17,12 @@ const EXPORT_OPTIONS = [
 
 const DEEPSEEK_CHAT_URL = 'https://chat.deepseek.com/'
 
-function buildFullExport(decisions, decisionStyle, aiInsights = []) {
+function buildFullExport(decisions, decisionStyle, aiInsights = [], dataHealth = null) {
   return {
     exportDate: new Date().toISOString(),
     exportType: 'full',
     totalDecisions: decisions.length,
+    dataHealth,
     decisionStyle: decisionStyle || null,
     aiInsights,
     decisions: decisions.map(d => ({
@@ -148,10 +149,15 @@ export default function DataExport() {
 
     let data
     if (selected === 'all') {
-      data = buildFullExport(decisions, decisionStyle, aiInsights)
+      data = buildFullExport(decisions, decisionStyle, aiInsights, dataHealth)
     } else if (selected === 'reviewed') {
       const reviewed = decisions.filter(d => d.firstReviewDone || d.resultReviewDone)
-      data = buildFullExport(reviewed, decisionStyle, aiInsights)
+      data = buildFullExport(
+        reviewed,
+        decisionStyle,
+        aiInsights,
+        checkDataHealth({ decisions: reviewed, aiInsights, decisionStyle })
+      )
     } else if (selected === 'lessons') {
       data = buildLessonsExport(decisions, decisionStyle)
     } else {
@@ -249,6 +255,19 @@ export default function DataExport() {
         const decisionsPayload = Array.isArray(payload.decisions)
           ? { ...payload, decisions: payload.decisions }
           : payload
+        if (!Array.isArray(decisionsPayload.decisions)) {
+          toast.show('导入失败：备份文件缺少决策数据')
+          return
+        }
+        const importHealth = checkDataHealth({
+          decisions: decisionsPayload.decisions,
+          aiInsights: decisionsPayload.aiInsights || [],
+          decisionStyle: decisionsPayload.decisionStyle || null,
+        })
+        if (importHealth.status === 'error') {
+          toast.show('导入失败：备份数据有严重格式问题')
+          return
+        }
         const ok = storage.importAll(decisionsPayload, 'merge')
         if (!ok) {
           toast.show('导入失败，请检查文件格式')
