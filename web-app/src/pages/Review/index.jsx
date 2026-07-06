@@ -238,8 +238,18 @@ export default function Review() {
     toast.show(msg, { type: 'success' })
 
     setTimeout(() => {
-      navigate('/')
-    }, 800)
+      navigate('/review-success', {
+        state: {
+          title: decision.title,
+          summary: pendingResult.summary,
+          lesson: pendingResult.lesson,
+          rating: pendingResult.rating,
+          reviewType: rType,
+          remainingCount: Math.max(maxWaterings - wateringCount, 0),
+          nextReviewDate: isDone ? '' : updatedDecision.reviewDate,
+        },
+      })
+    }, 500)
   }
 
   // Not found view

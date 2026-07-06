@@ -8,6 +8,7 @@ import Profile from './pages/Profile/index.jsx'
 
 import Record from './pages/Record/index.jsx'
 import RecordSuccess from './pages/RecordSuccess/index.jsx'
+import ReviewSuccess from './pages/ReviewSuccess/index.jsx'
 import Watering from './pages/Watering/index.jsx'
 import Review from './pages/Review/index.jsx'
 import DecisionDetail from './pages/DecisionDetail/index.jsx'
@@ -29,6 +30,7 @@ export default function AppRoutes() {
 
       <Route path="/record" element={<Record />} />
       <Route path="/record-success" element={<RecordSuccess />} />
+      <Route path="/review-success" element={<ReviewSuccess />} />
       <Route path="/watering" element={<PageHeader title="提醒中心"><Watering /></PageHeader>} />
       <Route path="/review/:id" element={<PageHeader title="复盘"><Review /></PageHeader>} />
       <Route path="/decision/:id" element={<DecisionDetail />} />

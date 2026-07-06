@@ -43,3 +43,50 @@
 .success-btn {
   max-width: 200px;
 }
+
+.success-panel {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(74, 124, 89, 0.18);
+  text-align: left;
+}
+
+.success-panel-soft {
+  background: rgba(255, 248, 236, 0.78);
+  border-color: #f4dfbd;
+}
+
+.success-panel-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.success-panel-text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.success-panel-meta {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.success-link {
+  margin-top: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
