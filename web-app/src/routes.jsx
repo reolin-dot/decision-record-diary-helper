@@ -14,6 +14,8 @@ import Review from './pages/Review/index.jsx'
 import DecisionDetail from './pages/DecisionDetail/index.jsx'
 import DecisionList from './pages/DecisionList/index.jsx'
 import GrowthSnippets from './pages/GrowthSnippets/index.jsx'
+import GrowthArchive from './pages/GrowthArchive/index.jsx'
+import MonthlyReport from './pages/MonthlyReport/index.jsx'
 import CoachAnalyze from './pages/CoachAnalyze/index.jsx'
 import CoachResult from './pages/CoachResult/index.jsx'
 import StyleTest from './pages/StyleTest/index.jsx'
@@ -36,6 +38,8 @@ export default function AppRoutes() {
       <Route path="/decision/:id" element={<DecisionDetail />} />
       <Route path="/decision-list" element={<PageHeader title="决策记录"><DecisionList /></PageHeader>} />
       <Route path="/growth-snippets" element={<PageHeader title="成长片段"><GrowthSnippets /></PageHeader>} />
+      <Route path="/growth-archive" element={<PageHeader title="成长档案"><GrowthArchive /></PageHeader>} />
+      <Route path="/monthly-report" element={<PageHeader title="月度成长报告"><MonthlyReport /></PageHeader>} />
       <Route path="/coach-analyze" element={<PageHeader title="分析"><CoachAnalyze /></PageHeader>} />
       <Route path="/coach-result" element={<PageHeader title="分析结果"><CoachResult /></PageHeader>} />
       <Route path="/style-test" element={<PageHeader title="决策风格测试"><StyleTest /></PageHeader>} />

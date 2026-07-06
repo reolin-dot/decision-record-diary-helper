@@ -1,0 +1,70 @@
+.archive-page {
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: 80px;
+  background: #f5f5f5;
+}
+
+.archive-hero {
+  padding: 18px 16px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(74, 124, 89, 0.14);
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-card);
+}
+
+.archive-hero span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.archive-hero h1 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.archive-hero p,
+.archive-card small {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.archive-card {
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+
+.archive-card.primary {
+  border-color: rgba(74, 124, 89, 0.24);
+  background: linear-gradient(145deg, rgba(74, 124, 89, 0.1), #ffffff);
+}
+
+.archive-icon {
+  font-size: 24px;
+}
+
+.archive-card b {
+  color: var(--color-text-primary);
+  font-size: 16px;
+}

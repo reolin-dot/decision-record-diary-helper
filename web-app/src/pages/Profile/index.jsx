@@ -4,6 +4,8 @@ import { useToast } from '../../components/Toast.jsx'
 import './profile.css'
 
 const SETTINGS = [
+  { icon: '🗂️', label: '成长档案', action: 'growthArchive' },
+  { icon: '🗓️', label: '月度成长报告', action: 'monthlyReport' },
   { icon: '💧', label: '提醒中心', action: 'watering' },
   { icon: '💡', label: '成长片段', action: 'growthSnippets' },
   { icon: '🤖', label: '数据导出与 AI 分析', action: 'dataExport' },
@@ -36,6 +38,12 @@ export default function Profile() {
     switch (action) {
       case 'watering':
         navigate('/watering')
+        break
+      case 'growthArchive':
+        navigate('/growth-archive')
+        break
+      case 'monthlyReport':
+        navigate('/monthly-report')
         break
       case 'growthSnippets':
         navigate('/growth-snippets')
