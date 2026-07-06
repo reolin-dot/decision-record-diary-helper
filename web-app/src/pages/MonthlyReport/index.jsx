@@ -1,12 +1,17 @@
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
-import { buildMonthlyReport } from '../../domain/monthlyReport.js'
+import { buildAvailableReportMonths, buildMonthlyReport } from '../../domain/monthlyReport.js'
 import './monthly-report.css'
 
 export default function MonthlyReport() {
   const navigate = useNavigate()
   const { decisions } = useApp()
-  const report = buildMonthlyReport(decisions)
+  const months = useMemo(() => buildAvailableReportMonths(decisions), [decisions])
+  const [selectedMonth, setSelectedMonth] = useState(months[0])
+  const month = months.includes(selectedMonth) ? selectedMonth : months[0]
+  const monthIndex = months.indexOf(month)
+  const report = buildMonthlyReport(decisions, { month })
 
   return (
     <div className="monthly-page">
@@ -14,6 +19,19 @@ export default function MonthlyReport() {
         <span className="monthly-kicker">{report.month} 月度成长报告</span>
         <h1>{report.summary}</h1>
         <p>这里看的是本月有没有完成“记录、行动、复盘”的闭环，不评价选择对错。</p>
+      </div>
+
+      <div className="monthly-switcher">
+        <button disabled={monthIndex >= months.length - 1} onClick={() => setSelectedMonth(months[monthIndex + 1])}>
+          上个月
+        </button>
+        <span>{month}</span>
+        <button disabled={monthIndex <= 0} onClick={() => setSelectedMonth(months[monthIndex - 1])}>
+          下个月
+        </button>
+        <button disabled={monthIndex === 0} onClick={() => setSelectedMonth(months[0])}>
+          回到本月
+        </button>
       </div>
 
       <div className="monthly-stats">

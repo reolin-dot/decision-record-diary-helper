@@ -44,6 +44,41 @@
   margin-bottom: 16px;
 }
 
+.monthly-switcher {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.monthly-switcher span {
+  min-width: 74px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.monthly-switcher button {
+  min-height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.monthly-switcher button:last-child {
+  grid-column: 1 / -1;
+}
+
+.monthly-switcher button:disabled {
+  color: #b8afa4;
+  background: #f7f4ef;
+}
+
 .monthly-stats div,
 .monthly-card,
 .monthly-snippet {

@@ -22,8 +22,21 @@ function categoryLabel(decision) {
   return CATEGORY_LABELS[decision.category] || '自由记录'
 }
 
-export function buildMonthlyReport(decisions = [], { today = formatDate(new Date()) } = {}) {
-  const month = today.slice(0, 7)
+export function buildAvailableReportMonths(decisions = [], today = formatDate(new Date())) {
+  const months = new Set([today.slice(0, 7)])
+
+  activeDecisions(decisions).forEach(decision => {
+    if (decision.createdAt) months.add(decision.createdAt.slice(0, 7))
+    ;(Array.isArray(decision.wateringHistory) ? decision.wateringHistory : [])
+      .forEach(item => {
+        if (item.date) months.add(item.date.slice(0, 7))
+      })
+  })
+
+  return [...months].filter(Boolean).sort((a, b) => b.localeCompare(a))
+}
+
+export function buildMonthlyReport(decisions = [], { today = formatDate(new Date()), month = today.slice(0, 7) } = {}) {
   const active = activeDecisions(decisions)
   const monthDecisions = active.filter(d => (d.createdAt || '').slice(0, 7) === month)
   const monthReviews = active.flatMap(d =>
