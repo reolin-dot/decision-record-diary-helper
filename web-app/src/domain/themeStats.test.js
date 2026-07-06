@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildThemeStats, getThemeDecisions } from './themeStats.js'
+import { buildThemeInsight, buildThemeStats, getThemeDecisions } from './themeStats.js'
 
 test('builds theme stats from active decisions', () => {
   const stats = buildThemeStats([
@@ -34,4 +34,10 @@ test('gets decisions for one theme', () => {
   ]
 
   assert.deepEqual(getThemeDecisions(decisions, 'career').map(item => item.id), ['d3', 'd1'])
+})
+
+test('builds a readable theme insight', () => {
+  assert.match(buildThemeInsight({ title: '职业选择', count: 3, ratio: 75 }), /一半以上/)
+  assert.match(buildThemeInsight({ title: '学习成长', count: 1, ratio: 20 }), /刚出现/)
+  assert.match(buildThemeInsight(null), /先记录/)
 })

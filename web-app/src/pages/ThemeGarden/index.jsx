@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
-import { buildThemeStats, getThemeDecisions } from '../../domain/themeStats.js'
+import { buildThemeInsight, buildThemeStats, getThemeDecisions } from '../../domain/themeStats.js'
 import './theme-garden.css'
 
 export default function ThemeGarden() {
@@ -11,6 +11,7 @@ export default function ThemeGarden() {
   const requestedTheme = searchParams.get('theme')
   const selectedTheme = themes.find(item => item.id === requestedTheme) || themes[0]
   const themeDecisions = selectedTheme ? getThemeDecisions(decisions, selectedTheme.id) : []
+  const insight = buildThemeInsight(selectedTheme)
 
   return (
     <div className="theme-page">
@@ -38,6 +39,11 @@ export default function ThemeGarden() {
           <div className="theme-summary">
             <b>{selectedTheme.count}</b>
             <span>个决策集中在这里，占全部记录的 {selectedTheme.ratio}%</span>
+          </div>
+
+          <div className="theme-insight">
+            <span>主题洞察</span>
+            <b>{insight}</b>
           </div>
 
           <div className="theme-list">
