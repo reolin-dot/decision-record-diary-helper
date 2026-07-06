@@ -1,0 +1,57 @@
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useApp } from '../../context/AppContext.jsx'
+import { buildThemeStats, getThemeDecisions } from '../../domain/themeStats.js'
+import './theme-garden.css'
+
+export default function ThemeGarden() {
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { decisions } = useApp()
+  const themes = buildThemeStats(decisions)
+  const requestedTheme = searchParams.get('theme')
+  const selectedTheme = themes.find(item => item.id === requestedTheme) || themes[0]
+  const themeDecisions = selectedTheme ? getThemeDecisions(decisions, selectedTheme.id) : []
+
+  return (
+    <div className="theme-page">
+      <div className="theme-hero">
+        <span>主题花园雏形</span>
+        <h1>{selectedTheme ? `${selectedTheme.title}正在长出自己的线索` : '还没有形成主题'}</h1>
+        <p>先按主题把决策收拢起来，后续再把它升级成真正的主题花园。</p>
+      </div>
+
+      {themes.length > 0 ? (
+        <>
+          <div className="theme-tabs">
+            {themes.map(item => (
+              <button
+                key={item.id}
+                className={item.id === selectedTheme.id ? 'on' : ''}
+                onClick={() => setSearchParams({ theme: item.id })}
+              >
+                <span>{item.icon}</span>
+                {item.title}
+              </button>
+            ))}
+          </div>
+
+          <div className="theme-summary">
+            <b>{selectedTheme.count}</b>
+            <span>个决策集中在这里，占全部记录的 {selectedTheme.ratio}%</span>
+          </div>
+
+          <div className="theme-list">
+            {themeDecisions.map(item => (
+              <button key={item.id} onClick={() => navigate(`/decision/${item.id}`)}>
+                <b>{item.title || '未命名决策'}</b>
+                <span>{item.createdAt || '未记录日期'} · {item.status === 'reviewed' ? '已复盘' : '生长中'}</span>
+              </button>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="theme-empty">记录第一个正式决策后，这里会出现主题花园。</div>
+      )}
+    </div>
+  )
+}

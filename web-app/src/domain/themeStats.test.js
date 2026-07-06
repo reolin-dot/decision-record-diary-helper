@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildThemeStats } from './themeStats.js'
+import { buildThemeStats, getThemeDecisions } from './themeStats.js'
 
 test('builds theme stats from active decisions', () => {
   const stats = buildThemeStats([
@@ -24,4 +24,14 @@ test('labels coach and free-form decisions', () => {
   ])
 
   assert.deepEqual(stats.map(item => item.title), ['决策锦囊', '自由记录'])
+})
+
+test('gets decisions for one theme', () => {
+  const decisions = [
+    { id: 'd1', category: 'career', title: '旧职业', createdAt: '2026-06-01' },
+    { id: 'd2', category: 'learning', title: '学习', createdAt: '2026-07-01' },
+    { id: 'd3', category: 'career', title: '新职业', createdAt: '2026-07-02' },
+  ]
+
+  assert.deepEqual(getThemeDecisions(decisions, 'career').map(item => item.id), ['d3', 'd1'])
 })

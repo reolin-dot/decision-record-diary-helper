@@ -4,7 +4,7 @@ const TEMPLATE_MAP = Object.fromEntries(
   DECISION_TEMPLATES.map(item => [item.id, item])
 )
 
-function themeForDecision(decision) {
+export function getDecisionTheme(decision) {
   if (decision.coachSource?.kitTitle) {
     return { id: `coach:${decision.coachSource.kitTitle}`, title: decision.coachSource.kitTitle, icon: '🧭' }
   }
@@ -22,7 +22,7 @@ export function buildThemeStats(decisions = []) {
   const counts = new Map()
 
   active.forEach(decision => {
-    const theme = themeForDecision(decision)
+    const theme = getDecisionTheme(decision)
     const existing = counts.get(theme.id) || { ...theme, count: 0 }
     counts.set(theme.id, { ...existing, count: existing.count + 1 })
   })
@@ -34,4 +34,11 @@ export function buildThemeStats(decisions = []) {
       ...item,
       ratio: total ? Math.round((item.count / total) * 100) : 0,
     }))
+}
+
+export function getThemeDecisions(decisions = [], themeId = '') {
+  return decisions
+    .filter(item => item && !item._deleted && !item.isDraft)
+    .filter(item => getDecisionTheme(item).id === themeId)
+    .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))
 }

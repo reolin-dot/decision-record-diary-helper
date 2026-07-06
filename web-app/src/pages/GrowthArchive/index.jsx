@@ -51,14 +51,18 @@ export default function GrowthArchive() {
         {themes.length > 0 ? (
           <div className="archive-theme-list">
             {themes.map(item => (
-              <div key={item.id} className="archive-theme-row">
+              <button
+                key={item.id}
+                className="archive-theme-row"
+                onClick={() => navigate(`/theme-garden?theme=${encodeURIComponent(item.id)}`)}
+              >
                 <span className="archive-theme-icon">{item.icon}</span>
                 <div>
                   <b>{item.title}</b>
                   <small>{item.count} 个决策 · {item.ratio}%</small>
                   <i style={{ width: `${item.ratio}%` }} />
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         ) : (

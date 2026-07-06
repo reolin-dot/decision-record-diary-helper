@@ -102,11 +102,13 @@
 }
 
 .archive-theme-row {
+  width: 100%;
   display: grid;
   grid-template-columns: 38px 1fr;
   gap: 10px;
   align-items: center;
   padding: 12px;
+  text-align: left;
 }
 
 .archive-theme-icon {

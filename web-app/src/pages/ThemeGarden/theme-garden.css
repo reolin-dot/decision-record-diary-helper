@@ -1,0 +1,118 @@
+.theme-page {
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: 80px;
+  background: #f5f5f5;
+}
+
+.theme-hero {
+  padding: 18px 16px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(74, 124, 89, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffffff, rgba(74, 124, 89, 0.1));
+  box-shadow: var(--shadow-card);
+}
+
+.theme-hero span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.theme-hero h1 {
+  margin: 0 0 8px;
+  color: var(--color-text-primary);
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.theme-hero p,
+.theme-list span,
+.theme-summary span,
+.theme-empty {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.theme-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.theme-tabs button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--color-text-primary);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.theme-tabs span {
+  margin-right: 5px;
+}
+
+.theme-tabs .on {
+  border-color: rgba(74, 124, 89, 0.35);
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.theme-summary,
+.theme-list button,
+.theme-empty {
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+}
+
+.theme-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.theme-summary b {
+  color: var(--color-accent);
+  font-size: 30px;
+}
+
+.theme-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.theme-list button {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 13px 14px;
+  text-align: left;
+}
+
+.theme-list b {
+  color: var(--color-text-primary);
+  font-size: 15px;
+}
+
+.theme-empty {
+  padding: 14px;
+}
