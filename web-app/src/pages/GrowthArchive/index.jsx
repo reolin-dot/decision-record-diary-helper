@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
-import { buildMonthlyReport } from '../../domain/monthlyReport.js'
+import { buildAvailableReportMonths, buildMonthlyReport } from '../../domain/monthlyReport.js'
 import { getLatestGrowthSnippets } from '../../domain/growthSnippets.js'
 import './growth-archive.css'
 
@@ -8,6 +8,8 @@ export default function GrowthArchive() {
   const navigate = useNavigate()
   const { decisions, aiInsights } = useApp()
   const report = buildMonthlyReport(decisions)
+  const months = buildAvailableReportMonths(decisions)
+  const recentReports = months.slice(0, 4).map(month => buildMonthlyReport(decisions, { month }))
   const snippets = getLatestGrowthSnippets(decisions, 2)
   const latestInsight = aiInsights?.[0]
 
@@ -39,6 +41,22 @@ export default function GrowthArchive() {
           <span className="archive-icon">📊</span>
           <b>决策记录</b>
           <small>回看所有选择、阶段和浇水历史</small>
+        </div>
+      </div>
+
+      <div className="archive-section">
+        <span className="archive-section-title">历史月报</span>
+        <div className="archive-report-list">
+          {recentReports.map(item => (
+            <button
+              key={item.month}
+              className="archive-report-row"
+              onClick={() => navigate(item.month === months[0] ? '/monthly-report' : `/monthly-report?month=${item.month}`)}
+            >
+              <b>{item.month}</b>
+              <span>{item.decisionCount} 个决策 · {item.reviewCount} 次复盘 · {item.snippetCount} 条片段</span>
+            </button>
+          ))}
         </div>
       </div>
     </div>

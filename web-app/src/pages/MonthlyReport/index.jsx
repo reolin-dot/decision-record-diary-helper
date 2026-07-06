@@ -1,17 +1,19 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { buildAvailableReportMonths, buildMonthlyReport } from '../../domain/monthlyReport.js'
 import './monthly-report.css'
 
 export default function MonthlyReport() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { decisions } = useApp()
   const months = useMemo(() => buildAvailableReportMonths(decisions), [decisions])
-  const [selectedMonth, setSelectedMonth] = useState(months[0])
-  const month = months.includes(selectedMonth) ? selectedMonth : months[0]
+  const requestedMonth = searchParams.get('month')
+  const month = months.includes(requestedMonth) ? requestedMonth : months[0]
   const monthIndex = months.indexOf(month)
   const report = buildMonthlyReport(decisions, { month })
+  const setMonth = nextMonth => setSearchParams(nextMonth === months[0] ? {} : { month: nextMonth })
 
   return (
     <div className="monthly-page">
@@ -22,14 +24,14 @@ export default function MonthlyReport() {
       </div>
 
       <div className="monthly-switcher">
-        <button disabled={monthIndex >= months.length - 1} onClick={() => setSelectedMonth(months[monthIndex + 1])}>
+        <button disabled={monthIndex >= months.length - 1} onClick={() => setMonth(months[monthIndex + 1])}>
           上个月
         </button>
         <span>{month}</span>
-        <button disabled={monthIndex <= 0} onClick={() => setSelectedMonth(months[monthIndex - 1])}>
+        <button disabled={monthIndex <= 0} onClick={() => setMonth(months[monthIndex - 1])}>
           下个月
         </button>
-        <button disabled={monthIndex === 0} onClick={() => setSelectedMonth(months[0])}>
+        <button disabled={monthIndex === 0} onClick={() => setMonth(months[0])}>
           回到本月
         </button>
       </div>
