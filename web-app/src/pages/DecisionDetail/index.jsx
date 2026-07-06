@@ -81,6 +81,44 @@ export default function DecisionDetail() {
     navigate(`/record?draftId=${id}&step=1`)
   }
 
+  const getNextStep = () => {
+    if (decision.isDraft) {
+      return {
+        title: '这还是一颗草稿种子',
+        text: '先把关键选项和复盘时间补上，它才会进入成长流程。',
+        action: '继续完善',
+        onClick: handleContinueRecord,
+      }
+    }
+    if (decision.canStartAction) {
+      return {
+        title: '下一步：让它长叶',
+        text: '如果已经迈出第一步，可以标记开始行动；还没开始也没关系，先找一个很小的动作。',
+        action: '我开始行动了',
+        onClick: handleMarkActionStarted,
+      }
+    }
+    if (decision.canReview) {
+      return {
+        title: decision.reviewType === 'result' ? '下一步：结果复盘' : '下一步：当下复盘',
+        text: decision.reviewType === 'result'
+          ? '结果更明朗时，把这次经验收回来。'
+          : '回来记录一点新信息，不急着判断对错。',
+        action: decision.reviewType === 'result' ? '去结果复盘' : '去当下复盘',
+        onClick: handleGoReview,
+      }
+    }
+    if ((decision.wateringHistory || []).length > 0) {
+      return {
+        title: '这朵花已经留下经验',
+        text: '复盘内容已经沉淀成成长片段，可以回头看看它带给你的提醒。',
+        action: '查看成长片段',
+        onClick: () => navigate('/growth-snippets'),
+      }
+    }
+    return null
+  }
+
   // Not found
   if (!decision) {
     return (
@@ -97,6 +135,8 @@ export default function DecisionDetail() {
     )
   }
 
+  const nextStep = getNextStep()
+
   return (
     <div className="detail-body">
       {/* Hero */}
@@ -109,6 +149,17 @@ export default function DecisionDetail() {
         <span className="hero-title">{decision.title}</span>
         <span className="hero-date">{decision.createdAt}</span>
       </div>
+
+      {nextStep && (
+        <div className="detail-section next-step-card">
+          <span className="next-step-label">下一步</span>
+          <span className="next-step-title">{nextStep.title}</span>
+          <span className="next-step-text">{nextStep.text}</span>
+          <button className="next-step-btn" onClick={nextStep.onClick}>
+            {nextStep.action}
+          </button>
+        </div>
+      )}
 
       {decision.coachSource && (
         <div className="detail-section coach-source-section">

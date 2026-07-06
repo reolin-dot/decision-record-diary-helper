@@ -86,6 +86,46 @@
   display: block;
 }
 
+.next-step-card {
+  border-color: rgba(74, 124, 89, 0.18);
+  background: linear-gradient(145deg, rgba(74, 124, 89, 0.08), #ffffff);
+}
+
+.next-step-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #4a7c59;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.next-step-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #222222;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.next-step-text {
+  font-size: 13px;
+  color: #666666;
+  line-height: 1.65;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.next-step-btn {
+  border: none;
+  border-radius: 999px;
+  background: #4a7c59;
+  color: #ffffff;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .coach-source-section {
   border-color: rgba(74, 124, 89, 0.16);
 }
