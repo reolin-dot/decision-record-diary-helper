@@ -26,6 +26,7 @@ export default function Garden() {
 
   const reminders = getReminders(decorated, today)
   const reminderCount = reminders.length
+  const topReminder = reminders[0] || null
   const bloomedCount = decorated.filter(d => isBloomStage(d.stage)).length
   const growingCount = decorated.filter(d => isGrowingStage(d.stage)).length
   const latestSnippets = getLatestGrowthSnippets(decorated, 3)
@@ -182,11 +183,30 @@ export default function Garden() {
             </div>
           )}
 
-          {reminderCount > 0 && (
-            <div className="garden-reminder" onClick={() => navigate('/watering')}>
-              <div className="reminder-dot"></div>
-              <span className="reminder-text">{reminderCount} 个决策等你回来看看</span>
-              <span className="reminder-arrow">›</span>
+          {topReminder && (
+            <div
+              className={`garden-review-focus focus-${topReminder.type}`}
+              onClick={() => navigate(`/review/${topReminder.decisionId}`)}
+            >
+              <div className="review-focus-head">
+                <span className="review-focus-icon">{topReminder.icon}</span>
+                <div className="review-focus-title-wrap">
+                  <span className="review-focus-kicker">今天最值得回看</span>
+                  <span className="review-focus-title">{topReminder.decision.title}</span>
+                </div>
+                <span className="review-focus-count">{reminderCount} 个</span>
+              </div>
+              <span className="review-focus-tone">{topReminder.tone}</span>
+              <div className="review-focus-actions">
+                <button type="button" onClick={(e) => { e.stopPropagation(); navigate(`/review/${topReminder.decisionId}`) }}>
+                  去复盘
+                </button>
+                {reminderCount > 1 && (
+                  <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/watering') }}>
+                    查看全部
+                  </button>
+                )}
+              </div>
             </div>
           )}
 

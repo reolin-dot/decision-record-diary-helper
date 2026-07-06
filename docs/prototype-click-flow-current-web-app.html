@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>决策成长日记 Web App V1.6 点击流原型</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f6f1e8;
+      color: #2d2924;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    .page {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+    h1 { margin: 0 0 8px; font-size: 34px; letter-spacing: 0; }
+    .sub { margin: 0; color: #74695d; font-size: 15px; }
+    .note {
+      padding: 16px;
+      border: 1px solid #e2d3bf;
+      border-radius: 8px;
+      background: #fffaf1;
+      color: #6f604e;
+      font-size: 13px;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin: 18px 0 28px;
+    }
+    .flow a {
+      padding: 12px 10px;
+      border: 1px solid #dac8af;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .section-title {
+      margin: 24px 0 12px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+    .screen {
+      min-height: 520px;
+      padding: 14px;
+      border: 2px solid #2d2924;
+      border-radius: 28px;
+      background: #fbfaf6;
+      box-shadow: 0 16px 28px rgba(70, 49, 30, .12);
+    }
+    .screen h2 {
+      margin: 5px 6px 12px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    .card {
+      margin-bottom: 10px;
+      padding: 12px;
+      border: 1px solid #e7d8c4;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .warm { background: #fff4dd; border-color: #e8c88f; }
+    .green { background: #eef7ed; border-color: #c8dfc5; }
+    .blue { background: #edf5fb; border-color: #bdd5e7; }
+    .pink { background: #fff0f2; border-color: #ebc7ce; }
+    .label {
+      display: block;
+      margin-bottom: 5px;
+      color: #887765;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .big { display: block; font-size: 23px; font-weight: 900; }
+    .text { color: #71665b; font-size: 12px; }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+    .tab {
+      padding: 7px 4px;
+      border-radius: 8px;
+      background: #f0eadf;
+      color: #5f5349;
+      font-size: 11px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .tab.on { background: #81613e; color: #fff; }
+    .btn {
+      display: inline-block;
+      margin-top: 9px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: #81613e;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .btn.alt { background: #fff; color: #6a5745; border: 1px solid #dccbb4; }
+    .field {
+      min-height: 34px;
+      margin-top: 7px;
+      padding: 8px;
+      border: 1px solid #dfd1be;
+      border-radius: 8px;
+      background: #fff;
+      color: #7a7066;
+      font-size: 12px;
+    }
+    .list { display: grid; gap: 8px; }
+    .item {
+      padding: 9px;
+      border-radius: 8px;
+      background: #f7f2ea;
+      font-size: 12px;
+    }
+    .item.hot { border: 1px solid #d9bea0; background: #fff9ec; }
+    .flowers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 10px; }
+    .flower {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #f0e7d5;
+      font-size: 21px;
+    }
+    .arrow {
+      margin: 8px 0 0;
+      color: #8b7158;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .map {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .map-card {
+      padding: 12px;
+      border: 1px solid #e1d1bd;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+    }
+    .map-card b { display: block; margin-bottom: 4px; }
+    @media (max-width: 980px) {
+      .page { padding: 18px; }
+      .hero { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: repeat(2, 1fr); }
+      .screen-grid { grid-template-columns: 1fr; }
+      .map { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <h1>决策成长日记 Web App V1.6 点击流原型</h1>
+        <p class="sub">基于当前 React Web V1.6：花园首页、记录决策、锦囊、提醒复盘、成长片段、个人页、数据安全、DeepSeek 分析与 AI 洞察回填。</p>
+      </div>
+      <div class="note">
+        当前定位：V1.6 数据安全与本地闭环增强版。核心闭环是“记录决策 -> 开始行动 -> 个性化复盘 -> 沉淀成长片段 -> 本地备份/恢复 -> 外部 AI 洞察回填”。
+      </div>
+    </section>
+
+    <nav class="flow">
+      <a href="#home">首页</a>
+      <a href="#record">种花记录</a>
+      <a href="#detail">详情行动</a>
+      <a href="#review">提醒复盘</a>
+      <a href="#coach">锦囊分析</a>
+      <a href="#assets">成长资产</a>
+      <a href="#profile">个人与数据</a>
+    </nav>
+
+    <div class="section-title">点击关系总览</div>
+    <section class="map">
+      <div class="map-card"><b>点击“种花”</b>新用户先进入决策风格测试；已完成或跳过测试后进入 4 步记录页。</div>
+      <div class="map-card"><b>点击“提醒”</b>进入提醒中心，按到期复盘、行动提醒、结果跟进分组展示，并带入个性化复盘问题。</div>
+      <div class="map-card"><b>点击“锦囊”</b>进入困境选择页，选中困境后填写分析，再生成锦囊卡片。</div>
+      <div class="map-card"><b>点击花朵/最近决策</b>进入决策详情，可标记开始行动、继续草稿或进入复盘。</div>
+      <div class="map-card"><b>完成复盘</b>弹出跟进次数选择，保存后返回花园，经验进入成长片段。</div>
+      <div class="map-card"><b>个人页设置入口</b>通向提醒中心、成长片段、数据导出、风格测试、决策记录。</div>
+      <div class="map-card"><b>点击“数据导出与 AI 分析”</b>进入 V1.6 数据安全页，可做健康检查、快速备份、完整备份、导入预览、低风险修复。</div>
+      <div class="map-card"><b>点击“复制并打开”</b>生成 DeepSeek 可读分析包，复制后打开外部 AI，再把分析结果保存为成长洞察。</div>
+    </section>
+
+    <div class="section-title">V1.6 版本新增范围</div>
+    <section class="map">
+      <div class="map-card"><b>本地数据安全</b>新增数据健康检查、备份新鲜度提示、快速备份、完整备份导出。</div>
+      <div class="map-card"><b>导入与修复</b>导入前预览新增/合并影响；导入或修复前自动下载当前备份；低风险格式问题可自动修复。</div>
+      <div class="map-card"><b>AI 辅助闭环</b>导出 DeepSeek 分析包，保存 AI 返回的成长洞察，并在首页和个人页露出。</div>
+      <div class="map-card"><b>个性化复盘</b>根据决策风格和历史记录调整复盘问题、状态选项和跟进提示。</div>
+      <div class="map-card"><b>决策模式洞察</b>首页展示近期决策模式卡片，引导用户回到锦囊、记录或数据分析。</div>
+      <div class="map-card"><b>仍不做的事</b>不强制登录，不做真实云同步，不在产品内直接替用户调用 AI 做最终决策。</div>
+    </section>
+
+    <div class="section-title" id="home">1. 首页花园及点击后页面</div>
+    <section class="screen-grid">
+      <article class="screen">
+        <h2>首页花园</h2>
+        <div class="card warm">
+          <span class="label">花园状态</span>
+          <span class="big">3 个决策在成长</span>
+          <div class="flowers">
+            <div class="flower">🌱</div><div class="flower">🌿</div><div class="flower">🌸</div>
+            <div class="flower">🌱</div><div class="flower">🌺</div><div class="flower">＋</div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="label">高频入口</span>
+          <div class="tabs">
+            <a class="tab on" href="#record">种花</a>
+            <a class="tab" href="#review">提醒</a>
+            <a class="tab" href="#coach">锦囊</a>
+            <a class="tab" href="#assets">片段</a>
+          </div>
+        </div>
+        <div class="card blue">
+          <b>决策模式提示</b>
+          <p class="text">最近更常卡在学习/职业类选择，建议先做一次低成本验证。</p>
+        </div>
+        <div class="arrow">点击头像 -> 个人页；点击花朵 -> 决策详情</div>
+      </article>
+
+      <article class="screen" id="record">
+        <h2>决策风格测试</h2>
+        <div class="card warm">
+          <span class="label">首次种花前</span>
+          <span class="big">发现你的决策风格</span>
+          <p class="text">可选快速版、标准版、深入版。推荐标准版 24 题。</p>
+        </div>
+        <div class="card">
+          <div class="item hot">标准画像：24 题，约 6 分钟</div>
+          <div class="item">快速了解：10 题，约 3 分钟</div>
+          <div class="item">深入分析：48 题，约 10 分钟</div>
+        </div>
+        <span class="btn">开始测试</span>
+        <span class="btn alt">跳过测试，直接使用</span>
+        <div class="arrow">完成或跳过 -> 记录决策 Step 1</div>
+      </article>
+
+      <article class="screen">
+        <h2>记录决策 4 步</h2>
+        <div class="card">
+          <span class="label">Step 1 / 4</span>
+          <b>描述你的决策</b>
+          <div class="field">要不要接一个新项目？</div>
+          <div class="field">此刻心情：纠结、期待、担心</div>
+        </div>
+        <div class="card">
+          <span class="label">Step 2 / 4</span>
+          <b>列出选项</b>
+          <div class="field">A. 接下项目，控制范围</div>
+          <div class="field">B. 暂时拒绝，保留精力</div>
+        </div>
+        <div class="card">
+          <span class="label">Step 3 / 4</span>
+          <b>选择方案与理由</b>
+          <div class="field">选择 A，因为能验证产品能力</div>
+        </div>
+        <div class="card green">
+          <span class="label">Step 4 / 4</span>
+          <b>设置复盘时间</b>
+          <div class="tabs"><span class="tab on">1 周</span><span class="tab">1 月</span><span class="tab">3 月</span><span class="tab">自定</span></div>
+        </div>
+        <div class="arrow">完成记录 -> 种子已种下</div>
+      </article>
+
+      <article class="screen">
+        <h2>记录成功</h2>
+        <div class="card warm">
+          <span class="big">种子已种下</span>
+          <p class="text">你已经把选择放到了纸面上。接下来开始行动，它会继续长叶、开花。</p>
+          <span class="btn">返回花园</span>
+        </div>
+        <div class="card">
+          <b>返回后首页变化</b>
+          <p class="text">花园新增一朵“发芽”状态的花；最近决策列表新增该记录。</p>
+        </div>
+      </article>
+    </section>
+
+    <div class="section-title" id="detail">2. 决策详情及行动点击</div>
+    <section class="screen-grid">
+      <article class="screen">
+        <h2>决策详情</h2>
+        <div class="card warm">
+          <span class="label">当前阶段</span>
+          <span class="big">🌱 发芽</span>
+          <p class="text">要不要接一个新项目？</p>
+        </div>
+        <div class="card">
+          <span class="label">当时背景</span>
+          <p class="text">机会有成长价值，但担心影响原计划。</p>
+        </div>
+        <div class="card">
+          <span class="label">当时的选项</span>
+          <div class="item hot">接下项目，控制范围 · 最终选择</div>
+          <div class="item">暂时拒绝，保留精力</div>
+        </div>
+        <span class="btn">我开始行动了</span>
+        <span class="btn alt">浇水：当下复盘</span>
+      </article>
+
+      <article class="screen">
+        <h2>点击“开始行动”后</h2>
+        <div class="card green">
+          <span class="label">状态反馈</span>
+          <span class="big">已长出新叶</span>
+          <p class="text">行动状态变为“已经开始行动”，花朵阶段从发芽进入长叶。</p>
+        </div>
+        <div class="card">
+          <b>详情页展示</b>
+          <div class="item">行动状态：已经开始行动</div>
+          <div class="item">仍可进入当下复盘</div>
+        </div>
+      </article>
+
+      <article class="screen">
+        <h2>草稿详情</h2>
+        <div class="card">
+          <span class="label">草稿状态</span>
+          <span class="big">🌱 种子</span>
+          <p class="text">只保存了标题或部分选项，尚未正式进入复盘流程。</p>
+        </div>
+        <span class="btn">继续完善这颗种子</span>
+        <div class="arrow">点击 -> 回到记录页 Step 1，带入草稿内容</div>
+      </article>
+
+      <article class="screen">
+        <h2>决策记录列表</h2>
+        <div class="card">
+          <div class="tabs"><span class="tab on">全部</span><span class="tab">生长中</span><span class="tab">待复盘</span><span class="tab">已盛开</span></div>
+        </div>
+        <div class="card">
+          <div class="field">搜索决策标题...</div>
+          <div class="item hot">要不要接新项目 · 长叶 · 生长中</div>
+          <div class="item">是否报名课程 · 初开 · 待复盘</div>
+        </div>
+        <div class="arrow">点击列表项 -> 决策详情</div>
+      </article>
+    </section>
+
+    <div class="section-title" id="review">3. 提醒中心与复盘点击后页面</div>
+    <section class="screen-grid">
+      <article class="screen">
+        <h2>提醒中心</h2>
+        <div class="card blue">
+          <span class="label">页面说明</span>
+          <span class="big">回来看看这些花</span>
+          <p class="text">收集值得回头看一眼的决策、行动和结果。</p>
+        </div>
+        <div class="card">
+          <span class="label">到期复盘</span>
+          <div class="item hot">要不要接新项目 · 提醒日 2026-07-06</div>
+          <span class="btn">去复盘</span>
+          <span class="btn alt">稍后提醒</span>
+          <span class="btn alt">今天不提醒</span>
+        </div>
+        <div class="card">
+          <span class="label">主动浇水</span>
+          <div class="item">还没到提醒时间，也可提前记录新信息</div>
+        </div>
+      </article>
+
+      <article class="screen">
+        <h2>当下复盘</h2>
+        <div class="card warm">
+          <span class="label">决策摘要</span>
+          <span class="big">要不要接新项目</span>
+          <p class="text">长叶 · 已开始推进真实行动</p>
+        </div>
+        <div class="card blue">
+          <span class="label">V1.6 个性化提示</span>
+          <p class="text">根据用户的决策风格和锦囊来源，动态调整复盘问题，不再只有固定模板。</p>
+        </div>
+        <div class="card">
+          <b>1. 当前状态</b>
+          <div class="tabs"><span class="tab on">更清楚</span><span class="tab">仍纠结</span><span class="tab">已变化</span><span class="tab">暂停</span></div>
+        </div>
+        <div class="card">
+          <b>2. 出现了哪些新信息？</b>
+          <div class="field">项目范围比预期小，可以先试一周。</div>
+        </div>
+        <div class="card">
+          <b>3. 下一步最小行动</b>
+          <div class="field">和对方确认边界与交付时间。</div>
+        </div>
+        <span class="btn">完成浇水</span>
+      </article>
+
+      <article class="screen">
+        <h2>完成浇水弹窗</h2>
+        <div class="card green">
+          <span class="big">浇水已记录</span>
+          <p class="text">选择是否继续跟进这条决策。</p>
+        </div>
+        <div class="card">
+          <div class="item">完成了，不再提醒</div>
+          <div class="item hot">再进行 1 次跟进复盘</div>
+          <div class="item">再进行 2 次跟进复盘</div>
+          <div class="item">自定义次数...</div>
+        </div>
+        <div class="arrow">保存后 -> 返回花园，复盘内容进入浇水记录</div>
+      </article>
+
+      <article class="screen">
+        <h2>结果复盘</h2>
+        <div class="card pink">
+          <span class="label">二次回看</span>
+          <span class="big">结果复盘</span>
+          <p class="text">关注事实、判断验证、下次保留或调整。</p>
+        </div>
+        <div class="card">
+          <b>实际结果与预期差异</b>
+          <div class="field">项目可控，但沟通成本偏高。</div>
+        </div>
+        <div class="card green">
+          <b>沉淀为成长片段</b>
+          <p class="text">“先验证精力容量，而不是直接拒绝机会。”</p>
+        </div>
+      </article>
+    </section>
+
+    <div class="section-title" id="coach">4. 锦囊点击后页面</div>
+    <section class="screen-grid">
+      <article class="screen">
+        <h2>决策急救锦囊</h2>
+        <div class="card warm">
+          <span class="label">入口问题</span>
+          <span class="big">你现在卡在哪一步？</span>
+          <p class="text">锦囊不替你做决定，只提供思考脚手架。</p>
+        </div>
+        <div class="card">
+          <div class="item hot">选择困难 · 利弊对比</div>
+          <div class="item">行动卡住 · 最小行动</div>
+          <div class="item">情绪很乱 · 情绪降噪</div>
+          <div class="item">复盘困惑 · 事实回看</div>
+        </div>
+        <div class="arrow">点击困境卡片 -> 锦囊分析页</div>
+      </article>
+
+      <article class="screen">
+        <h2>锦囊分析页</h2>
+        <div class="card blue">
+          <span class="label">选择困难 · 利弊对比</span>
+          <span class="big">把两个选项放到桌面上</span>
+        </div>
+        <div class="card">
+          <b>1. 选项 A 是什么？</b>
+          <div class="field">接下新项目</div>
+          <b>2. A 的好处</b>
+          <div class="field">锻炼产品推动能力</div>
+          <b>3. 选项 B 是什么？</b>
+          <div class="field">暂时拒绝</div>
+        </div>
+        <div class="card">
+          <b>此刻倾向打分</b>
+          <div class="tabs"><span class="tab">1</span><span class="tab">2</span><span class="tab on">3</span><span class="tab">5</span></div>
+        </div>
+        <span class="btn">生成锦囊卡片</span>
+      </article>
+
+      <article class="screen">
+        <h2>锦囊结果卡片</h2>
+        <div class="card warm">
+          <span class="label">不是标准答案</span>
+          <span class="big">先把思路放到桌面上</span>
+        </div>
+        <div class="card">
+          <b>利弊对比分析</b>
+          <div class="row"><span>选项 A</span><b>3 分</b></div>
+          <div class="row"><span>选项 B</span><b>2 分</b></div>
+        </div>
+        <div class="card green">
+          <b>下一步小行动</b>
+          <p class="text">先确认项目边界，再决定是否正式接下。</p>
+        </div>
+        <div class="arrow">向下 -> 保存前确认</div>
+      </article>
+
+      <article class="screen">
+        <h2>保存到决策</h2>
+        <div class="card">
+          <span class="label">保存前确认</span>
+          <div class="field">决策标题：要不要接新项目</div>
+          <div class="field">保留选项：A / B</div>
+          <div class="field">保存为选择理由：先试小范围</div>
+        </div>
+        <span class="btn">保存到我的决策</span>
+        <div class="arrow">保存成功 -> 决策详情，并显示“锦囊来源”</div>
+      </article>
+    </section>
+
+    <div class="section-title" id="assets">5. 成长资产页面</div>
+    <section class="screen-grid">
+      <article class="screen">
+        <h2>成长片段</h2>
+        <div class="card green">
+          <span class="label">复盘留下的线索</span>
+          <span class="big">成长片段</span>
+          <p class="text">不记录选对选错，只收集下一次决策可复用的经验。</p>
+        </div>
+        <div class="card">
+          <span class="label">结果复盘</span>
+          <p class="text">“先验证精力容量，而不是直接拒绝机会。”</p>
+          <span class="label">来自：要不要接新项目</span>
+        </div>
+        <div class="arrow">点击片段 -> 对应决策详情</div>
+      </article>
+
+      <article class="screen">
+        <h2>空状态</h2>
+        <div class="card">
+          <span class="big">还没有成长片段</span>
+          <p class="text">完成一次浇水复盘后，写下的收获会自动沉淀到这里。</p>
+        </div>
+      </article>
+
+      <article class="screen">
+        <h2>首页片段露出</h2>
+        <div class="card green">
+          <span class="label">最近成长片段</span>
+          <p class="text">“先验证精力容量，而不是直接拒绝机会。”</p>
+        </div>
+        <div class="arrow">点击 -> 成长片段列表</div>
+      </article>
+
+      <article class="screen">
+        <h2>成长洞察露出</h2>
+        <div class="card blue">
+          <span class="label">最近成长洞察</span>
+          <b>你最近更常在职业类选择里犹豫</b>
+          <p class="text">来自数据导出与 DeepSeek 分析结果保存。</p>
+        </div>
+        <div class="arrow">点击 -> 数据导出与 AI 分析</div>
+      </article>
+    </section>
+
+    <div class="section-title" id="profile">6. 个人页、数据导出与恢复</div>
+    <section class="screen-grid">
+      <article class="screen">
+        <h2>个人页</h2>
+        <div class="card warm">
+          <span class="big">决策者</span>
+          <p class="text">理性分析型决策者</p>
+        </div>
+        <div class="card">
+          <div class="row"><b>总决策数</b><span>12</span></div>
+          <div class="row"><b>复盘完成率</b><span>58%</span></div>
+          <div class="row"><b>盛开率</b><span>33%</span></div>
+        </div>
+        <div class="card">
+          <div class="item">提醒中心</div>
+          <div class="item">成长片段</div>
+          <div class="item hot">数据导出与 AI 分析</div>
+          <div class="item">重新测试决策风格</div>
+          <div class="item">决策记录</div>
+        </div>
+      </article>
+
+      <article class="screen">
+        <h2>数据导出</h2>
+        <div class="card green">
+          <span class="label">数据状态良好</span>
+          <p class="text">12 条决策 · 2 条洞察。本地数据格式正常；上次完整备份在今天。</p>
+          <span class="btn">立即备份</span>
+        </div>
+        <div class="card">
+          <span class="label">选择导出内容</span>
+          <div class="item hot">完整本地备份</div>
+          <div class="item">全部决策记录</div>
+          <div class="item">已完成复盘</div>
+          <div class="item">成长片段合集</div>
+          <div class="item">统计摘要</div>
+        </div>
+        <span class="btn">开始导出</span>
+      </article>
+
+      <article class="screen">
+        <h2>DeepSeek 分析</h2>
+        <div class="card blue">
+          <span class="big">一键生成 AI 可读分析包</span>
+          <p class="text">复制结构化提示词并打开 DeepSeek，用外部 AI 做决策模式分析。</p>
+          <span class="btn">复制并打开</span>
+        </div>
+        <div class="card">
+          <b>保存 AI 返回的成长洞察</b>
+          <div class="field">标题，可不填</div>
+          <div class="field">粘贴 DeepSeek 的分析结果...</div>
+          <span class="btn">保存洞察</span>
+        </div>
+      </article>
+
+      <article class="screen">
+        <h2>恢复备份</h2>
+        <div class="card">
+          <span class="label">导入 JSON 备份</span>
+          <p class="text">支持完整本地备份或普通决策导出；导入前自动下载当前完整备份。</p>
+          <span class="btn">选择文件</span>
+        </div>
+        <div class="card warm">
+          <b>导入确认弹窗</b>
+          <p class="text">展示文件包含多少条决策、多少条洞察，预计新增和合并数量；严重格式问题会阻止导入。</p>
+        </div>
+        <div class="card green">
+          <b>低风险修复</b>
+          <p class="text">只修复空数组、默认状态、布尔字段等格式问题；修复前先自动备份。</p>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

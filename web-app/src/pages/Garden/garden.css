@@ -103,52 +103,92 @@
   background: var(--color-border);
 }
 
-/* ====== Reminder ====== */
-.garden-reminder {
-  display: flex;
-  align-items: center;
+/* ====== Review focus ====== */
+.garden-review-focus {
   width: 100%;
   background: linear-gradient(135deg, #4a7c59 0%, #3a6247 100%);
   border-radius: var(--radius-md);
-  padding: 12px 14px;
+  padding: 14px;
   margin-bottom: 12px;
   box-shadow: 0 2px 8px rgba(74, 124, 89, 0.3);
   color: #ffffff;
   cursor: pointer;
 }
 
-.garden-reminder:active {
+.garden-review-focus:active {
   opacity: 0.9;
   transform: scale(0.98);
 }
 
-.reminder-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
+.review-focus-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.review-focus-icon {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: #f5a623;
-  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.16);
   flex-shrink: 0;
-  animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.reminder-text {
+.review-focus-title-wrap {
   flex: 1;
-  font-size: 13px;
-  color: #ffffff;
-  font-weight: 500;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.reminder-arrow {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 16px;
-  margin-left: 6px;
+.review-focus-kicker,
+.review-focus-count {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 700;
+}
+
+.review-focus-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.review-focus-tone {
+  display: block;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 10px;
+}
+
+.review-focus-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.review-focus-actions button {
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  background: #ffffff;
+  color: #3a6247;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.review-focus-actions button + button {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
 }
 
 /* ====== Growth snippet ====== */
