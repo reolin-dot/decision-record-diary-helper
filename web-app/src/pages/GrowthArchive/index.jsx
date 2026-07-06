@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { buildAvailableReportMonths, buildMonthlyReport } from '../../domain/monthlyReport.js'
 import { getLatestGrowthSnippets } from '../../domain/growthSnippets.js'
+import { buildThemeStats } from '../../domain/themeStats.js'
 import './growth-archive.css'
 
 export default function GrowthArchive() {
@@ -11,6 +12,7 @@ export default function GrowthArchive() {
   const months = buildAvailableReportMonths(decisions)
   const recentReports = months.slice(0, 4).map(month => buildMonthlyReport(decisions, { month }))
   const snippets = getLatestGrowthSnippets(decisions, 2)
+  const themes = buildThemeStats(decisions).slice(0, 3)
   const latestInsight = aiInsights?.[0]
 
   return (
@@ -42,6 +44,26 @@ export default function GrowthArchive() {
           <b>决策记录</b>
           <small>回看所有选择、阶段和浇水历史</small>
         </div>
+      </div>
+
+      <div className="archive-section">
+        <span className="archive-section-title">主题统计</span>
+        {themes.length > 0 ? (
+          <div className="archive-theme-list">
+            {themes.map(item => (
+              <div key={item.id} className="archive-theme-row">
+                <span className="archive-theme-icon">{item.icon}</span>
+                <div>
+                  <b>{item.title}</b>
+                  <small>{item.count} 个决策 · {item.ratio}%</small>
+                  <i style={{ width: `${item.ratio}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="archive-empty">记录第一个决策后，这里会出现你的主题分布。</div>
+        )}
       </div>
 
       <div className="archive-section">
