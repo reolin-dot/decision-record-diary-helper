@@ -1,4 +1,5 @@
 import { DECISION_TEMPLATES } from './decisionTemplates.js'
+import { getGrowthSnippets } from './growthSnippets.js'
 
 const TEMPLATE_MAP = Object.fromEntries(
   DECISION_TEMPLATES.map(item => [item.id, item])
@@ -48,4 +49,11 @@ export function buildThemeInsight(theme) {
   if (theme.count === 1) return `${theme.title}刚出现一条记录，可以先观察它会不会成为反复出现的主题。`
   if (theme.ratio >= 50) return `你最近有一半以上的决策集中在${theme.title}，这可能是当前最值得回看的生活主题。`
   return `${theme.title}已经积累了 ${theme.count} 个决策，可以开始看看这些选择背后有没有相似模式。`
+}
+
+export function getThemeGrowthSnippets(decisions = [], themeId = '', limit = 2) {
+  const decisionIds = new Set(getThemeDecisions(decisions, themeId).map(item => item.id))
+  return getGrowthSnippets(decisions)
+    .filter(item => decisionIds.has(item.decisionId))
+    .slice(0, limit)
 }

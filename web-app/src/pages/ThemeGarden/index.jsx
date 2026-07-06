@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
-import { buildThemeInsight, buildThemeStats, getThemeDecisions } from '../../domain/themeStats.js'
+import { buildThemeInsight, buildThemeStats, getThemeDecisions, getThemeGrowthSnippets } from '../../domain/themeStats.js'
 import './theme-garden.css'
 
 export default function ThemeGarden() {
@@ -11,6 +11,7 @@ export default function ThemeGarden() {
   const requestedTheme = searchParams.get('theme')
   const selectedTheme = themes.find(item => item.id === requestedTheme) || themes[0]
   const themeDecisions = selectedTheme ? getThemeDecisions(decisions, selectedTheme.id) : []
+  const themeSnippets = selectedTheme ? getThemeGrowthSnippets(decisions, selectedTheme.id) : []
   const insight = buildThemeInsight(selectedTheme)
 
   return (
@@ -46,6 +47,21 @@ export default function ThemeGarden() {
             <b>{insight}</b>
           </div>
 
+          <div className="theme-section-title">主题收获</div>
+          {themeSnippets.length > 0 ? (
+            <div className="theme-snippets">
+              {themeSnippets.map(item => (
+                <button key={item.id} onClick={() => navigate(`/decision/${item.decisionId}`)}>
+                  <b>“{item.text}”</b>
+                  <span>来自：{item.decisionTitle}</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="theme-empty">完成这个主题下的一次复盘后，这里会出现可带走的收获。</div>
+          )}
+
+          <div className="theme-section-title">主题决策</div>
           <div className="theme-list">
             {themeDecisions.map(item => (
               <button key={item.id} onClick={() => navigate(`/decision/${item.id}`)}>

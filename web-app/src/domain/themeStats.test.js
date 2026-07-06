@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildThemeInsight, buildThemeStats, getThemeDecisions } from './themeStats.js'
+import { buildThemeInsight, buildThemeStats, getThemeDecisions, getThemeGrowthSnippets } from './themeStats.js'
 
 test('builds theme stats from active decisions', () => {
   const stats = buildThemeStats([
@@ -40,4 +40,23 @@ test('builds a readable theme insight', () => {
   assert.match(buildThemeInsight({ title: '职业选择', count: 3, ratio: 75 }), /一半以上/)
   assert.match(buildThemeInsight({ title: '学习成长', count: 1, ratio: 20 }), /刚出现/)
   assert.match(buildThemeInsight(null), /先记录/)
+})
+
+test('gets growth snippets for one theme', () => {
+  const snippets = getThemeGrowthSnippets([
+    {
+      id: 'd1',
+      category: 'career',
+      title: '职业',
+      wateringHistory: [{ date: '2026-07-02', lesson: '先小范围验证' }],
+    },
+    {
+      id: 'd2',
+      category: 'learning',
+      title: '学习',
+      wateringHistory: [{ date: '2026-07-03', lesson: '每天半小时' }],
+    },
+  ], 'career')
+
+  assert.deepEqual(snippets.map(item => item.text), ['先小范围验证'])
 })
