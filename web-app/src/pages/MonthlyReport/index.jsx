@@ -48,7 +48,7 @@ export default function MonthlyReport() {
           <span className="monthly-card-main">
             {report.topCategory ? `${report.topCategory} · ${report.topCategoryCount} 次` : '还没有足够记录形成主题'}
           </span>
-          <span className="monthly-card-sub">后续主题花园会基于这里继续展开。</span>
+          <span className="monthly-card-sub">主题花园会继续沉淀这些高频主题。</span>
         </div>
       </div>
 

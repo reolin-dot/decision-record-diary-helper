@@ -18,9 +18,9 @@ export default function ThemeGarden() {
   return (
     <div className="theme-page">
       <div className="theme-hero">
-        <span>主题花园雏形</span>
+        <span>主题花园</span>
         <h1>{selectedTheme ? `${selectedTheme.title}正在长出自己的线索` : '还没有形成主题'}</h1>
-        <p>先按主题把决策收拢起来，后续再把它升级成真正的主题花园。</p>
+        <p>按主题回看决策、收获和下一步，让长期选择慢慢有形。</p>
       </div>
 
       {themes.length > 0 ? (

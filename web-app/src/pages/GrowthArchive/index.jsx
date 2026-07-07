@@ -20,7 +20,7 @@ export default function GrowthArchive() {
       <div className="archive-hero">
         <span>长期成长档案</span>
         <h1>把每次选择留下的证据收在一起</h1>
-        <p>月报、成长片段、AI 洞察和决策记录会先从这里汇总，主题花园后续再展开。</p>
+        <p>月报、成长片段、AI 洞察、主题花园和决策记录会在这里汇总。</p>
       </div>
 
       <div className="archive-grid">
