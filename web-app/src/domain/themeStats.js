@@ -1,5 +1,6 @@
 import { DECISION_TEMPLATES } from './decisionTemplates.js'
 import { getGrowthSnippets } from './growthSnippets.js'
+import { formatDate } from '../utils/util.js'
 
 const TEMPLATE_MAP = Object.fromEntries(
   DECISION_TEMPLATES.map(item => [item.id, item])
@@ -56,4 +57,22 @@ export function getThemeGrowthSnippets(decisions = [], themeId = '', limit = 2) 
   return getGrowthSnippets(decisions)
     .filter(item => decisionIds.has(item.decisionId))
     .slice(0, limit)
+}
+
+export function buildThemeNextAction(decisions = [], themeId = '', today = formatDate(new Date())) {
+  const themeDecisions = getThemeDecisions(decisions, themeId)
+  if (themeDecisions.length === 0) {
+    return { text: '先记录一个正式决策，让这个主题有第一条线索。', label: '去记录', path: '/record' }
+  }
+
+  const dueCount = themeDecisions.filter(item => item.status === 'pending' && item.reviewDate && item.reviewDate <= today).length
+  if (dueCount > 0) {
+    return { text: `这个主题下有 ${dueCount} 个决策到期了，可以先回来看一眼。`, label: '去提醒中心', path: '/watering' }
+  }
+
+  if (getThemeGrowthSnippets(decisions, themeId, 1).length === 0) {
+    return { text: '这个主题还没有沉淀出收获，下一次可以先完成一条复盘。', label: '去提醒中心', path: '/watering' }
+  }
+
+  return { text: '这个主题已经有记录和收获了，可以继续补一条新的相关决策。', label: '继续记录', path: '/record' }
 }

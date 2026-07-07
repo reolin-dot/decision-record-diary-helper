@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
-import { buildThemeInsight, buildThemeStats, getThemeDecisions, getThemeGrowthSnippets } from '../../domain/themeStats.js'
+import { buildThemeInsight, buildThemeNextAction, buildThemeStats, getThemeDecisions, getThemeGrowthSnippets } from '../../domain/themeStats.js'
 import './theme-garden.css'
 
 export default function ThemeGarden() {
@@ -13,6 +13,7 @@ export default function ThemeGarden() {
   const themeDecisions = selectedTheme ? getThemeDecisions(decisions, selectedTheme.id) : []
   const themeSnippets = selectedTheme ? getThemeGrowthSnippets(decisions, selectedTheme.id) : []
   const insight = buildThemeInsight(selectedTheme)
+  const nextAction = selectedTheme ? buildThemeNextAction(decisions, selectedTheme.id) : null
 
   return (
     <div className="theme-page">
@@ -46,6 +47,14 @@ export default function ThemeGarden() {
             <span>主题洞察</span>
             <b>{insight}</b>
           </div>
+
+          {nextAction && (
+            <div className="theme-next">
+              <span>下一步建议</span>
+              <b>{nextAction.text}</b>
+              <button onClick={() => navigate(nextAction.path)}>{nextAction.label}</button>
+            </div>
+          )}
 
           <div className="theme-section-title">主题收获</div>
           {themeSnippets.length > 0 ? (

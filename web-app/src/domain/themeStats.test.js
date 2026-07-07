@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildThemeInsight, buildThemeStats, getThemeDecisions, getThemeGrowthSnippets } from './themeStats.js'
+import { buildThemeInsight, buildThemeNextAction, buildThemeStats, getThemeDecisions, getThemeGrowthSnippets } from './themeStats.js'
 
 test('builds theme stats from active decisions', () => {
   const stats = buildThemeStats([
@@ -59,4 +59,24 @@ test('gets growth snippets for one theme', () => {
   ], 'career')
 
   assert.deepEqual(snippets.map(item => item.text), ['先小范围验证'])
+})
+
+test('builds next action for a theme', () => {
+  assert.equal(buildThemeNextAction([], 'career', '2026-07-07').path, '/record')
+
+  const due = buildThemeNextAction([
+    { id: 'd1', category: 'career', status: 'pending', reviewDate: '2026-07-01' },
+  ], 'career', '2026-07-07')
+  assert.equal(due.path, '/watering')
+  assert.match(due.text, /到期/)
+
+  const withSnippet = buildThemeNextAction([
+    {
+      id: 'd2',
+      category: 'career',
+      status: 'reviewed',
+      wateringHistory: [{ date: '2026-07-03', lesson: '先试一周' }],
+    },
+  ], 'career', '2026-07-07')
+  assert.equal(withSnippet.path, '/record')
 })
