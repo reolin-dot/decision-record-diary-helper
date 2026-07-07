@@ -21,6 +21,7 @@ import CoachAnalyze from './pages/CoachAnalyze/index.jsx'
 import CoachResult from './pages/CoachResult/index.jsx'
 import StyleTest from './pages/StyleTest/index.jsx'
 import DataExport from './pages/DataExport/index.jsx'
+import Login from './pages/Login/index.jsx'
 
 export default function AppRoutes() {
   return (
@@ -46,6 +47,7 @@ export default function AppRoutes() {
       <Route path="/coach-result" element={<PageHeader title="分析结果"><CoachResult /></PageHeader>} />
       <Route path="/style-test" element={<PageHeader title="决策风格测试"><StyleTest /></PageHeader>} />
       <Route path="/data-export" element={<PageHeader title="数据导出"><DataExport /></PageHeader>} />
+      <Route path="/login" element={<PageHeader title="账号登录"><Login /></PageHeader>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

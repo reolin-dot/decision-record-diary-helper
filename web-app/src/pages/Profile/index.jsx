@@ -63,8 +63,8 @@ export default function Profile() {
     }
   }
 
-  const showAccountRoadmap = () => {
-    toast.show('账号登录将在 2.1 后续版本开放')
+  const openLogin = () => {
+    navigate('/login')
   }
 
   return (
@@ -148,15 +148,15 @@ export default function Profile() {
       <div className="pf-section">
         <span className="pf-section-title">账号与数据保护</span>
         <div className="pf-settings-list">
-          <div className="pf-setting" onClick={showAccountRoadmap}>
+          <div className="pf-setting" onClick={openLogin}>
             <span className="pf-setting-icon">🔐</span>
             <span className="pf-setting-label">账号登录</span>
-            <span className="pf-setting-hint">规划中</span>
+            <span className="pf-setting-hint">邮箱登录</span>
           </div>
-          <div className="pf-setting" onClick={showAccountRoadmap}>
+          <div className="pf-setting" onClick={openLogin}>
             <span className="pf-setting-icon">☁️</span>
             <span className="pf-setting-label">云备份与跨设备恢复</span>
-            <span className="pf-setting-hint">即将上线</span>
+            <span className="pf-setting-hint">登录后开放</span>
           </div>
         </div>
       </div>
