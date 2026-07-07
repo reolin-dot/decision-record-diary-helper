@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react'
 import { supabase, isSupabaseConfigured } from '../../lib/supabase.js'
+import { buildAuthRedirectUrl } from '../../lib/authRedirect.js'
 import { useToast } from '../../components/Toast.jsx'
 import './login.css'
-
-function getRedirectUrl() {
-  return `${window.location.origin}${window.location.pathname}#/login`
-}
 
 export default function Login() {
   const toast = useToast()
@@ -34,7 +31,7 @@ export default function Login() {
     setLoading(true)
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: getRedirectUrl() },
+      options: { emailRedirectTo: buildAuthRedirectUrl() },
     })
     setLoading(false)
 
