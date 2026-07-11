@@ -39,6 +39,25 @@
   gap: 12px;
 }
 
+.login-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.login-tabs button {
+  padding: 10px;
+  border-radius: 8px;
+  background: #f3f3f3;
+  color: #666666;
+  font-weight: 700;
+}
+
+.login-tabs button.active {
+  background: rgba(74, 124, 89, 0.12);
+  color: #4a7c59;
+}
+
 .login-session span {
   font-size: 14px;
   color: #333333;
