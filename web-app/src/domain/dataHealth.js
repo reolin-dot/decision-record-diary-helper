@@ -1,3 +1,5 @@
+import { normalizeDecision } from './decisionSchema.js'
+
 const VALID_STATUSES = new Set(['pending', 'reviewed', 'draft'])
 const VALID_REVIEW_STAGES = new Set(['none', 'current_done', 'result_done'])
 const VALID_STAGES = new Set(['seed', 'sprout', 'leaf', 'first_bloom', 'full_bloom', 'bloom'])
@@ -96,21 +98,12 @@ function repairDecision(decision) {
     return { decision, changed: false }
   }
 
-  const repaired = {
+  const repaired = normalizeDecision({
     ...decision,
-    options: Array.isArray(decision.options) ? decision.options : [],
-    wateringHistory: Array.isArray(decision.wateringHistory) ? decision.wateringHistory : [],
-    maxWaterings: typeof decision.maxWaterings === 'number' ? decision.maxWaterings : 1,
-    choice: typeof decision.choice === 'number' ? decision.choice : -1,
-    actionStarted: !!decision.actionStarted,
-    firstReviewDone: !!decision.firstReviewDone,
-    resultReviewDone: !!decision.resultReviewDone,
-    isDraft: !!decision.isDraft,
-    _deleted: !!decision._deleted,
     status: VALID_STATUSES.has(decision.status) ? decision.status : (decision.isDraft ? 'draft' : 'pending'),
     reviewStage: VALID_REVIEW_STAGES.has(decision.reviewStage) ? decision.reviewStage : 'none',
     stage: VALID_STAGES.has(decision.stage) ? decision.stage : 'seed',
-  }
+  })
 
   return {
     decision: repaired,

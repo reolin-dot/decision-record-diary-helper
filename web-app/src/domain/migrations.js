@@ -3,6 +3,7 @@
 
 import storage from '../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS, CURRENT_SCHEMA_VERSION } from '../storage/storageKeys.js'
+import { normalizeDecision } from './decisionSchema.js'
 
 /**
  * Run all necessary migrations on stored data.
@@ -10,13 +11,11 @@ import { STORAGE_KEYS, CURRENT_SCHEMA_VERSION } from '../storage/storageKeys.js'
  */
 export function runMigrations() {
   const version = storage.get(STORAGE_KEYS.SCHEMA_VERSION, 0)
+  if (version > CURRENT_SCHEMA_VERSION) return false
 
-  if (version < 1) {
-    migrateV0toV1()
-  }
+  if (version < 1 && !migrateV0toV1()) return false
 
-  // Always ensure schema version is current
-  storage.set(STORAGE_KEYS.SCHEMA_VERSION, CURRENT_SCHEMA_VERSION)
+  return storage.set(STORAGE_KEYS.SCHEMA_VERSION, CURRENT_SCHEMA_VERSION)
 }
 
 /**
@@ -28,27 +27,10 @@ export function runMigrations() {
 function migrateV0toV1() {
   const decisions = storage.get(STORAGE_KEYS.DECISIONS, [])
 
-  if (!Array.isArray(decisions) || decisions.length === 0) return
+  if (!Array.isArray(decisions) || decisions.length === 0) return true
 
-  const migrated = decisions.map(d => ({
+  const migrated = decisions.map(d => normalizeDecision({
     ...d,
-    // Ensure arrays exist
-    options: Array.isArray(d.options) ? d.options : [],
-    wateringHistory: Array.isArray(d.wateringHistory)
-      ? d.wateringHistory.map(item => ({
-          ...item,
-          summary: item.summary || '',
-        }))
-      : [],
-    // Ensure numeric fields
-    maxWaterings: typeof d.maxWaterings === 'number' ? d.maxWaterings : 1,
-    choice: typeof d.choice === 'number' ? d.choice : -1,
-    // Ensure boolean fields
-    actionStarted: !!d.actionStarted,
-    firstReviewDone: !!d.firstReviewDone,
-    resultReviewDone: !!d.resultReviewDone,
-    isDraft: !!d.isDraft,
-    _deleted: !!d._deleted,
     // Ensure string fields
     status: d.status || (d.isDraft ? 'draft' : 'pending'),
     reviewStage: d.reviewStage || 'none',
@@ -59,5 +41,5 @@ function migrateV0toV1() {
     updatedAt: d.updatedAt || (d.createdAt ? new Date(d.createdAt).toISOString() : new Date().toISOString()),
   }))
 
-  storage.set(STORAGE_KEYS.DECISIONS, migrated)
+  return storage.set(STORAGE_KEYS.DECISIONS, migrated)
 }

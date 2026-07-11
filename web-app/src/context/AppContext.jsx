@@ -49,6 +49,7 @@ function loadStoredState() {
   const stats = buildStats(decisions)
 
   return {
+    isLoaded: true,
     hasLaunched: !!hasLaunched,
     isNewUser: !hasLaunched,
     decisions,
@@ -62,6 +63,7 @@ function loadStoredState() {
 
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, {
+    isLoaded: false,
     hasLaunched: false,
     isNewUser: false,
     decisions: [],

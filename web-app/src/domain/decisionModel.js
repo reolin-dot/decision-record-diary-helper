@@ -4,6 +4,7 @@
 import storage from '../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS } from '../storage/storageKeys.js'
 import { generateId, generateUpdatedAt } from '../utils/util.js'
+import { normalizeDecision } from './decisionSchema.js'
 
 /**
  * Get all decisions from storage
@@ -33,15 +34,15 @@ export function saveDecision(decision) {
     return false
   }
 
-  decision.updatedAt = generateUpdatedAt()
+  const normalized = normalizeDecision({ ...decision, updatedAt: generateUpdatedAt() })
 
   const decisions = loadDecisions()
-  const idx = decisions.findIndex(d => d.id === decision.id)
+  const idx = decisions.findIndex(d => d.id === normalized.id)
 
   if (idx >= 0) {
-    decisions[idx] = decision
+    decisions[idx] = normalized
   } else {
-    decisions.unshift(decision)
+    decisions.unshift(normalized)
   }
 
   return storage.set(STORAGE_KEYS.DECISIONS, decisions)
@@ -53,11 +54,11 @@ export function saveDecision(decision) {
  * @returns {Object|null} The created decision, or null on failure
  */
 export function createDecision(payload) {
-  const decision = {
+  const decision = normalizeDecision({
     id: generateId(),
     ...payload,
     updatedAt: generateUpdatedAt(),
-  }
+  })
 
   const decisions = loadDecisions()
   decisions.unshift(decision)

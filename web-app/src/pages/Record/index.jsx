@@ -5,6 +5,7 @@ import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import { formatDate, generateId, getReviewDate } from '../../utils/util.js'
 import { DECISION_STAGES } from '../../domain/decisionStages.js'
+import { normalizeDecision } from '../../domain/decisionSchema.js'
 import { buildMoodValue, parseMoodValue, toggleMood } from '../../domain/moods.js'
 import { getRecordStyleGuidance } from '../../domain/decisionStyleGuidance.js'
 import { DECISION_TEMPLATES, getDecisionTemplate, shouldApplyStarterOptions } from '../../domain/decisionTemplates.js'
@@ -21,7 +22,7 @@ export default function Record() {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
-  const { decisions, decisionStyle, saveDecision } = useApp()
+  const { decisions, decisionStyle, isLoaded, saveDecision } = useApp()
   const toast = useToast()
   const modal = useModal()
 
@@ -50,7 +51,7 @@ export default function Record() {
 
   // Load draft if draftId provided
   useEffect(() => {
-    if (draftId) {
+    if (draftId && isLoaded) {
       const draft = decisions.find(d => d.id === draftId && d.isDraft)
       if (!draft) {
         toast.show('没有找到这颗种子')
@@ -72,7 +73,7 @@ export default function Record() {
       setCustomDate(draft.reviewDate || '')
       if (draft.reviewDate) setReviewPeriod('custom')
     }
-  }, [draftId])
+  }, [draftId, isLoaded, decisions])
 
   useEffect(() => {
     if (!coachDraft || draftId) return
@@ -118,7 +119,7 @@ export default function Record() {
         reviewDate = getReviewDate(createdAt, reviewPeriod)
       }
     }
-    return {
+    return normalizeDecision({
       title: title.trim(),
       category: selectedTemplateId,
       background: background.trim(),
@@ -132,13 +133,8 @@ export default function Record() {
       status: isDraft ? 'draft' : 'pending',
       reviewStage: 'none',
       stage: isDraft ? DECISION_STAGES.SEED : DECISION_STAGES.SPROUT,
-      actionStarted: false,
-      firstReviewDone: false,
-      resultReviewDone: false,
-      wateringHistory: [],
-      maxWaterings: 1,
       isDraft,
-    }
+    })
   }, [title, selectedTemplateId, background, options, selectedOption, choiceReason, expectation, selectedMoods, customMood, reviewPeriod, customDate])
 
   const upsertDecision = useCallback((payload) => {
@@ -226,9 +222,13 @@ export default function Record() {
     })
     if (!confirmed) return
     setSaving(true)
-    upsertDecision(buildDecisionPayload(false))
+    const ok = upsertDecision(buildDecisionPayload(false))
     setTimeout(() => {
       setSaving(false)
+      if (!ok) {
+        toast.show('存储失败，请清理浏览器存储空间')
+        return
+      }
       navigate('/record-success')
     }, 400)
   }

@@ -1,4 +1,5 @@
 import { DECISION_STAGES } from './decisionStages.js'
+import { normalizeDecision } from './decisionSchema.js'
 import { formatDate, getReviewDate } from '../utils/util.js'
 
 function cleanText(value) {
@@ -162,7 +163,7 @@ export function buildDecisionFromCoachDraft(draft, overrides = {}) {
   const reviewDate = draft.reviewPeriod === 'done' ? createdAt : getReviewDate(createdAt, draft.reviewPeriod || '1w')
   const isReviewed = draft.reviewPeriod === 'done'
 
-  return {
+  return normalizeDecision({
     title: cleanText(overrides.title) || draft.title,
     category: `coach-${draft.kitId}`,
     background: cleanText(overrides.background) || draft.background,
@@ -182,9 +183,7 @@ export function buildDecisionFromCoachDraft(draft, overrides = {}) {
     wateringHistory: isReviewed && draft.initialReview
       ? [{ ...draft.initialReview, date: createdAt }]
       : [],
-    maxWaterings: 1,
-    isDraft: false,
     source: 'coach',
     coachSource: draft.coachSource,
-  }
+  })
 }
