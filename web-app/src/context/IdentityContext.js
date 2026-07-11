@@ -1,8 +1,13 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { supabase } from '../lib/supabase.js'
-import { buildAuthRedirectUrl } from '../lib/authRedirect.js'
+import { passwordRecoveryRoute, supabase } from '../lib/supabase.js'
+import { buildAuthRedirectUrl, buildPasswordRecoveryRedirectUrl } from '../lib/authRedirect.js'
 
 const IdentityContext = createContext(null)
+
+function openPasswordRecovery(route = '/login') {
+  window.history.replaceState(null, '', window.location.pathname)
+  window.location.hash = route
+}
 
 async function runAuth(call) {
   try {
@@ -16,7 +21,7 @@ async function runAuth(call) {
 export function IdentityProvider({ children, client = supabase, getRedirectUrl = buildAuthRedirectUrl }) {
   const [session, setSession] = useState(null)
   const [isLoading, setIsLoading] = useState(Boolean(client))
-  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false)
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(Boolean(passwordRecoveryRoute))
 
   useEffect(() => {
     if (!client) {
@@ -27,7 +32,11 @@ export function IdentityProvider({ children, client = supabase, getRedirectUrl =
     let active = true
     client.auth.getSession()
       .then(({ data }) => {
-        if (active) setSession(data.session)
+        if (active) {
+          setSession(data.session)
+          if (passwordRecoveryRoute && data.session) openPasswordRecovery(passwordRecoveryRoute)
+          if (passwordRecoveryRoute && !data.session) setIsPasswordRecovery(false)
+        }
       })
       .catch(() => {
         if (active) setSession(null)
@@ -41,7 +50,7 @@ export function IdentityProvider({ children, client = supabase, getRedirectUrl =
         setSession(nextSession)
         if (event === 'PASSWORD_RECOVERY') {
           setIsPasswordRecovery(true)
-          window.location.hash = '/login'
+          openPasswordRecovery()
         }
         setIsLoading(false)
       }
@@ -83,7 +92,7 @@ export function IdentityProvider({ children, client = supabase, getRedirectUrl =
   const requestPasswordReset = useCallback(async (email) => {
     if (!client) return { ok: false, error: '账号功能尚未配置' }
     const result = await runAuth(() => client.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: getRedirectUrl(),
+      redirectTo: buildPasswordRecoveryRedirectUrl(getRedirectUrl()),
     }))
     return result.ok ? { ok: true } : result
   }, [client, getRedirectUrl])

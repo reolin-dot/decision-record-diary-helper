@@ -56,7 +56,7 @@ test('hides Supabase auth calls behind the identity interface', async () => {
     }],
     ['resetPassword', {
       email: 'user@example.com',
-      options: { redirectTo: 'https://example.com/app' },
+      options: { redirectTo: 'https://example.com/app?recovery=1' },
     }],
     ['updatePassword', { password: 'new-secret' }],
   ])
