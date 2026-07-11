@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
 import { getStageMeta } from '../../domain/decisionStages.js'
+import { getDecisionLifecycle } from '../../domain/decisionLifecycle.js'
 import { dismissReminderToday, getReminders, groupReminders, snoozeReminder } from '../../domain/reminders.js'
 import { formatDate } from '../../utils/util.js'
 import './watering.css'
@@ -16,17 +17,12 @@ export default function Watering() {
   const grouped = groupReminders(reminders).filter(group => group.items.length > 0)
 
   const canWater = (d) => {
-    if (d.isDraft || d.status !== 'pending') return false
-    if (d.reviewStage === 'current_done') {
-      return d.stage === 'first_bloom' && !d.resultReviewDone
-    }
-    return true
+    return getDecisionLifecycle(d).canReview
   }
 
   const decorateDecision = (d) => {
     const watered = d.wateringHistory ? d.wateringHistory.length : 0
-    const max = d.maxWaterings || 1
-    const remaining = Math.max(max - watered, 0)
+    const remaining = getDecisionLifecycle(d).remainingFollowUps
     const isDue = !!(d.reviewDate && d.reviewDate <= today)
     const meta = getStageMeta(d.stage)
     return {

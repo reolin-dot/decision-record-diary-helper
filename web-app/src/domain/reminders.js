@@ -1,4 +1,4 @@
-import { DECISION_STAGES } from './decisionStages.js'
+import { getDecisionLifecycle } from './decisionLifecycle.js'
 import { addDays, daysBetween, formatDate } from '../utils/util.js'
 
 export const REMINDER_TYPES = {
@@ -31,14 +31,6 @@ function isHiddenByUser(decision, today) {
   return false
 }
 
-function isReviewable(decision) {
-  if (decision.isDraft || decision.status !== 'pending') return false
-  if (decision.reviewStage === 'current_done') {
-    return decision.stage === DECISION_STAGES.FIRST_BLOOM && !decision.resultReviewDone
-  }
-  return true
-}
-
 function buildReminder(decision, type, today) {
   const meta = REMINDER_META[type]
   const isDue = !!(decision.reviewDate && decision.reviewDate <= today)
@@ -57,16 +49,15 @@ function buildReminder(decision, type, today) {
 export function getDecisionReminder(decision, today = formatDate(new Date())) {
   if (!decision || decision._deleted || decision.isDraft) return null
   if (isHiddenByUser(decision, today)) return null
+  const lifecycle = getDecisionLifecycle(decision)
 
-  if (isReviewable(decision) && decision.reviewDate && decision.reviewDate <= today) {
+  if (lifecycle.canReview && decision.reviewDate && decision.reviewDate <= today) {
     return buildReminder(decision, REMINDER_TYPES.DUE_REVIEW, today)
   }
 
   const daysSinceCreated = decision.createdAt ? daysBetween(decision.createdAt, today) : 0
   if (
-    decision.status === 'pending' &&
-    !decision.actionStarted &&
-    [DECISION_STAGES.SPROUT, DECISION_STAGES.SEED].includes(decision.stage) &&
+    lifecycle.canStartAction &&
     daysSinceCreated >= 3
   ) {
     return buildReminder(decision, REMINDER_TYPES.ACTION, today)
@@ -75,8 +66,8 @@ export function getDecisionReminder(decision, today = formatDate(new Date())) {
   const lastWatered = decision.lastWateredAt || decision.reviewDate || decision.createdAt
   const daysSinceFirstBloom = lastWatered ? daysBetween(lastWatered, today) : 0
   if (
-    decision.stage === DECISION_STAGES.FIRST_BLOOM &&
-    !decision.resultReviewDone &&
+    lifecycle.canReview &&
+    lifecycle.reviewType === 'result' &&
     daysSinceFirstBloom >= 7
   ) {
     return buildReminder(decision, REMINDER_TYPES.RESULT_FOLLOWUP, today)

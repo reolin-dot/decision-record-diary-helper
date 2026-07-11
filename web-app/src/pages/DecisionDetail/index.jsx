@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
 import { getStageMeta } from '../../domain/decisionStages.js'
-import { DECISION_STAGES } from '../../domain/decisionStages.js'
+import { getDecisionLifecycle, startDecisionAction } from '../../domain/decisionLifecycle.js'
 import './detail.css'
 
 export default function DecisionDetail() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { decisions, saveDecision, refreshStats } = useApp()
+  const { decisions, saveDecision } = useApp()
   const toast = useToast()
 
   const [decision, setDecision] = useState(null)
@@ -27,49 +27,22 @@ export default function DecisionDetail() {
         ? found.options[found.choice]
         : ''
 
-    const canStartAction =
-      !found.actionStarted &&
-      !found.isDraft &&
-      (found.stage === DECISION_STAGES.SEED || found.stage === DECISION_STAGES.SPROUT)
-
-    const canReview =
-      !found.isDraft &&
-      ((found.status === 'pending' && found.reviewStage !== 'current_done') ||
-        (found.stage === DECISION_STAGES.FIRST_BLOOM && !found.resultReviewDone))
-
-    const reviewType = found.firstReviewDone ? 'result' : 'current'
-
     setDecision({
       ...found,
       stageMeta,
       chosenOption,
-      canStartAction,
-      canReview,
-      reviewType,
+      ...getDecisionLifecycle(found),
     })
   }, [id, decisions])
 
   const handleMarkActionStarted = () => {
-    if (!decision) return
-
-    const updated = {
-      ...decision,
-      actionStarted: true,
-      stage: DECISION_STAGES.LEAF,
-    }
+    const storedDecision = decisions.find(item => item.id === id)
+    const updated = startDecisionAction(storedDecision)
+    if (!updated) return
 
     const ok = saveDecision(updated)
     if (ok) {
-      refreshStats()
       toast.show('已长出新叶', { type: 'success' })
-      setDecision({
-        ...updated,
-        stageMeta: getStageMeta(updated.stage),
-        chosenOption: decision.chosenOption,
-        canStartAction: false,
-        canReview: decision.canReview,
-        reviewType: decision.reviewType,
-      })
     }
   }
 

@@ -2,10 +2,15 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
-import { getStageMeta, DECISION_STAGES } from '../../domain/decisionStages.js'
+import { getStageMeta } from '../../domain/decisionStages.js'
+import {
+  completeDecisionReview,
+  getDecisionLifecycle,
+  startDecisionAction,
+} from '../../domain/decisionLifecycle.js'
 import { getReviewStyleGuidance } from '../../domain/decisionStyleGuidance.js'
 import { buildReviewPrompts } from '../../domain/reviewPrompts.js'
-import { formatDate, addDays } from '../../utils/util.js'
+import { formatDate } from '../../utils/util.js'
 import './review.css'
 
 const FOLLOW_UP_OPTIONS = [
@@ -19,7 +24,7 @@ const FOLLOW_UP_OPTIONS = [
 export default function Review() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { decisions, decisionStyle, saveDecision, refreshStats } = useApp()
+  const { decisions, decisionStyle, saveDecision } = useApp()
   const toast = useToast()
 
   const [decision, setDecision] = useState(null)
@@ -63,47 +68,34 @@ export default function Review() {
     }
 
     const meta = getStageMeta(found.stage)
-    const type = found.firstReviewDone ? 'result' : 'current'
-    const canDoReview = canShowReviewForm(found)
+    const lifecycle = getDecisionLifecycle(found)
 
     setDecision(found)
     setStageMeta(meta)
-    setReviewType(type)
-    setCanReview(canDoReview)
+    setReviewType(lifecycle.reviewType)
+    setCanReview(lifecycle.canReview)
   }, [id, decisions])
-
-  function canShowReviewForm(d) {
-    if (!d) return false
-    if (d.status === 'pending' && d.reviewStage !== 'current_done') return true
-    return d.stage === DECISION_STAGES.FIRST_BLOOM && !d.resultReviewDone
-  }
 
   function decorateDecision(d) {
     if (!d) return d
-    const wateringHistory = d.wateringHistory || []
-    const maxWaterings = d.maxWaterings || 1
-    const remainingWaterings = Math.max(maxWaterings - wateringHistory.length, 0)
+    const lifecycle = getDecisionLifecycle(d)
     return {
       ...d,
-      remainingWaterings,
-      hasRemainingFollowUps: d.status === 'pending' && remainingWaterings > 0,
+      remainingWaterings: lifecycle.remainingFollowUps,
+      hasRemainingFollowUps: lifecycle.hasRemainingFollowUps,
     }
   }
 
   // Mark action started
   const handleMarkActionStarted = () => {
-    if (!decision) return
-    const updated = {
-      ...decision,
-      actionStarted: true,
-      stage: DECISION_STAGES.LEAF,
-    }
+    const updated = startDecisionAction(decision)
+    if (!updated) return
     const ok = saveDecision(updated)
     if (ok) {
-      refreshStats()
-      setDecision(decorateDecision(updated))
+      const lifecycle = getDecisionLifecycle(updated)
+      setDecision(updated)
       setStageMeta(getStageMeta(updated.stage))
-      setCanReview(canShowReviewForm(updated))
+      setCanReview(lifecycle.canReview)
       toast.show('已长出新叶', { type: 'success' })
     }
   }
@@ -123,8 +115,7 @@ export default function Review() {
       reflectionLabel: reviewPrompts.reflectionLabel,
       lesson,
       lessonLabel: reviewPrompts.lessonLabel,
-      summary: buildReviewSummary(decision.firstReviewDone ? 'result' : 'current', resultRating, lesson),
-      type: decision.firstReviewDone ? 'result' : 'current',
+      summary: buildReviewSummary(reviewType, resultRating, lesson),
     }
 
     setShowFollowUp(true)
@@ -167,48 +158,17 @@ export default function Review() {
 
     const today = formatDate(new Date())
     const pendingResult = pendingResultRef.current
-    if (!pendingResult || !decision) return
-
-    const wateringHistory = [...(decision.wateringHistory || []), pendingResult]
-    const wateringCount = wateringHistory.length
-
-    let maxWaterings
-    if (extraChoice === 0) {
-      maxWaterings = wateringCount
-    } else {
-      maxWaterings = wateringCount + extraChoice
+    const transition = completeDecisionReview(decision, pendingResult, extraChoice, today)
+    if (!transition) {
+      setSubmitting(false)
+      return
     }
-
-    const isDone = wateringCount >= maxWaterings
-    const rType = pendingResult.type
-    let updatedDecision
-
-    if (isDone) {
-      updatedDecision = {
-        ...decision,
-        status: rType === 'result' ? 'reviewed' : 'pending',
-        reviewStage: rType === 'result' ? 'result_done' : 'current_done',
-        stage: rType === 'result' ? DECISION_STAGES.FULL_BLOOM : DECISION_STAGES.FIRST_BLOOM,
-        firstReviewDone: true,
-        resultReviewDone: rType === 'result',
-        wateringHistory,
-        maxWaterings,
-        lastWateredAt: today,
-        reviewDate: rType === 'result' ? decision.reviewDate : addDays(today, 7),
-      }
-    } else {
-      updatedDecision = {
-        ...decision,
-        status: 'pending',
-        reviewStage: 'current_done',
-        stage: DECISION_STAGES.FIRST_BLOOM,
-        firstReviewDone: true,
-        wateringHistory,
-        maxWaterings,
-        lastWateredAt: today,
-        reviewDate: addDays(today, 7),
-      }
-    }
+    const {
+      decision: updatedDecision,
+      isDone,
+      reviewType: rType,
+      remainingFollowUps,
+    } = transition
 
     // Mark as just reviewed to prevent form from re-appearing before navigate
     justReviewedRef.current = true
@@ -223,10 +183,9 @@ export default function Review() {
       return
     }
 
-    refreshStats()
-    setDecision(decorateDecision(updatedDecision))
+    setDecision(updatedDecision)
     setStageMeta(getStageMeta(updatedDecision.stage))
-    setCanReview(canShowReviewForm(updatedDecision))
+    setCanReview(getDecisionLifecycle(updatedDecision).canReview)
     setShowFollowUp(false)
     setShowCustomInput(false)
     setCustomFollowUpCount('')
@@ -234,7 +193,7 @@ export default function Review() {
 
     const msg = isDone
       ? (rType === 'result' ? '已完成结果浇水' : '已完成当下浇水')
-      : `已浇水，还剩 ${maxWaterings - wateringCount} 次跟进复盘`
+      : `已浇水，还剩 ${remainingFollowUps} 次跟进复盘`
     toast.show(msg, { type: 'success' })
 
     setTimeout(() => {
@@ -245,7 +204,7 @@ export default function Review() {
           lesson: pendingResult.lesson,
           rating: pendingResult.rating,
           reviewType: rType,
-          remainingCount: Math.max(maxWaterings - wateringCount, 0),
+          remainingCount: remainingFollowUps,
           nextReviewDate: isDone ? '' : updatedDecision.reviewDate,
         },
       })
@@ -269,9 +228,7 @@ export default function Review() {
   }
 
   const decorated = decorateDecision(decision)
-  const showMarkAction =
-    !decision.actionStarted &&
-    (decision.stage === 'sprout' || decision.stage === 'seed')
+  const showMarkAction = getDecisionLifecycle(decision).canStartAction
 
   const reviewTypeName = reviewType === 'result' ? '结果复盘' : '当下复盘'
   const styleGuidance = getReviewStyleGuidance(decisionStyle)
