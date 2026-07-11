@@ -151,7 +151,7 @@ export default function Garden() {
             </div>
             <div className="action-btn" onClick={() => navigate('/coach')}>
               <span className="action-btn-icon">🧭</span>
-              <span className="action-btn-text">锦囊</span>
+              <span className="action-btn-text">圆桌</span>
             </div>
             <div className="action-btn" onClick={() => navigate('/growth-snippets')}>
               <span className="action-btn-icon">💡</span>

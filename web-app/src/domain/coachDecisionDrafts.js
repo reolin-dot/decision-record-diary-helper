@@ -33,6 +33,8 @@ function buildCoachSource(analysis, steps) {
     summaryTitle: analysis.summaryTitle || '',
     nextActionTitle: analysis.nextActionTitle || '',
     nextAction: analysis.nextAction || '',
+    question: cleanText(analysis.question),
+    options: Array.isArray(analysis.options) ? analysis.options.map(cleanText).filter(Boolean) : [],
     steps,
   }
 }
@@ -43,6 +45,10 @@ export function buildCoachDecisionDraft(analysis = {}) {
   const kitId = analysis.kitId || 'choice'
   const kitTitle = analysis.kitTitle || '决策锦囊'
   const nextAction = cleanText(analysis.nextAction)
+  const roundtableQuestion = cleanText(analysis.question)
+  const roundtableOptions = Array.isArray(analysis.options)
+    ? analysis.options.map(cleanText).filter(Boolean)
+    : []
 
   let draft = {
     kitId,
@@ -58,8 +64,8 @@ export function buildCoachDecisionDraft(analysis = {}) {
   }
 
   if (kitId === 'choice') {
-    const optionA = getValue(0) || '选项 A'
-    const optionB = getValue(2) || '选项 B'
+    const optionA = roundtableOptions[0] || getValue(0) || '选项 A'
+    const optionB = roundtableOptions[1] || getValue(2) || '选项 B'
     const scoreA = Number(analysis.scoreA) || 3
     const scoreB = Number(analysis.scoreB) || 3
     draft = {
@@ -155,28 +161,39 @@ export function buildCoachDecisionDraft(analysis = {}) {
     }
   }
 
+  if (roundtableQuestion) draft.title = roundtableQuestion
+  if (roundtableOptions.length >= 2) draft.options = roundtableOptions
+
   return draft
 }
 
 export function buildDecisionFromCoachDraft(draft, overrides = {}) {
   const createdAt = overrides.createdAt || formatDate(new Date())
-  const reviewDate = draft.reviewPeriod === 'done' ? createdAt : getReviewDate(createdAt, draft.reviewPeriod || '1w')
-  const isReviewed = draft.reviewPeriod === 'done'
+  const reviewPeriod = overrides.reviewPeriod || draft.reviewPeriod || '1w'
+  const reviewDate = reviewPeriod === 'done' ? createdAt : getReviewDate(createdAt, reviewPeriod)
+  const isReviewed = reviewPeriod === 'done'
+  const options = (overrides.options || draft.options).map(cleanText).filter(Boolean)
+  const choice = typeof overrides.choice === 'number' ? overrides.choice : draft.choice
+  const hasChoice = choice >= 0 && choice < options.length
+  const pendingInformation = cleanText(overrides.pendingInformation)
+  const smallestAction = cleanText(overrides.smallestAction)
 
   return normalizeDecision({
     title: cleanText(overrides.title) || draft.title,
     category: `coach-${draft.kitId}`,
     background: cleanText(overrides.background) || draft.background,
-    options: (overrides.options || draft.options).map(cleanText).filter(Boolean),
-    choice: typeof overrides.choice === 'number' ? overrides.choice : draft.choice,
+    options,
+    choice,
     reason: cleanText(overrides.reason) || draft.reason,
-    expectation: cleanText(overrides.expectation) || draft.expectation,
+    expectation: cleanText(overrides.expectation) || smallestAction || draft.expectation,
+    pendingInformation,
+    smallestAction,
     mood: '',
     createdAt,
     reviewDate,
     status: isReviewed ? 'reviewed' : 'pending',
     reviewStage: isReviewed ? 'result_done' : 'none',
-    stage: isReviewed ? DECISION_STAGES.FULL_BLOOM : DECISION_STAGES.SPROUT,
+    stage: isReviewed ? DECISION_STAGES.FULL_BLOOM : hasChoice ? DECISION_STAGES.SPROUT : DECISION_STAGES.SEED,
     actionStarted: isReviewed,
     firstReviewDone: isReviewed,
     resultReviewDone: isReviewed,
@@ -184,6 +201,11 @@ export function buildDecisionFromCoachDraft(draft, overrides = {}) {
       ? [{ ...draft.initialReview, date: createdAt }]
       : [],
     source: 'coach',
-    coachSource: draft.coachSource,
+    coachSource: {
+      ...draft.coachSource,
+      choiceStatus: hasChoice ? 'chosen' : 'pending',
+      pendingInformation,
+      smallestAction,
+    },
   })
 }

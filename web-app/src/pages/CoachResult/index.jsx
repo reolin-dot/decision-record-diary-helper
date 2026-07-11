@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
 import { buildCoachDecisionDraft, buildDecisionFromCoachDraft } from '../../domain/coachDecisionDrafts.js'
+import { buildPendingInformation } from '../../domain/roundtableFlow.js'
 import './result.css'
 
 function splitLines(value) {
@@ -49,15 +50,18 @@ export default function CoachResult() {
   const [saveOptions, setSaveOptions] = useState(suggestedDraft.options)
   const [saveChoice, setSaveChoice] = useState(suggestedDraft.choice)
   const [saveReason, setSaveReason] = useState(suggestedDraft.reason)
-  const [saveExpectation, setSaveExpectation] = useState(suggestedDraft.expectation)
+  const [choiceStatus, setChoiceStatus] = useState('')
+  const [pendingInformation, setPendingInformation] = useState(buildPendingInformation(steps))
+  const [smallestAction, setSmallestAction] = useState(analysis.nextAction || suggestedDraft.expectation)
+  const [reviewPeriod, setReviewPeriod] = useState('1w')
   const [saving, setSaving] = useState(false)
 
   const optionA = {
-    title: steps[0]?.value || '选项 A',
+    title: analysis.options?.[0] || steps[0]?.value || '选项 A',
     pros: splitLines(steps[1]?.value),
   }
   const optionB = {
-    title: steps[2]?.value || '选项 B',
+    title: analysis.options?.[1] || steps[2]?.value || '选项 B',
     pros: splitLines(steps[3]?.value),
   }
 
@@ -79,14 +83,28 @@ export default function CoachResult() {
       toast.show('至少保留 2 个可复盘选项')
       return
     }
+    if (!choiceStatus) {
+      toast.show('先确认现在能不能做选择')
+      return
+    }
+    if (choiceStatus === 'chosen' && (saveChoice < 0 || saveChoice >= saveOptions.length)) {
+      toast.show('请选择当前更倾向的选项')
+      return
+    }
+    if (!smallestAction.trim()) {
+      toast.show('写下一个现在能做的最小行动')
+      return
+    }
 
     setSaving(true)
     const payload = buildDecisionFromCoachDraft(suggestedDraft, {
       title: saveTitle,
       options: saveOptions,
-      choice: saveChoice,
+      choice: choiceStatus === 'chosen' ? saveChoice : -1,
       reason: saveReason,
-      expectation: saveExpectation,
+      pendingInformation: choiceStatus === 'pending' ? pendingInformation : '',
+      smallestAction,
+      reviewPeriod,
     })
     const decision = createDecision(payload)
     setSaving(false)
@@ -96,22 +114,22 @@ export default function CoachResult() {
       return
     }
 
-    toast.show('已保存到决策花园', { type: 'success' })
+    toast.show(choiceStatus === 'chosen' ? '已种入花园' : '已作为待确认种子保存', { type: 'success' })
     setTimeout(() => navigate(`/decision/${decision.id}`), 500)
   }
 
   const handleBackToCoach = () => {
-    navigate('/coach')
+    navigate(`/coach-analyze?kit=${analysis.kitId || 'choice'}`, { state: analysis })
   }
 
   return (
     <div className="page-container">
       <div className="result-body">
         <div className="coach-result-hero">
-          <span className="coach-result-kicker">{analysis.kitTitle || '决策锦囊'}</span>
+          <span className="coach-result-kicker">{analysis.kitTitle || '决策圆桌'}</span>
           <h1 className="coach-result-title">{analysis.resultTitle || '先把思路放到桌面上'}</h1>
           <p className="coach-result-desc">
-            这张卡片不是标准答案，而是帮你把此刻的判断、情绪和下一步行动分开放好。
+            这张卡片会保留此刻的问题、选项、判断和下一步行动。不能马上选择也没关系。
           </p>
         </div>
 
@@ -166,7 +184,7 @@ export default function CoachResult() {
             ))
           ) : (
             <div className="coach-result-empty">
-              还没有填写内容。你可以返回锦囊补充几句话，再生成卡片。
+              还没有填写内容。你可以返回圆桌补充几句话，再生成卡片。
             </div>
           )}
         </div>
@@ -181,16 +199,36 @@ export default function CoachResult() {
         </div>
 
         <div className="disclaimer">
-          锦囊只提供思考结构，不替你做判断。真正重要的是：你愿意把这次选择记录下来，并在之后温柔地复盘它。
+          圆桌只提供思考结构，不替你做判断。真正重要的是：把此刻判断留下来，并在之后回来复盘。
         </div>
 
         <div className="coach-save-panel">
           <div className="coach-save-head">
             <span className="coach-save-kicker">{suggestedDraft.sourceLabel}</span>
-            <span className="coach-save-title">保存前确认</span>
+            <span className="coach-save-title">完成这张决策卡</span>
             <span className="coach-save-desc">
-              已按这个锦囊整理成可复盘的决策记录，你可以轻微改动后直接保存。
+              先判断现在能否选择，再写下一个最小行动。两种情况都可以种进花园。
             </span>
+          </div>
+
+          <div className="coach-save-field">
+            <span>现在能做选择吗？</span>
+            <div className="decision-readiness">
+              <button
+                type="button"
+                className={choiceStatus === 'chosen' ? 'active' : ''}
+                onClick={() => setChoiceStatus('chosen')}
+              >
+                能，确认当前选择
+              </button>
+              <button
+                type="button"
+                className={choiceStatus === 'pending' ? 'active' : ''}
+                onClick={() => setChoiceStatus('pending')}
+              >
+                还不能，先补信息
+              </button>
+            </div>
           </div>
 
           <label className="coach-save-field">
@@ -208,7 +246,7 @@ export default function CoachResult() {
               {saveOptions.map((option, idx) => (
                 <div
                   key={idx}
-                  className={`coach-save-option ${saveChoice === idx ? 'selected' : ''}`}
+                  className={`coach-save-option ${choiceStatus === 'chosen' && saveChoice === idx ? 'selected' : ''}`}
                   onClick={() => setSaveChoice(idx)}
                 >
                   <input
@@ -216,14 +254,25 @@ export default function CoachResult() {
                     onChange={(e) => handleSaveOptionInput(idx, e.target.value)}
                     maxLength={80}
                   />
-                  <span>{saveChoice === idx ? '当前选择' : '设为选择'}</span>
+                  <span>{choiceStatus === 'chosen' && saveChoice === idx ? '当前选择' : '选择这个'}</span>
                 </div>
               ))}
             </div>
           </div>
 
+          {choiceStatus === 'pending' && (
+            <label className="coach-save-field">
+              <span>还需要确认什么？</span>
+              <textarea
+                value={pendingInformation}
+                onChange={(e) => setPendingInformation(e.target.value)}
+                maxLength={300}
+              />
+            </label>
+          )}
+
           <label className="coach-save-field">
-            <span>{analysis.kitId === 'action' ? '真正卡住的地方' : '保存为选择理由'}</span>
+            <span>{analysis.kitId === 'action' ? '真正卡住的地方' : choiceStatus === 'pending' ? '当前判断或暂缓理由' : '保存为选择理由'}</span>
             <textarea
               value={saveReason}
               onChange={(e) => setSaveReason(e.target.value)}
@@ -232,23 +281,32 @@ export default function CoachResult() {
           </label>
 
           <label className="coach-save-field">
-            <span>{analysis.kitId === 'review' ? '这次带走的经验' : '期待或下一步'}</span>
+            <span>现在能做的最小行动</span>
             <textarea
-              value={saveExpectation}
-              onChange={(e) => setSaveExpectation(e.target.value)}
+              value={smallestAction}
+              onChange={(e) => setSmallestAction(e.target.value)}
               maxLength={300}
             />
           </label>
 
+          <label className="coach-save-field">
+            <span>什么时候回来复盘？</span>
+            <select value={reviewPeriod} onChange={(e) => setReviewPeriod(e.target.value)}>
+              <option value="1w">一周后</option>
+              <option value="1m">一个月后</option>
+              <option value="3m">三个月后</option>
+            </select>
+          </label>
+
           <button className="save-draft-btn save-primary" onClick={handleSaveDecision} disabled={saving}>
-            {saving ? '保存中...' : '保存到我的决策'}
+            {saving ? '种入花园中...' : '种入花园并设置复盘'}
           </button>
         </div>
       </div>
 
       <div className="bottom-bar">
         <button className="btn-secondary" onClick={handleBackToCoach}>
-          返回锦囊
+          返回圆桌追问
         </button>
       </div>
     </div>

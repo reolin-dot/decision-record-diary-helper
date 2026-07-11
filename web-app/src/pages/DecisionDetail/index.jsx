@@ -136,7 +136,7 @@ export default function DecisionDetail() {
 
       {decision.coachSource && (
         <div className="detail-section coach-source-section">
-          <span className="section-label">锦囊来源</span>
+          <span className="section-label">圆桌来源</span>
           <div className="coach-source-card">
             <span className="coach-source-title">{decision.coachSource.kitTitle || '决策锦囊'}</span>
             {(decision.coachSource.framework || decision.coachSource.tone) && (
@@ -149,9 +149,14 @@ export default function DecisionDetail() {
             )}
             <button
               className="coach-source-btn"
-              onClick={() => navigate(`/coach-analyze?kit=${decision.coachSource.kitId}`)}
+              onClick={() => navigate(`/coach-analyze?kit=${decision.coachSource.kitId}`, {
+                state: {
+                  question: decision.coachSource.question || decision.title,
+                  options: decision.coachSource.options || decision.options,
+                },
+              })}
             >
-              再打开这个锦囊
+              再打开这个视角
             </button>
           </div>
         </div>
@@ -201,10 +206,24 @@ export default function DecisionDetail() {
         </div>
       )}
 
-      {/* Expectation */}
-      {decision.expectation && (
+      {decision.pendingInformation && (
         <div className="detail-section">
-          <span className="section-label">预期结果</span>
+          <span className="section-label">待确认信息</span>
+          <span className="section-text">{decision.pendingInformation}</span>
+        </div>
+      )}
+
+      {decision.smallestAction && (
+        <div className="detail-section">
+          <span className="section-label">最小行动</span>
+          <span className="section-text">{decision.smallestAction}</span>
+        </div>
+      )}
+
+      {/* Expectation */}
+      {decision.expectation && decision.expectation !== decision.smallestAction && (
+        <div className="detail-section">
+          <span className="section-label">期待或行动线索</span>
           <span className="section-text">{decision.expectation}</span>
         </div>
       )}

@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 
 const tabs = [
   { path: '/', label: '花园', icon: '🌿', activeIcon: '🌺' },
-  { path: '/coach', label: '锦囊', icon: '💡', activeIcon: '✨' },
+  { path: '/coach', label: '圆桌', icon: '💡', activeIcon: '✨' },
   { path: '/profile', label: '我的', icon: '👤', activeIcon: '😊' },
 ]
 

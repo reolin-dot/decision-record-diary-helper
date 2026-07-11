@@ -296,7 +296,8 @@
 }
 
 .coach-save-field input,
-.coach-save-field textarea {
+.coach-save-field textarea,
+.coach-save-field select {
   width: 100%;
   border: 1px solid #dcdcdc;
   border-radius: 8px;
@@ -305,6 +306,31 @@
   color: #222222;
   outline: none;
   box-sizing: border-box;
+}
+
+.coach-save-field select {
+  font: inherit;
+}
+
+.decision-readiness {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.decision-readiness button {
+  padding: 10px 8px;
+  border-radius: 8px;
+  background: #f3f3f3;
+  color: #666666;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.decision-readiness button.active {
+  background: rgba(74, 124, 89, 0.12);
+  color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px rgba(74, 124, 89, 0.25);
 }
 
 .coach-save-field textarea {

@@ -50,6 +50,55 @@
   line-height: 1;
 }
 
+.live-decision-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, rgba(74, 124, 89, 0.1), #ffffff);
+  border: 1px solid rgba(74, 124, 89, 0.18);
+  box-shadow: var(--shadow-card);
+}
+
+.live-card-kicker,
+.live-card-progress {
+  font-size: 11px;
+  color: var(--color-accent);
+}
+
+.live-decision-card strong {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.live-card-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.live-card-options span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid var(--color-border-light);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.live-card-answer {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .analyze-step {
   background: var(--color-surface);
   border: 1px solid var(--color-border-light);

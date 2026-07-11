@@ -2,6 +2,7 @@ export const COACH_KITS = [
   {
     id: 'choice',
     icon: '🔀',
+    perspectiveLabel: '权衡者视角',
     title: '我在几个选项里反复纠结',
     shortTitle: '纠结选择型',
     desc: '适合二选一、多选一，帮你比较利弊和真正看重的东西。',
@@ -22,6 +23,7 @@ export const COACH_KITS = [
   {
     id: 'emotion',
     icon: '🌧️',
+    perspectiveLabel: '守护者视角',
     title: '我情绪很乱，没法判断',
     shortTitle: '情绪降噪型',
     desc: '适合焦虑、害怕、冲动时先降噪，再慢慢看清问题。',
@@ -41,6 +43,7 @@ export const COACH_KITS = [
   {
     id: 'action',
     icon: '🏃',
+    perspectiveLabel: '行动者视角',
     title: '我知道方向，但迟迟动不起来',
     shortTitle: '行动启动型',
     desc: '适合已经有方向但卡在拖延、害怕开始、执行阻力上。',
@@ -60,6 +63,7 @@ export const COACH_KITS = [
   {
     id: 'info',
     icon: '🔎',
+    perspectiveLabel: '调查者视角',
     title: '我缺信息，不敢决定',
     shortTitle: '信息验证型',
     desc: '适合不知道该查什么、问谁、如何低成本试错的情况。',
@@ -79,6 +83,7 @@ export const COACH_KITS = [
   {
     id: 'review',
     icon: '🌸',
+    perspectiveLabel: '复盘者视角',
     title: '我已经做完了，想复盘一下',
     shortTitle: '复盘提炼型',
     desc: '适合做完决定后，把事实、判断和经验沉淀下来。',

@@ -64,6 +64,102 @@
   padding: 12px 16px;
 }
 
+.roundtable-input-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.roundtable-step-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.roundtable-input-card textarea,
+.roundtable-option-row input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  color: var(--color-text-primary);
+  font: inherit;
+  outline: none;
+}
+
+.roundtable-input-card textarea {
+  min-height: 84px;
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.roundtable-input-card textarea:focus,
+.roundtable-option-row input:focus {
+  border-color: var(--color-accent);
+}
+
+.roundtable-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.roundtable-option-row {
+  display: grid;
+  grid-template-columns: 26px 1fr 28px;
+  align-items: center;
+  gap: 8px;
+}
+
+.roundtable-option-row > span {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.roundtable-option-row input {
+  padding: 9px 10px;
+}
+
+.roundtable-option-row button,
+.roundtable-add-option {
+  color: var(--color-accent);
+  background: none;
+}
+
+.roundtable-add-option {
+  align-self: flex-start;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.roundtable-perspective-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 2px 10px;
+}
+
+.roundtable-perspective-head > span:last-child {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
 .dilemma-card {
   display: flex;
   flex-direction: row;

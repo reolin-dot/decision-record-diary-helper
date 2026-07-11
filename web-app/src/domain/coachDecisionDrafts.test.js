@@ -26,6 +26,41 @@ test('builds a choice draft with inferred option and coach source', () => {
   assert.equal(draft.coachSource.kitId, 'choice')
 })
 
+test('uses the roundtable question and options as the decision card', () => {
+  const draft = buildCoachDecisionDraft({
+    kitId: 'info',
+    question: '现在换工作合适吗？',
+    options: ['接受 offer', '继续留下'],
+    steps: [],
+  })
+
+  assert.equal(draft.title, '现在换工作合适吗？')
+  assert.deepEqual(draft.options, ['接受 offer', '继续留下'])
+  assert.equal(draft.coachSource.question, '现在换工作合适吗？')
+})
+
+test('plants an unresolved decision as a seed with a smallest action', () => {
+  const draft = buildCoachDecisionDraft({
+    kitId: 'info',
+    question: '现在换工作合适吗？',
+    options: ['接受 offer', '继续留下'],
+    steps: [],
+  })
+  const decision = buildDecisionFromCoachDraft(draft, {
+    choice: -1,
+    pendingInformation: '确认团队未来半年的业务方向',
+    smallestAction: '明天约主管聊 20 分钟',
+    reviewPeriod: '1m',
+    createdAt: '2026-07-11',
+  })
+
+  assert.equal(decision.choice, -1)
+  assert.equal(decision.stage, 'seed')
+  assert.equal(decision.pendingInformation, '确认团队未来半年的业务方向')
+  assert.equal(decision.smallestAction, '明天约主管聊 20 分钟')
+  assert.equal(decision.reviewDate, '2026-08-11')
+})
+
 test('builds an action draft around a small first step', () => {
   const draft = buildCoachDecisionDraft({
     kitId: 'action',

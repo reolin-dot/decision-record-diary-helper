@@ -48,8 +48,8 @@ export default function AppRoutes() {
         <Route path="/growth-archive" element={<PageHeader title="成长档案"><GrowthArchive /></PageHeader>} />
         <Route path="/monthly-report" element={<PageHeader title="月度成长报告"><MonthlyReport /></PageHeader>} />
         <Route path="/theme-garden" element={<PageHeader title="主题花园"><ThemeGarden /></PageHeader>} />
-        <Route path="/coach-analyze" element={<PageHeader title="分析"><CoachAnalyze /></PageHeader>} />
-        <Route path="/coach-result" element={<PageHeader title="分析结果"><CoachResult /></PageHeader>} />
+        <Route path="/coach-analyze" element={<PageHeader title="圆桌追问"><CoachAnalyze /></PageHeader>} />
+        <Route path="/coach-result" element={<PageHeader title="决策卡"><CoachResult /></PageHeader>} />
         <Route path="/style-test" element={<PageHeader title="决策风格测试"><StyleTest /></PageHeader>} />
         <Route path="/data-export" element={<PageHeader title="数据导出"><DataExport /></PageHeader>} />
         <Route path="/login" element={<PageHeader title="账号登录"><Login /></PageHeader>} />
