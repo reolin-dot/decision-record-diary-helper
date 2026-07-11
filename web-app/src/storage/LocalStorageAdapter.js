@@ -82,17 +82,20 @@ class LocalStorageAdapter {
     if (!payload || typeof payload !== 'object') return false
 
     try {
-      Object.values(STORAGE_KEYS).forEach(key => {
+      for (const key of Object.values(STORAGE_KEYS)) {
         if (payload[key] !== undefined) {
+          let ok
           if (mode === 'merge' && Array.isArray(payload[key])) {
             const existing = this.get(key, [])
             const merged = this._mergeArrays(existing, payload[key])
-            this.set(key, merged)
+            ok = this.set(key, merged)
           } else {
-            this.set(key, payload[key])
+            ok = this.set(key, payload[key])
           }
+          // ponytail: localStorage has no transactions; the caller downloads a recovery backup first.
+          if (!ok) return false
         }
-      })
+      }
       return true
     } catch (e) {
       console.error('[Storage] import error:', e)

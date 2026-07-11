@@ -17,7 +17,11 @@ export function addDays(dateStr, days) {
 
 export function addMonths(dateStr, months) {
   const d = new Date(dateStr)
+  const day = d.getDate()
+  d.setDate(1)
   d.setMonth(d.getMonth() + months)
+  const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()
+  d.setDate(Math.min(day, lastDay))
   return formatDate(d)
 }
 

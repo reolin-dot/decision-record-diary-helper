@@ -24,7 +24,7 @@ function compactDecision(decision) {
     category: decision.category || '',
     background: toText(decision.background),
     options: Array.isArray(decision.options) ? decision.options.filter(Boolean) : [],
-    choice: toText(decision.choice),
+    choice: Number.isInteger(decision.choice) ? decision.choice : toText(decision.choice),
     reason: toText(decision.reason),
     expectation: toText(decision.expectation),
     mood: decision.mood || '',
