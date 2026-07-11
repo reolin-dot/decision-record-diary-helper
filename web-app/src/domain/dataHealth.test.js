@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { checkDataHealth, describeBackupFreshness, repairDataHealth, summarizeImport } from './dataHealth.js'
+import { checkDataHealth, describeBackupFreshness, repairDataHealth } from './dataHealth.js'
 
 test('returns healthy for normal local data', () => {
   const result = checkDataHealth({
@@ -89,23 +89,6 @@ test('preserves soft-deleted decisions during repair', () => {
 
   assert.equal(result.changedCount, 1)
   assert.equal(result.decisions[0]._deleted, true)
-})
-
-test('summarizes import impact before merging', () => {
-  const result = summarizeImport(
-    {
-      decisions: [{ id: 'old' }, { id: 'new' }],
-      aiInsights: [{ id: 'ai1' }],
-    },
-    [{ id: 'old' }]
-  )
-
-  assert.deepEqual(result, {
-    decisions: 2,
-    aiInsights: 1,
-    addedDecisions: 1,
-    mergedDecisions: 1,
-  })
 })
 
 test('describes backup freshness', () => {

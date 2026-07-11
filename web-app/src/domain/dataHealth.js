@@ -130,27 +130,6 @@ export function repairDataHealth({ decisions = [] } = {}) {
   }
 }
 
-export function summarizeImport(payload, existingDecisions = []) {
-  const decisions = Array.isArray(payload?.decisions) ? payload.decisions : []
-  const existingIds = new Set(existingDecisions.map(item => item?.id).filter(Boolean))
-  const summary = {
-    decisions: decisions.length,
-    aiInsights: Array.isArray(payload?.aiInsights) ? payload.aiInsights.length : 0,
-    addedDecisions: 0,
-    mergedDecisions: 0,
-  }
-
-  decisions.forEach(item => {
-    if (existingIds.has(item?.id)) {
-      summary.mergedDecisions += 1
-    } else {
-      summary.addedDecisions += 1
-    }
-  })
-
-  return summary
-}
-
 export function describeBackupFreshness(lastBackupAt, now = new Date()) {
   if (!lastBackupAt) {
     return { status: 'missing', message: '还没有完整备份记录' }

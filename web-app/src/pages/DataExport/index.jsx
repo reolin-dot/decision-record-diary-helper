@@ -6,11 +6,11 @@ import { useModal } from '../../components/Modal.jsx'
 import storage from '../../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS } from '../../storage/storageKeys.js'
 import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
+import { buildLocalBackup, prepareBackupImport } from '../../domain/backupRecovery.js'
 import {
   checkDataHealth,
   describeBackupFreshness,
   repairDataHealth,
-  summarizeImport,
 } from '../../domain/dataHealth.js'
 import './export.css'
 
@@ -155,16 +155,11 @@ export default function DataExport() {
   const healthItems = dataHealth.issues.length > 0 ? dataHealth.issues : dataHealth.warnings.slice(0, 3)
   const repairPreview = repairDataHealth({ decisions: storedDecisions })
   const canRepair = dataHealth.status === 'warning' && dataHealth.issues.length === 0 && repairPreview.repaired
-  const buildLocalBackup = () => ({
-    ...storage.exportAll(),
-    exportType: 'local_backup',
-    dataHealth,
-  })
+  const buildCurrentBackup = () => buildLocalBackup(storage.exportAll(), { dataHealth })
   const markBackupExported = () => {
     const exportedAt = new Date().toISOString()
     storage.set(STORAGE_KEYS.LAST_BACKUP_AT, exportedAt)
     setLastBackupAt(exportedAt)
-    return exportedAt
   }
 
   const handleExport = () => {
@@ -172,7 +167,7 @@ export default function DataExport() {
 
     let data
     if (selected === 'backup') {
-      data = buildLocalBackup()
+      data = buildCurrentBackup()
     } else if (selected === 'all') {
       data = buildFullExport(decisions, decisionStyle, aiInsights, dataHealth)
     } else if (selected === 'reviewed') {
@@ -204,7 +199,7 @@ export default function DataExport() {
       setExporting(false)
 
       if (selected === 'backup') {
-        data[STORAGE_KEYS.LAST_BACKUP_AT] = markBackupExported()
+        markBackupExported()
       }
       downloadJSON(data, `decision-diary-${selected}-${Date.now()}.json`)
       toast.show('导出成功')
@@ -212,8 +207,8 @@ export default function DataExport() {
   }
 
   const handleQuickBackup = () => {
-    const data = buildLocalBackup()
-    data[STORAGE_KEYS.LAST_BACKUP_AT] = markBackupExported()
+    const data = buildCurrentBackup()
+    markBackupExported()
     downloadJSON(data, `decision-diary-backup-${Date.now()}.json`)
     toast.show('已导出完整本地备份', { type: 'success' })
   }
@@ -282,7 +277,7 @@ export default function DataExport() {
       return
     }
 
-    downloadJSON(storage.exportAll(), `decision-diary-before-repair-${Date.now()}.json`)
+    downloadJSON(buildCurrentBackup(), `decision-diary-before-repair-${Date.now()}.json`)
 
     const ok = storage.set(STORAGE_KEYS.DECISIONS, result.decisions)
     if (!ok) {
@@ -303,32 +298,12 @@ export default function DataExport() {
     reader.onload = async () => {
       try {
         const payload = JSON.parse(reader.result)
-        const decisionsPayload = Array.isArray(payload.decisions)
-          ? { ...payload, decisions: payload.decisions }
-          : payload
-        if (!Array.isArray(decisionsPayload.decisions)) {
-          toast.show('导入失败：备份文件缺少决策数据')
+        const prepared = prepareBackupImport(payload, storedDecisions)
+        if (!prepared.ok) {
+          toast.show(`导入失败：${prepared.error}`)
           return
         }
-        const importHealth = checkDataHealth({
-          decisions: decisionsPayload.decisions,
-          aiInsights: decisionsPayload.aiInsights || [],
-          decisionStyle: decisionsPayload.decisionStyle || null,
-        })
-        if (importHealth.status === 'error') {
-          toast.show(`导入失败：${importHealth.issues[0]?.message || '备份数据有严重格式问题'}`)
-          return
-        }
-        const repairResult = repairDataHealth({ decisions: decisionsPayload.decisions })
-        const safePayload = {
-          ...decisionsPayload,
-          decisions: repairResult.decisions,
-        }
-        if (!Array.isArray(safePayload.aiInsights)) delete safePayload.aiInsights
-        if (safePayload.decisionStyle && typeof safePayload.decisionStyle !== 'object') {
-          delete safePayload.decisionStyle
-        }
-        const importSummary = summarizeImport(safePayload, storedDecisions)
+        const { payload: safePayload, repair: repairResult, summary: importSummary } = prepared
         const confirmed = await modal.confirm({
           title: '确认导入备份',
           content: `文件包含 ${importSummary.decisions} 条决策、${importSummary.aiInsights} 条洞察；预计新增 ${importSummary.addedDecisions} 条决策，同 ID 合并 ${importSummary.mergedDecisions} 条。导入前会自动下载当前完整备份。`,
@@ -337,7 +312,7 @@ export default function DataExport() {
         })
         if (!confirmed) return
 
-        downloadJSON(storage.exportAll(), `decision-diary-before-import-${Date.now()}.json`)
+        downloadJSON(buildCurrentBackup(), `decision-diary-before-import-${Date.now()}.json`)
         const ok = storage.importAll(safePayload, 'merge')
         if (!ok) {
           toast.show('导入失败，请检查文件格式')
