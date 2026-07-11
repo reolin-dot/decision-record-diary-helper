@@ -45,7 +45,7 @@ export default function Login() {
       toast.show('密码已更新', { type: 'success' })
     } else if (mode === 'recover') {
       setMode('login')
-      toast.show('如果该邮箱已注册，重置链接已发送', { type: 'success' })
+      toast.show('重置链接已发送，请在当前浏览器打开邮件', { type: 'success' })
     } else {
       toast.show(mode === 'register' ? '注册成功' : '登录成功', { type: 'success' })
     }
@@ -140,6 +140,9 @@ export default function Login() {
             <button className="btn-primary" disabled={loading}>
               {loading ? '处理中...' : mode === 'recover' ? '发送重置链接' : (mode === 'register' ? '注册' : '登录')}
             </button>
+            {mode === 'recover' && (
+              <p className="login-recovery-note">请使用当前浏览器打开重置邮件；换浏览器可能无法进入设置新密码页面。</p>
+            )}
             {mode === 'login' && (
               <button type="button" className="login-link" onClick={() => setMode('recover')}>忘记密码？</button>
             )}

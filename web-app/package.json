@@ -1,7 +1,7 @@
 {
   "name": "decision-growth-diary",
   "private": true,
-  "version": "2.1.0-alpha.4",
+  "version": "2.1.0-alpha.5",
   "type": "module",
   "scripts": {
     "dev": "vite",

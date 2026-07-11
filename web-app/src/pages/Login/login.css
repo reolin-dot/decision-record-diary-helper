@@ -70,3 +70,12 @@
   background: none;
   padding: 4px;
 }
+
+.login-card .login-recovery-note {
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: #fff8ec;
+  color: #7a5a35;
+  font-size: 12px;
+  line-height: 1.6;
+}
