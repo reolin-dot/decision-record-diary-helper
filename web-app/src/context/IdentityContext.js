@@ -16,6 +16,7 @@ async function runAuth(call) {
 export function IdentityProvider({ children, client = supabase, getRedirectUrl = buildAuthRedirectUrl }) {
   const [session, setSession] = useState(null)
   const [isLoading, setIsLoading] = useState(Boolean(client))
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false)
 
   useEffect(() => {
     if (!client) {
@@ -35,9 +36,13 @@ export function IdentityProvider({ children, client = supabase, getRedirectUrl =
         if (active) setIsLoading(false)
       })
 
-    const { data } = client.auth.onAuthStateChange((_event, nextSession) => {
+    const { data } = client.auth.onAuthStateChange((event, nextSession) => {
       if (active) {
         setSession(nextSession)
+        if (event === 'PASSWORD_RECOVERY') {
+          setIsPasswordRecovery(true)
+          window.location.hash = '/login'
+        }
         setIsLoading(false)
       }
     })
@@ -75,14 +80,32 @@ export function IdentityProvider({ children, client = supabase, getRedirectUrl =
     return result.ok ? { ok: true } : result
   }, [client])
 
+  const requestPasswordReset = useCallback(async (email) => {
+    if (!client) return { ok: false, error: '账号功能尚未配置' }
+    const result = await runAuth(() => client.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: getRedirectUrl(),
+    }))
+    return result.ok ? { ok: true } : result
+  }, [client, getRedirectUrl])
+
+  const updatePassword = useCallback(async (password) => {
+    if (!client) return { ok: false, error: '账号功能尚未配置' }
+    const result = await runAuth(() => client.auth.updateUser({ password }))
+    if (result.ok) setIsPasswordRecovery(false)
+    return result.ok ? { ok: true } : result
+  }, [client])
+
   const value = useMemo(() => ({
     user: session?.user || null,
     isConfigured: Boolean(client),
     isLoading,
+    isPasswordRecovery,
     signIn,
     register,
     signOut,
-  }), [client, isLoading, register, session, signIn, signOut])
+    requestPasswordReset,
+    updatePassword,
+  }), [client, isLoading, isPasswordRecovery, register, requestPasswordReset, session, signIn, signOut, updatePassword])
 
   return createElement(IdentityContext.Provider, { value }, children)
 }

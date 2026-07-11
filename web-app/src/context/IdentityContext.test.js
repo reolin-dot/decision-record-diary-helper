@@ -16,6 +16,14 @@ test('hides Supabase auth calls behind the identity interface', async () => {
         calls.push(['register', input])
         return { data: { session: null }, error: null }
       },
+      resetPasswordForEmail: async (email, options) => {
+        calls.push(['resetPassword', { email, options }])
+        return { data: {}, error: null }
+      },
+      updateUser: async input => {
+        calls.push(['updatePassword', input])
+        return { data: { user: {} }, error: null }
+      },
       signOut: async () => ({ error: { message: '退出失败' } }),
     },
   }
@@ -37,6 +45,8 @@ test('hides Supabase auth calls behind the identity interface', async () => {
     requiresEmailConfirmation: true,
   })
   assert.deepEqual(await identity.signOut(), { ok: false, error: '退出失败' })
+  assert.deepEqual(await identity.requestPasswordReset(' user@example.com '), { ok: true })
+  assert.deepEqual(await identity.updatePassword('new-secret'), { ok: true })
   assert.deepEqual(calls, [
     ['signIn', { email: 'user@example.com', password: 'secret' }],
     ['register', {
@@ -44,5 +54,10 @@ test('hides Supabase auth calls behind the identity interface', async () => {
       password: 'secret',
       options: { emailRedirectTo: 'https://example.com/app' },
     }],
+    ['resetPassword', {
+      email: 'user@example.com',
+      options: { redirectTo: 'https://example.com/app' },
+    }],
+    ['updatePassword', { password: 'new-secret' }],
   ])
 })

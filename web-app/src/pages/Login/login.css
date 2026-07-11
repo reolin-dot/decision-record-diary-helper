@@ -62,3 +62,11 @@
   font-size: 14px;
   color: #333333;
 }
+
+.login-link {
+  align-self: center;
+  color: #4a7c59;
+  font-size: 13px;
+  background: none;
+  padding: 4px;
+}

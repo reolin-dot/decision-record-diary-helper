@@ -5,7 +5,17 @@ import './login.css'
 
 export default function Login() {
   const toast = useToast()
-  const { user, isConfigured, isLoading, signIn, register, signOut } = useIdentity()
+  const {
+    user,
+    isConfigured,
+    isLoading,
+    isPasswordRecovery,
+    signIn,
+    register,
+    signOut,
+    requestPasswordReset,
+    updatePassword,
+  } = useIdentity()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [mode, setMode] = useState('login')
@@ -13,12 +23,16 @@ export default function Login() {
 
   const submitPasswordAuth = async (event) => {
     event.preventDefault()
-    if (!email.trim() || !password) return
+    if (isPasswordRecovery ? !password : !email.trim() || (mode !== 'recover' && !password)) return
 
     setLoading(true)
-    const result = mode === 'register'
-      ? await register(email, password)
-      : await signIn(email, password)
+    const result = isPasswordRecovery
+      ? await updatePassword(password)
+      : mode === 'recover'
+        ? await requestPasswordReset(email)
+        : mode === 'register'
+          ? await register(email, password)
+          : await signIn(email, password)
     setLoading(false)
 
     if (!result.ok) {
@@ -26,10 +40,15 @@ export default function Login() {
       return
     }
 
-    toast.show(
-      result.requiresEmailConfirmation ? '注册成功，请去邮箱确认' : '登录成功',
-      { type: 'success' },
-    )
+    if (isPasswordRecovery) {
+      setPassword('')
+      toast.show('密码已更新', { type: 'success' })
+    } else if (mode === 'recover') {
+      setMode('login')
+      toast.show('如果该邮箱已注册，重置链接已发送', { type: 'success' })
+    } else {
+      toast.show(mode === 'register' ? '注册成功' : '登录成功', { type: 'success' })
+    }
   }
 
   const handleSignOut = async () => {
@@ -57,11 +76,27 @@ export default function Login() {
     <div className="login-page">
       <div className="login-card">
         <span className="login-kicker">账号登录</span>
-        <h2>{user ? '已经登录' : (mode === 'register' ? '注册账号' : '邮箱密码登录')}</h2>
-        <p>当前版本先接入账号身份，后续再把本地决策同步到云端。</p>
+        <h2>{isPasswordRecovery ? '设置新密码' : user ? '已经登录' : mode === 'recover' ? '重置密码' : (mode === 'register' ? '注册账号' : '邮箱密码登录')}</h2>
+        <p>{isPasswordRecovery ? '输入新密码，保存后即可继续使用账号。' : '当前版本先接入账号身份，后续再把本地决策同步到云端。'}</p>
 
         {isLoading ? (
           <p>正在确认登录状态...</p>
+        ) : isPasswordRecovery ? (
+          <form onSubmit={submitPasswordAuth} className="login-form">
+            <input
+              className="form-input"
+              type="password"
+              value={password}
+              placeholder="输入新密码"
+              minLength={6}
+              autoComplete="new-password"
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+            <button className="btn-primary" disabled={loading}>
+              {loading ? '保存中...' : '保存新密码'}
+            </button>
+          </form>
         ) : user ? (
           <div className="login-session">
             <span>{user.email}</span>
@@ -69,7 +104,7 @@ export default function Login() {
           </div>
         ) : (
           <form onSubmit={submitPasswordAuth} className="login-form">
-            <div className="login-tabs">
+            {mode !== 'recover' && <div className="login-tabs">
               <button
                 type="button"
                 className={mode === 'login' ? 'active' : ''}
@@ -84,7 +119,7 @@ export default function Login() {
               >
                 注册
               </button>
-            </div>
+            </div>}
             <input
               className="form-input"
               type="email"
@@ -93,7 +128,7 @@ export default function Login() {
               onChange={(event) => setEmail(event.target.value)}
               required
             />
-            <input
+            {mode !== 'recover' && <input
               className="form-input"
               type="password"
               value={password}
@@ -101,10 +136,16 @@ export default function Login() {
               minLength={6}
               onChange={(event) => setPassword(event.target.value)}
               required
-            />
+            />}
             <button className="btn-primary" disabled={loading}>
-              {loading ? '处理中...' : (mode === 'register' ? '注册' : '登录')}
+              {loading ? '处理中...' : mode === 'recover' ? '发送重置链接' : (mode === 'register' ? '注册' : '登录')}
             </button>
+            {mode === 'login' && (
+              <button type="button" className="login-link" onClick={() => setMode('recover')}>忘记密码？</button>
+            )}
+            {mode === 'recover' && (
+              <button type="button" className="login-link" onClick={() => setMode('login')}>返回登录</button>
+            )}
           </form>
         )}
       </div>
