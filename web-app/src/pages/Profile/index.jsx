@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
+import { useIdentity } from '../../context/IdentityContext.js'
 import { useToast } from '../../components/Toast.jsx'
 import './profile.css'
 
@@ -28,6 +29,7 @@ function computeBadges(stats) {
 export default function Profile() {
   const navigate = useNavigate()
   const { stats, decisionStyle, userInfo, aiInsights } = useApp()
+  const { user, isConfigured, isLoading } = useIdentity()
   const toast = useToast()
 
   const badges = computeBadges(stats)
@@ -150,13 +152,15 @@ export default function Profile() {
         <div className="pf-settings-list">
           <div className="pf-setting" onClick={openLogin}>
             <span className="pf-setting-icon">🔐</span>
-            <span className="pf-setting-label">账号登录</span>
-            <span className="pf-setting-hint">邮箱登录</span>
+            <span className="pf-setting-label">{user ? '已登录账号' : '账号登录'}</span>
+            <span className="pf-setting-hint">
+              {isLoading ? '确认中' : user?.email || (isConfigured ? '邮箱登录' : '未配置')}
+            </span>
           </div>
           <div className="pf-setting" onClick={openLogin}>
             <span className="pf-setting-icon">☁️</span>
             <span className="pf-setting-label">云备份与跨设备恢复</span>
-            <span className="pf-setting-hint">登录后开放</span>
+            <span className="pf-setting-hint">{user ? '即将开放' : '登录后开放'}</span>
           </div>
         </div>
       </div>

@@ -1,68 +1,47 @@
-import { useEffect, useState } from 'react'
-import { supabase, isSupabaseConfigured } from '../../lib/supabase.js'
-import { buildAuthRedirectUrl } from '../../lib/authRedirect.js'
+import { useState } from 'react'
+import { useIdentity } from '../../context/IdentityContext.js'
 import { useToast } from '../../components/Toast.jsx'
 import './login.css'
 
 export default function Login() {
   const toast = useToast()
+  const { user, isConfigured, isLoading, signIn, register, signOut } = useIdentity()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [mode, setMode] = useState('login')
-  const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    if (!supabase) return undefined
-
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-    })
-
-    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession)
-    })
-
-    return () => data.subscription.unsubscribe()
-  }, [])
 
   const submitPasswordAuth = async (event) => {
     event.preventDefault()
-    if (!supabase || !email.trim() || !password) return
+    if (!email.trim() || !password) return
 
     setLoading(true)
-    const authCall = mode === 'register'
-      ? supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: { emailRedirectTo: buildAuthRedirectUrl() },
-        })
-      : supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        })
-
-    const { data, error } = await authCall
+    const result = mode === 'register'
+      ? await register(email, password)
+      : await signIn(email, password)
     setLoading(false)
 
-    if (error) {
-      toast.show(error.message)
+    if (!result.ok) {
+      toast.show(result.error)
       return
     }
 
     toast.show(
-      mode === 'register' && !data.session ? '注册成功，请去邮箱确认' : '登录成功',
+      result.requiresEmailConfirmation ? '注册成功，请去邮箱确认' : '登录成功',
       { type: 'success' },
     )
   }
 
-  const signOut = async () => {
-    if (!supabase) return
-    await supabase.auth.signOut()
+  const handleSignOut = async () => {
+    const result = await signOut()
+    if (!result.ok) {
+      toast.show(result.error)
+      return
+    }
     toast.show('已退出登录')
   }
 
-  if (!isSupabaseConfigured) {
+  if (!isConfigured) {
     return (
       <div className="login-page">
         <div className="login-card">
@@ -78,13 +57,15 @@ export default function Login() {
     <div className="login-page">
       <div className="login-card">
         <span className="login-kicker">账号登录</span>
-        <h2>{session ? '已经登录' : (mode === 'register' ? '注册账号' : '邮箱密码登录')}</h2>
+        <h2>{user ? '已经登录' : (mode === 'register' ? '注册账号' : '邮箱密码登录')}</h2>
         <p>当前版本先接入账号身份，后续再把本地决策同步到云端。</p>
 
-        {session ? (
+        {isLoading ? (
+          <p>正在确认登录状态...</p>
+        ) : user ? (
           <div className="login-session">
-            <span>{session.user.email}</span>
-            <button className="btn-secondary" onClick={signOut}>退出登录</button>
+            <span>{user.email}</span>
+            <button className="btn-secondary" onClick={handleSignOut}>退出登录</button>
           </div>
         ) : (
           <form onSubmit={submitPasswordAuth} className="login-form">
