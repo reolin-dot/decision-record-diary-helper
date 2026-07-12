@@ -1,0 +1,18 @@
+{
+  "name": "决策成长日记",
+  "short_name": "决策日记",
+  "description": "记录选择、行动与复盘，让每次决策沉淀成成长。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#4a7c59",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
