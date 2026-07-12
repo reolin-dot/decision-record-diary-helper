@@ -266,6 +266,11 @@
   flex-shrink: 0;
 }
 
+.pf-setting-danger .pf-setting-label,
+.pf-setting-danger .pf-setting-hint {
+  color: #a4463b;
+}
+
 .pf-local-note {
   display: flex;
   gap: 10px;

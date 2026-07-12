@@ -5,11 +5,11 @@ import { getStageMeta } from '../../domain/decisionStages.js'
 import { formatDate } from '../../utils/util.js'
 import './list.css'
 
-const TABS = ['全部', '生长中', '待复盘', '已盛开']
+const TABS = ['全部', '生长中', '待复盘', '已盛开', '已归档']
 
 export default function DecisionList() {
   const navigate = useNavigate()
-  const { decisions } = useApp()
+  const { decisions, archivedDecisions } = useApp()
 
   const [activeTab, setActiveTab] = useState(0)
   const [searchKey, setSearchKey] = useState('')
@@ -32,7 +32,7 @@ export default function DecisionList() {
 
   // Sort and decorate decisions
   const decoratedDecisions = useMemo(() => {
-    return decisions
+    return [...decisions, ...archivedDecisions]
       .slice()
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .map(d => {
@@ -47,7 +47,7 @@ export default function DecisionList() {
           wateringText: wateringCount > 0 ? `已浇水 ${wateringCount} 次` : '',
         }
       })
-  }, [decisions, today])
+  }, [decisions, archivedDecisions, today])
 
   // Filter by tab + search
   const filteredDecisions = useMemo(() => {
@@ -60,14 +60,24 @@ export default function DecisionList() {
         filtered = decoratedDecisions.filter(d => d.status === 'pending' && isOverdue(d))
         break
       case 3: // 已盛开
-        filtered = decoratedDecisions.filter(d => d.status === 'reviewed')
+        filtered = decoratedDecisions.filter(d => d.status === 'reviewed' && !d.isArchived)
+        break
+      case 4: // 已归档
+        filtered = decoratedDecisions.filter(d => d.isArchived)
         break
       default:
-        filtered = decoratedDecisions
+        filtered = decoratedDecisions.filter(d => !d.isArchived)
     }
     const key = searchKey.trim().toLowerCase()
     if (key) {
-      filtered = filtered.filter(d => d.title.toLowerCase().includes(key))
+      filtered = filtered.filter(d => [
+        d.title,
+        d.background,
+        d.reason,
+        d.expectation,
+        ...(d.options || []),
+        ...(d.wateringHistory || []).flatMap(item => [item.reflection, item.lesson, item.summary]),
+      ].filter(Boolean).join(' ').toLowerCase().includes(key))
     }
     return filtered
   }, [decoratedDecisions, activeTab, searchKey])
@@ -80,7 +90,7 @@ export default function DecisionList() {
           <span className="dl-search-icon">🔍</span>
           <input
             className="dl-search-input"
-            placeholder="搜索决策标题..."
+            placeholder="搜索标题、选项、理由或复盘..."
             value={searchKey}
             onChange={(e) => setSearchKey(e.target.value)}
           />

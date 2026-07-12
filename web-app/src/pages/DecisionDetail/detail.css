@@ -311,6 +311,12 @@
   padding: 20px 16px;
 }
 
+.btn-danger {
+  color: #a4463b;
+  background: #fff7f5;
+  border: 1px solid #ebc7c1;
+}
+
 .btn-action {
   width: 100%;
   height: 48px;

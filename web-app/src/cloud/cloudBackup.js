@@ -33,3 +33,17 @@ export async function getLatestCloudBackup(client, userId) {
     return failure(error)
   }
 }
+
+export async function deleteCloudBackups(client, userId) {
+  if (!client || !userId) return failure(new Error('请先登录后再管理云备份'))
+
+  try {
+    const { error } = await client
+      .from('cloud_backups')
+      .delete()
+      .eq('user_id', userId)
+    return error ? failure(error) : { ok: true }
+  } catch (error) {
+    return failure(error)
+  }
+}

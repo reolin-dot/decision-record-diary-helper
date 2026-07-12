@@ -5,7 +5,7 @@ import { useIdentity } from '../../context/IdentityContext.js'
 import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import { supabase } from '../../lib/supabase.js'
-import { getLatestCloudBackup, saveCloudBackup } from '../../cloud/cloudBackup.js'
+import { deleteCloudBackups, getLatestCloudBackup, saveCloudBackup } from '../../cloud/cloudBackup.js'
 import storage from '../../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS } from '../../storage/storageKeys.js'
 import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
@@ -239,6 +239,29 @@ export default function DataExport() {
     reloadFromStorage()
     toast.show('云备份已合并到本地', { type: 'success' })
     setTimeout(() => navigate('/'), 700)
+  }
+
+  const handleDeleteCloudBackups = async () => {
+    if (!user || cloudLoading) return
+    const confirmed = await modal.confirm({
+      title: '删除全部云备份？',
+      content: '这会永久删除当前账号保存的全部云备份，不影响本机数据。',
+      confirmText: '确认删除',
+      cancelText: '保留',
+    })
+    if (!confirmed) return
+
+    setCloudLoading(true)
+    const result = await deleteCloudBackups(supabase, user.id)
+    setCloudLoading(false)
+    if (!result.ok) {
+      setCloudError(result.error)
+      toast.show(`删除失败：${result.error}`)
+      return
+    }
+    setCloudBackup(null)
+    setCloudError('')
+    toast.show('云备份已全部删除', { type: 'success' })
   }
 
   const handleExport = () => {
@@ -487,6 +510,9 @@ export default function DataExport() {
               </button>
               <button onClick={handleCloudRestore} disabled={cloudLoading || !cloudBackup?.payload}>
                 从最近备份恢复
+              </button>
+              <button onClick={handleDeleteCloudBackups} disabled={cloudLoading || !cloudBackup}>
+                删除全部云备份
               </button>
             </div>
           </>

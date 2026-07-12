@@ -57,6 +57,10 @@ class LocalStorageAdapter {
     }
   }
 
+  clearAll() {
+    return Object.values(STORAGE_KEYS).every(key => this.remove(key))
+  }
+
   /**
    * Export all app data as a plain object (for backup)
    * @returns {Object}

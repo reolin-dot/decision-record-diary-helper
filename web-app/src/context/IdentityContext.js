@@ -104,6 +104,14 @@ export function IdentityProvider({ children, client = supabase, getRedirectUrl =
     return result.ok ? { ok: true } : result
   }, [client])
 
+  const deleteAccount = useCallback(async () => {
+    if (!client) return { ok: false, error: '账号功能尚未配置' }
+    const result = await runAuth(() => client.rpc('delete_my_account'))
+    if (!result.ok) return result
+    await client.auth.signOut({ scope: 'local' })
+    return { ok: true }
+  }, [client])
+
   const value = useMemo(() => ({
     user: session?.user || null,
     isConfigured: Boolean(client),
@@ -114,7 +122,8 @@ export function IdentityProvider({ children, client = supabase, getRedirectUrl =
     signOut,
     requestPasswordReset,
     updatePassword,
-  }), [client, isLoading, isPasswordRecovery, register, requestPasswordReset, session, signIn, signOut, updatePassword])
+    deleteAccount,
+  }), [client, deleteAccount, isLoading, isPasswordRecovery, register, requestPasswordReset, session, signIn, signOut, updatePassword])
 
   return createElement(IdentityContext.Provider, { value }, children)
 }

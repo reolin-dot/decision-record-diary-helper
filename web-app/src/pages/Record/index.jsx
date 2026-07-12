@@ -22,7 +22,7 @@ export default function Record() {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
-  const { decisions, decisionStyle, isLoaded, saveDecision } = useApp()
+  const { decisions, archivedDecisions, decisionStyle, isLoaded, saveDecision } = useApp()
   const toast = useToast()
   const modal = useModal()
 
@@ -52,7 +52,7 @@ export default function Record() {
   // Load draft if draftId provided
   useEffect(() => {
     if (draftId && isLoaded) {
-      const draft = decisions.find(d => d.id === draftId && d.isDraft)
+      const draft = [...decisions, ...archivedDecisions].find(d => d.id === draftId)
       if (!draft) {
         toast.show('没有找到这颗种子')
         return
@@ -73,7 +73,7 @@ export default function Record() {
       setCustomDate(draft.reviewDate || '')
       if (draft.reviewDate) setReviewPeriod('custom')
     }
-  }, [draftId, isLoaded, decisions])
+  }, [draftId, isLoaded, decisions, archivedDecisions, toast])
 
   useEffect(() => {
     if (!coachDraft || draftId) return
@@ -139,7 +139,7 @@ export default function Record() {
 
   const upsertDecision = useCallback((payload) => {
     if (draftId || editingDraft) {
-      const existing = decisions.find(d => d.id === (draftId || editingDraft))
+      const existing = [...decisions, ...archivedDecisions].find(d => d.id === (draftId || editingDraft))
       if (existing) {
         const merged = {
           ...existing,
@@ -147,13 +147,19 @@ export default function Record() {
           id: existing.id,
           createdAt: existing.createdAt || payload.createdAt,
           wateringHistory: existing.wateringHistory || [],
+          status: existing.isDraft ? payload.status : existing.status,
+          reviewStage: existing.isDraft ? payload.reviewStage : existing.reviewStage,
+          stage: existing.isDraft ? payload.stage : existing.stage,
+          isDraft: existing.isDraft ? payload.isDraft : false,
+          actionStarted: existing.actionStarted,
+          actionStartedAt: existing.actionStartedAt,
         }
         return saveDecision(merged)
       }
     }
     const decision = { id: generateId(), ...payload }
     return saveDecision(decision)
-  }, [draftId, editingDraft, decisions, saveDecision])
+  }, [draftId, editingDraft, decisions, archivedDecisions, saveDecision])
 
   const handleBack = async () => {
     if (step > 1) {

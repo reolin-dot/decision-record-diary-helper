@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { useIdentity } from '../../context/IdentityContext.js'
 import { useToast } from '../../components/Toast.jsx'
+import { useModal } from '../../components/Modal.jsx'
+import storage from '../../storage/LocalStorageAdapter.js'
 import './profile.css'
 
 const SETTINGS = [
@@ -28,9 +30,10 @@ function computeBadges(stats) {
 
 export default function Profile() {
   const navigate = useNavigate()
-  const { stats, decisionStyle, userInfo, aiInsights } = useApp()
-  const { user, isConfigured, isLoading } = useIdentity()
+  const { stats, decisionStyle, userInfo, aiInsights, reloadFromStorage } = useApp()
+  const { user, isConfigured, isLoading, deleteAccount } = useIdentity()
   const toast = useToast()
+  const modal = useModal()
 
   const badges = computeBadges(stats)
   const styleLabel = decisionStyle?.type || '理性型决策者'
@@ -67,6 +70,25 @@ export default function Profile() {
 
   const openLogin = () => {
     navigate('/login')
+  }
+
+  const handleDeleteAccount = async () => {
+    const confirmed = await modal.confirm({
+      title: '永久注销账号？',
+      content: '账号、云端数据和本机数据都会删除，且无法恢复。请先导出备份。',
+      confirmText: '永久注销',
+      cancelText: '取消',
+    })
+    if (!confirmed) return
+    const result = await deleteAccount()
+    if (!result.ok) {
+      toast.show(`注销失败：${result.error}`)
+      return
+    }
+    storage.clearAll()
+    reloadFromStorage()
+    toast.show('账号与本机数据已删除', { type: 'success' })
+    navigate('/', { replace: true })
   }
 
   return (
@@ -162,6 +184,13 @@ export default function Profile() {
             <span className="pf-setting-label">云备份与跨设备恢复</span>
             <span className="pf-setting-hint">{user ? '手动备份可用' : '登录后开放'}</span>
           </div>
+          {user && (
+            <div className="pf-setting pf-setting-danger" onClick={handleDeleteAccount}>
+              <span className="pf-setting-icon">🗑️</span>
+              <span className="pf-setting-label">永久注销账号</span>
+              <span className="pf-setting-hint">同时删除云端与本机数据</span>
+            </div>
+          )}
         </div>
       </div>
 

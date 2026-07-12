@@ -2,6 +2,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { useToast } from '../../components/Toast.jsx'
+import { useModal } from '../../components/Modal.jsx'
 import { getStageMeta } from '../../domain/decisionStages.js'
 import { getDecisionLifecycle, startDecisionAction } from '../../domain/decisionLifecycle.js'
 import './detail.css'
@@ -9,13 +10,14 @@ import './detail.css'
 export default function DecisionDetail() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { decisions, saveDecision } = useApp()
+  const { decisions, archivedDecisions, saveDecision, deleteDecision } = useApp()
   const toast = useToast()
+  const modal = useModal()
 
   const [decision, setDecision] = useState(null)
 
   useEffect(() => {
-    const found = decisions.find(d => d.id === id)
+    const found = [...decisions, ...archivedDecisions].find(d => d.id === id)
     if (!found) {
       setDecision(null)
       return
@@ -33,7 +35,7 @@ export default function DecisionDetail() {
       chosenOption,
       ...getDecisionLifecycle(found),
     })
-  }, [id, decisions])
+  }, [id, decisions, archivedDecisions])
 
   const handleMarkActionStarted = () => {
     const storedDecision = decisions.find(item => item.id === id)
@@ -52,6 +54,27 @@ export default function DecisionDetail() {
 
   const handleContinueRecord = () => {
     navigate(`/record?draftId=${id}&step=1`)
+  }
+
+  const handleArchive = () => {
+    const stored = [...decisions, ...archivedDecisions].find(item => item.id === id)
+    if (!stored) return
+    if (saveDecision({ ...stored, isArchived: !stored.isArchived })) {
+      toast.show(stored.isArchived ? '已移回花园' : '已归档', { type: 'success' })
+    }
+  }
+
+  const handleDelete = async () => {
+    const confirmed = await modal.confirm({
+      title: '删除这条决策？',
+      content: '删除后将不再出现在花园和归档中。建议先在数据管理中导出备份。',
+      confirmText: '确认删除',
+      cancelText: '保留',
+    })
+    if (confirmed && deleteDecision(id)) {
+      toast.show('决策已删除', { type: 'success' })
+      navigate('/decision-list', { replace: true })
+    }
   }
 
   const getNextStep = () => {
@@ -278,6 +301,9 @@ export default function DecisionDetail() {
 
       {/* Actions */}
       <div className="detail-actions">
+        <button className="btn-action btn-secondary" onClick={handleContinueRecord}>
+          编辑决策
+        </button>
         {decision.canStartAction && (
           <button className="btn-action btn-secondary" onClick={handleMarkActionStarted}>
             我开始行动了
@@ -293,6 +319,12 @@ export default function DecisionDetail() {
             {decision.reviewType === 'result' ? '浇水：结果复盘' : '浇水：当下复盘'}
           </button>
         )}
+        <button className="btn-action btn-secondary" onClick={handleArchive}>
+          {decision.isArchived ? '移回花园' : '归档决策'}
+        </button>
+        <button className="btn-action btn-danger" onClick={handleDelete}>
+          删除决策
+        </button>
         <div className="btn-back" onClick={() => navigate('/')}>
           返回花园
         </div>

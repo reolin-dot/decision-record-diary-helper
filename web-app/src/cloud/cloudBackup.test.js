@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { getLatestCloudBackup, saveCloudBackup } from './cloudBackup.js'
+import { deleteCloudBackups, getLatestCloudBackup, saveCloudBackup } from './cloudBackup.js'
 
 test('saves a complete backup for the signed-in user', async () => {
   const calls = []
@@ -67,4 +67,29 @@ test('loads the latest backup payload only for the signed-in user', async () => 
 
   assert.deepEqual(result, { ok: true, backup })
   assert.deepEqual(calls[2], ['eq', 'user_id', 'u1'])
+})
+
+test('deletes only the signed-in user cloud backups', async () => {
+  const calls = []
+  const client = {
+    from(table) {
+      calls.push(['from', table])
+      return {
+        delete() {
+          calls.push(['delete'])
+          return {
+            eq: async (column, value) => {
+              calls.push(['eq', column, value])
+              return { error: null }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  const result = await deleteCloudBackups(client, 'u1')
+
+  assert.deepEqual(result, { ok: true })
+  assert.deepEqual(calls, [['from', 'cloud_backups'], ['delete'], ['eq', 'user_id', 'u1']])
 })
