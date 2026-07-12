@@ -77,7 +77,7 @@ export default function Login() {
       <div className="login-card">
         <span className="login-kicker">账号登录</span>
         <h2>{isPasswordRecovery ? '设置新密码' : user ? '已经登录' : mode === 'recover' ? '重置密码' : (mode === 'register' ? '注册账号' : '邮箱密码登录')}</h2>
-        <p>{isPasswordRecovery ? '输入新密码，保存后即可继续使用账号。' : '当前版本先接入账号身份，后续再把本地决策同步到云端。'}</p>
+        <p>{isPasswordRecovery ? '输入新密码，保存后即可继续使用账号。' : '登录后可以使用云端备份；日常记录仍会优先保存在这台设备上。'}</p>
 
         {isLoading ? (
           <p>正在确认登录状态...</p>

@@ -14,7 +14,6 @@ const SETTINGS = [
   { icon: '🤖', label: '数据导出与 AI 分析', action: 'dataExport' },
   { icon: '📝', label: '重新测试决策风格', action: 'styleTest' },
   { icon: '📊', label: '决策记录', action: 'decisionList' },
-  { icon: '⚙️', label: '通用设置', action: 'general' },
 ]
 
 function computeBadges(stats) {
@@ -61,9 +60,6 @@ export default function Profile() {
         break
       case 'dataExport':
         navigate('/data-export')
-        break
-      case 'general':
-        toast.show('通用设置后续上线')
         break
     }
   }

@@ -481,7 +481,7 @@ export default function DataExport() {
       <div className="cloud-backup-card">
         <div className="cloud-backup-head">
           <div>
-            <span className="cloud-backup-kicker">V2.2 云备份</span>
+            <span className="cloud-backup-kicker">云端备份</span>
             <span className="cloud-backup-title">跨设备保存一份完整副本</span>
           </div>
           <span className={`cloud-backup-status ${user ? 'signed-in' : ''}`}>

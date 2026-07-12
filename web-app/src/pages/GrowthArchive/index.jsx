@@ -57,16 +57,6 @@ export default function GrowthArchive() {
       </div>
 
       <div className="archive-section">
-        <span className="archive-section-title">2.0 Beta 准备度</span>
-        <div className="archive-progress-list">
-          <div><b>月度报告</b><span>已支持本月总结和历史月份回看</span></div>
-          <div><b>成长档案</b><span>已聚合月报、片段、AI 洞察和决策记录</span></div>
-          <div><b>主题花园</b><span>已支持主题统计、主题决策和主题收获</span></div>
-          <div><b>发布前收口</b><span>Beta 阶段只做体验检查、文案修正和小问题修复</span></div>
-        </div>
-      </div>
-
-      <div className="archive-section">
         <span className="archive-section-title">主题统计</span>
         {themes.length > 0 ? (
           <div className="archive-theme-list">
