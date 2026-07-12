@@ -1,5 +1,5 @@
 ﻿import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { getStageMeta } from '../../domain/decisionStages.js'
 import { formatDate } from '../../utils/util.js'
@@ -9,6 +9,7 @@ const TABS = ['全部', '生长中', '待复盘', '已盛开', '已归档']
 
 export default function DecisionList() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { decisions, archivedDecisions } = useApp()
 
   const [activeTab, setActiveTab] = useState(0)
@@ -93,6 +94,7 @@ export default function DecisionList() {
             placeholder="搜索标题、选项、理由或复盘..."
             value={searchKey}
             onChange={(e) => setSearchKey(e.target.value)}
+            autoFocus={searchParams.get('focus') === '1'}
           />
           {searchKey && (
             <span className="dl-search-clear" onClick={() => setSearchKey('')}>✕</span>

@@ -64,6 +64,32 @@
   position: relative;
 }
 
+.garden-search-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e8e8e8;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.onboarding-choices {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.onboarding-choices button {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  background: #fff;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
 /* ====== Stats ====== */
 .garden-stats {
   display: flex;

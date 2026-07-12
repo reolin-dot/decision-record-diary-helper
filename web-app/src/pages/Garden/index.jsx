@@ -4,6 +4,7 @@ import { getStageMeta, isBloomStage, isGrowingStage } from '../../domain/decisio
 import { getReminders } from '../../domain/reminders.js'
 import { getLatestGrowthSnippets } from '../../domain/growthSnippets.js'
 import { buildDecisionPatterns } from '../../domain/decisionPatterns.js'
+import { buildHomeNextAction } from '../../domain/homeNextAction.js'
 import { formatDate } from '../../utils/util.js'
 import './garden.css'
 
@@ -27,6 +28,7 @@ export default function Garden() {
   const reminders = getReminders(decorated, today)
   const reminderCount = reminders.length
   const topReminder = reminders[0] || null
+  const homeNextAction = buildHomeNextAction(decorated, topReminder)
   const bloomedCount = decorated.filter(d => isBloomStage(d.stage)).length
   const growingCount = decorated.filter(d => isGrowingStage(d.stage)).length
   const latestSnippets = getLatestGrowthSnippets(decorated, 3)
@@ -64,6 +66,7 @@ export default function Garden() {
             )}
           </div>
         </div>
+        <button className="garden-search-btn" onClick={() => navigate('/decision-list?focus=1')} aria-label="搜索全部决策">🔍</button>
       </div>
 
       {isNewUser && isEmpty && (
@@ -96,6 +99,11 @@ export default function Garden() {
             <button className="empty-cta" onClick={handlePlantFlower}>
               种下第一颗种子
             </button>
+            <div className="onboarding-choices">
+              <button onClick={() => navigate('/coach')}>我正在纠结：去圆桌梳理</button>
+              <button onClick={() => navigate('/record?step=1')}>我已经想清：直接记录</button>
+              <button onClick={() => navigate('/data-export')}>我有旧数据：恢复备份</button>
+            </div>
           </div>
         </div>
       )}
@@ -183,23 +191,23 @@ export default function Garden() {
             </div>
           )}
 
-          {topReminder && (
+          {homeNextAction && (
             <div
-              className={`garden-review-focus focus-${topReminder.type}`}
-              onClick={() => navigate(`/review/${topReminder.decisionId}`)}
+              className={`garden-review-focus focus-${topReminder?.type || 'action'}`}
+              onClick={() => navigate(homeNextAction.path)}
             >
               <div className="review-focus-head">
-                <span className="review-focus-icon">{topReminder.icon}</span>
+                <span className="review-focus-icon">{topReminder?.icon || '🌱'}</span>
                 <div className="review-focus-title-wrap">
-                  <span className="review-focus-kicker">今天最值得回看</span>
-                  <span className="review-focus-title">{topReminder.decision.title}</span>
+                  <span className="review-focus-kicker">{homeNextAction.label}</span>
+                  <span className="review-focus-title">{homeNextAction.title}</span>
                 </div>
                 <span className="review-focus-count">{reminderCount} 个</span>
               </div>
-              <span className="review-focus-tone">{topReminder.tone}</span>
+              <span className="review-focus-tone">{homeNextAction.text}</span>
               <div className="review-focus-actions">
-                <button type="button" onClick={(e) => { e.stopPropagation(); navigate(`/review/${topReminder.decisionId}`) }}>
-                  去复盘
+                <button type="button" onClick={(e) => { e.stopPropagation(); navigate(homeNextAction.path) }}>
+                  {homeNextAction.action}
                 </button>
                 {reminderCount > 1 && (
                   <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/watering') }}>
