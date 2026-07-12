@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
+import { useIdentity } from '../../context/IdentityContext.js'
 import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
+import { supabase } from '../../lib/supabase.js'
+import { getLatestCloudBackup, saveCloudBackup } from '../../cloud/cloudBackup.js'
 import storage from '../../storage/LocalStorageAdapter.js'
 import { STORAGE_KEYS } from '../../storage/storageKeys.js'
 import { buildDeepSeekPayload, buildDeepSeekPrompt } from '../../domain/deepseekExport.js'
@@ -134,6 +137,7 @@ async function copyText(text) {
 export default function DataExport() {
   const navigate = useNavigate()
   const { decisions, decisionStyle, aiInsights, saveAiInsight, reloadFromStorage } = useApp()
+  const { user } = useIdentity()
   const toast = useToast()
   const modal = useModal()
   const [selected, setSelected] = useState('all')
@@ -144,6 +148,9 @@ export default function DataExport() {
   const [insightTitle, setInsightTitle] = useState('')
   const [insightContent, setInsightContent] = useState('')
   const [lastBackupAt, setLastBackupAt] = useState(storage.get(STORAGE_KEYS.LAST_BACKUP_AT, ''))
+  const [cloudBackup, setCloudBackup] = useState(null)
+  const [cloudLoading, setCloudLoading] = useState(false)
+  const [cloudError, setCloudError] = useState('')
   const storedDecisions = storage.get(STORAGE_KEYS.DECISIONS, decisions)
   const dataHealth = checkDataHealth({ decisions: storedDecisions, aiInsights, decisionStyle })
   const backupFreshness = describeBackupFreshness(lastBackupAt)
@@ -160,6 +167,78 @@ export default function DataExport() {
     const exportedAt = new Date().toISOString()
     storage.set(STORAGE_KEYS.LAST_BACKUP_AT, exportedAt)
     setLastBackupAt(exportedAt)
+  }
+
+  useEffect(() => {
+    let active = true
+    if (!user) {
+      setCloudBackup(null)
+      setCloudError('')
+      return undefined
+    }
+
+    setCloudLoading(true)
+    setCloudError('')
+    getLatestCloudBackup(supabase, user.id)
+      .then(result => {
+        if (active && result.ok) setCloudBackup(result.backup)
+        if (active && !result.ok) setCloudError(result.error)
+      })
+      .finally(() => {
+        if (active) setCloudLoading(false)
+      })
+
+    return () => { active = false }
+  }, [user?.id])
+
+  const handleCloudBackup = async () => {
+    if (!user || cloudLoading) return
+    setCloudLoading(true)
+    const payload = buildCurrentBackup()
+    const result = await saveCloudBackup(supabase, { userId: user.id, payload })
+    setCloudLoading(false)
+
+    if (!result.ok) {
+      setCloudError(result.error)
+      toast.show(`云备份失败：${result.error}`)
+      return
+    }
+
+    setCloudError('')
+    setCloudBackup({ ...result.backup, payload })
+    markBackupExported()
+    toast.show('已上传完整云备份', { type: 'success' })
+  }
+
+  const handleCloudRestore = async () => {
+    if (!cloudBackup?.payload || cloudLoading) return
+    const prepared = prepareBackupImport(cloudBackup.payload, storedDecisions)
+    if (!prepared.ok) {
+      toast.show(`云备份不可恢复：${prepared.error}`)
+      return
+    }
+
+    const { payload, summary } = prepared
+    const confirmed = await modal.confirm({
+      title: '从云端恢复',
+      content: `云备份包含 ${summary.decisions} 条决策、${summary.aiInsights} 条洞察；预计新增 ${summary.addedDecisions} 条，同 ID 合并 ${summary.mergedDecisions} 条。恢复前会先下载当前本地备份。`,
+      confirmText: '确认恢复',
+      cancelText: '取消',
+    })
+    if (!confirmed) return
+
+    setCloudLoading(true)
+    downloadJSON(buildCurrentBackup(), `decision-diary-before-cloud-restore-${Date.now()}.json`)
+    const ok = storage.importAll(payload, 'merge')
+    setCloudLoading(false)
+    if (!ok) {
+      toast.show('云端恢复失败，本地数据未完整写入')
+      return
+    }
+
+    reloadFromStorage()
+    toast.show('云备份已合并到本地', { type: 'success' })
+    setTimeout(() => navigate('/'), 700)
   }
 
   const handleExport = () => {
@@ -374,6 +453,44 @@ export default function DataExport() {
             </button>
           )}
         </div>
+      </div>
+
+      <div className="cloud-backup-card">
+        <div className="cloud-backup-head">
+          <div>
+            <span className="cloud-backup-kicker">V2.2 云备份</span>
+            <span className="cloud-backup-title">跨设备保存一份完整副本</span>
+          </div>
+          <span className={`cloud-backup-status ${user ? 'signed-in' : ''}`}>
+            {user ? '已登录' : '未登录'}
+          </span>
+        </div>
+        {!user ? (
+          <>
+            <span className="cloud-backup-desc">登录后可以手动上传本地完整备份，并在其他设备恢复。</span>
+            <button className="cloud-primary" onClick={() => navigate('/login')}>登录后使用</button>
+          </>
+        ) : (
+          <>
+            <span className="cloud-backup-desc">
+              {cloudLoading
+                ? '正在读取云端状态...'
+                : cloudError
+                  ? `云端连接失败：${cloudError}`
+                : cloudBackup
+                  ? `最近备份：${new Date(cloudBackup.created_at).toLocaleString('zh-CN')}`
+                  : '云端还没有备份。第一次上传不会删除本地数据。'}
+            </span>
+            <div className="cloud-backup-actions">
+              <button className="cloud-primary" onClick={handleCloudBackup} disabled={cloudLoading}>
+                {cloudLoading ? '处理中...' : '上传当前完整备份'}
+              </button>
+              <button onClick={handleCloudRestore} disabled={cloudLoading || !cloudBackup?.payload}>
+                从最近备份恢复
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="export-section">

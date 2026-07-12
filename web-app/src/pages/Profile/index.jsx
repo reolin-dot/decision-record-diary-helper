@@ -157,10 +157,10 @@ export default function Profile() {
               {isLoading ? '确认中' : user?.email || (isConfigured ? '邮箱登录' : '未配置')}
             </span>
           </div>
-          <div className="pf-setting" onClick={openLogin}>
+          <div className="pf-setting" onClick={() => navigate(user ? '/data-export' : '/login')}>
             <span className="pf-setting-icon">☁️</span>
             <span className="pf-setting-label">云备份与跨设备恢复</span>
-            <span className="pf-setting-hint">{user ? '即将开放' : '登录后开放'}</span>
+            <span className="pf-setting-hint">{user ? '手动备份可用' : '登录后开放'}</span>
           </div>
         </div>
       </div>

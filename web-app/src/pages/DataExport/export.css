@@ -12,6 +12,89 @@
   margin-bottom: 16px;
 }
 
+.cloud-backup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 12px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(74, 124, 89, 0.12), #ffffff);
+  border: 1px solid rgba(74, 124, 89, 0.18);
+}
+
+.cloud-backup-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cloud-backup-head > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cloud-backup-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.cloud-backup-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.cloud-backup-status {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eeeeee;
+  color: #777777;
+  font-size: 11px;
+}
+
+.cloud-backup-status.signed-in {
+  background: rgba(74, 124, 89, 0.12);
+  color: var(--color-accent);
+}
+
+.cloud-backup-desc {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #666666;
+}
+
+.cloud-backup-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cloud-backup-card button {
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid rgba(74, 124, 89, 0.24);
+  border-radius: 9px;
+  background: #ffffff;
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cloud-backup-card button.cloud-primary {
+  background: var(--color-accent);
+  color: #ffffff;
+  border-color: var(--color-accent);
+}
+
+.cloud-backup-card button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .health-card {
   display: flex;
   flex-direction: column;
