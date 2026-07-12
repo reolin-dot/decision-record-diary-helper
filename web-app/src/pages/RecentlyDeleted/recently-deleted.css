@@ -1,0 +1,17 @@
+.deleted-page { min-height: calc(100dvh - var(--page-header-height)); padding: 24px 16px 50px; background: #f5f3ee; }
+.deleted-page > header, .deleted-list, .deleted-empty { max-width: 430px; margin-left: auto; margin-right: auto; }
+.deleted-page header > span { color: #7a745f; font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.deleted-page h1 { margin: 5px 0; color: #343c36; font-size: 26px; }
+.deleted-page header p { color: #777d78; font-size: 13px; line-height: 1.7; }
+.deleted-list { display: grid; gap: 10px; margin-top: 20px; }
+.deleted-list article { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 14px; border: 1px solid #e2dfd7; border-radius: 14px; background: #fff; }
+.deleted-list article div { display: flex; flex-direction: column; min-width: 0; }
+.deleted-list article b { overflow: hidden; color: #3b443d; text-overflow: ellipsis; white-space: nowrap; }
+.deleted-list article span { color: #969b96; font-size: 11px; }
+.deleted-list article button { padding: 7px 10px; border-radius: 9px; background: #e9f1e7; color: #4a7c59; font-size: 12px; font-weight: 700; }
+.deleted-list article .deleted-forever { grid-column: 2; background: transparent; color: #a26760; }
+.deleted-empty { margin-top: 70px; text-align: center; color: #7d847d; }
+.deleted-empty > span { display: block; font-size: 58px; }
+.deleted-empty b { display: block; color: #465149; font-size: 17px; }
+.deleted-empty p { margin: 4px 0 18px; }
+.deleted-empty button { padding: 10px 14px; border-radius: 11px; background: #4a7c59; color: #fff; }

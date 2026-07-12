@@ -26,6 +26,7 @@ const DecisionCompass = lazy(() => import('./pages/DecisionCompass/index.jsx'))
 const DailyMemory = lazy(() => import('./pages/DailyMemory/index.jsx'))
 const QuickCapture = lazy(() => import('./pages/QuickCapture/index.jsx'))
 const ActivityTrail = lazy(() => import('./pages/ActivityTrail/index.jsx'))
+const RecentlyDeleted = lazy(() => import('./pages/RecentlyDeleted/index.jsx'))
 
 function RouteFallback() {
   return <div className="page-container"><div className="empty-state">页面加载中...</div></div>
@@ -61,6 +62,7 @@ export default function AppRoutes() {
         <Route path="/daily-memory" element={<PageHeader title="今日拾光"><DailyMemory /></PageHeader>} />
         <Route path="/quick-capture" element={<PageHeader title="收下念头"><QuickCapture /></PageHeader>} />
         <Route path="/activity-trail" element={<PageHeader title="成长足迹"><ActivityTrail /></PageHeader>} />
+        <Route path="/recently-deleted" element={<PageHeader title="最近删除"><RecentlyDeleted /></PageHeader>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

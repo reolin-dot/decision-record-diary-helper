@@ -38,13 +38,26 @@ function appReducer(state, action) {
   }
 }
 
+function splitDecisions() {
+  const allDecisions = decisionModel.getActiveDecisions()
+  return {
+    decisions: allDecisions.filter(item => !item.isArchived),
+    archivedDecisions: allDecisions.filter(item => item.isArchived),
+    deletedDecisions: decisionModel.getDeletedDecisions(),
+  }
+}
+
+function refreshDecisions(dispatch) {
+  const next = splitDecisions()
+  dispatch({ type: 'UPDATE_DECISIONS', payload: next })
+  dispatch({ type: 'UPDATE_STATS', payload: buildStats(next.decisions) })
+}
+
 function loadStoredState() {
   runMigrations()
 
   const hasLaunched = storage.get(STORAGE_KEYS.HAS_LAUNCHED, false)
-  const allDecisions = decisionModel.getActiveDecisions()
-  const decisions = allDecisions.filter(item => !item.isArchived)
-  const archivedDecisions = allDecisions.filter(item => item.isArchived)
+  const { decisions, archivedDecisions, deletedDecisions } = splitDecisions()
   const decisionStyle = decisionModel.loadDecisionStyle()
   const aiInsights = getLatestAiInsights(storage.get(STORAGE_KEYS.AI_INSIGHTS, []))
   const styleSkipped = storage.get(STORAGE_KEYS.STYLE_TEST_SKIPPED, false)
@@ -56,6 +69,7 @@ function loadStoredState() {
     isNewUser: !hasLaunched,
     decisions,
     archivedDecisions,
+    deletedDecisions,
     decisionStyle,
     aiInsights,
     hasStyleTest: !!(decisionStyle || styleSkipped),
@@ -71,6 +85,7 @@ export function AppProvider({ children }) {
     isNewUser: false,
     decisions: [],
     archivedDecisions: [],
+    deletedDecisions: [],
     decisionStyle: null,
     aiInsights: [],
     hasStyleTest: false,
@@ -93,30 +108,14 @@ export function AppProvider({ children }) {
   // Save a decision and refresh stats
   const saveDecision = useCallback((decision) => {
     const ok = decisionModel.saveDecision(decision)
-    if (ok) {
-      const allDecisions = decisionModel.getActiveDecisions()
-      const visible = allDecisions.filter(item => !item.isArchived)
-      dispatch({ type: 'UPDATE_DECISIONS', payload: {
-        decisions: visible,
-        archivedDecisions: allDecisions.filter(item => item.isArchived),
-      } })
-      dispatch({ type: 'UPDATE_STATS', payload: buildStats(visible) })
-    }
+    if (ok) refreshDecisions(dispatch)
     return ok
   }, [])
 
   // Create a new decision
   const createDecision = useCallback((payload) => {
     const decision = decisionModel.createDecision(payload)
-    if (decision) {
-      const allDecisions = decisionModel.getActiveDecisions()
-      const visible = allDecisions.filter(item => !item.isArchived)
-      dispatch({ type: 'UPDATE_DECISIONS', payload: {
-        decisions: visible,
-        archivedDecisions: allDecisions.filter(item => item.isArchived),
-      } })
-      dispatch({ type: 'UPDATE_STATS', payload: buildStats(visible) })
-    }
+    if (decision) refreshDecisions(dispatch)
     return decision
   }, [])
 
@@ -137,15 +136,19 @@ export function AppProvider({ children }) {
 
   const deleteDecision = useCallback((decisionId) => {
     const ok = decisionModel.deleteDecision(decisionId)
-    if (ok) {
-      const allDecisions = decisionModel.getActiveDecisions()
-      const visible = allDecisions.filter(item => !item.isArchived)
-      dispatch({ type: 'UPDATE_DECISIONS', payload: {
-        decisions: visible,
-        archivedDecisions: allDecisions.filter(item => item.isArchived),
-      } })
-      dispatch({ type: 'UPDATE_STATS', payload: buildStats(visible) })
-    }
+    if (ok) refreshDecisions(dispatch)
+    return ok
+  }, [])
+
+  const restoreDecision = useCallback((decisionId) => {
+    const ok = decisionModel.restoreDecision(decisionId)
+    if (ok) refreshDecisions(dispatch)
+    return ok
+  }, [])
+
+  const purgeDecision = useCallback((decisionId) => {
+    const ok = decisionModel.purgeDecision(decisionId)
+    if (ok) refreshDecisions(dispatch)
     return ok
   }, [])
 
@@ -180,6 +183,8 @@ export function AppProvider({ children }) {
     saveDecision,
     createDecision,
     deleteDecision,
+    restoreDecision,
+    purgeDecision,
     saveDecisionStyle,
     saveAiInsight,
     skipStyleTest,

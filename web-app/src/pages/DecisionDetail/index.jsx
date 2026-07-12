@@ -5,6 +5,7 @@ import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import { getStageMeta } from '../../domain/decisionStages.js'
 import { getDecisionLifecycle, startDecisionAction } from '../../domain/decisionLifecycle.js'
+import { buildReviewCalendarEvent } from '../../domain/calendarEvent.js'
 import './detail.css'
 
 export default function DecisionDetail() {
@@ -75,6 +76,16 @@ export default function DecisionDetail() {
       toast.show('决策已删除', { type: 'success' })
       navigate('/decision-list', { replace: true })
     }
+  }
+
+  const handleAddToCalendar = () => {
+    const blob = new Blob([buildReviewCalendarEvent(decision)], { type: 'text/calendar;charset=utf-8' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `复盘-${decision.reviewDate}.ics`
+    link.click()
+    URL.revokeObjectURL(link.href)
+    toast.show('日历文件已生成', { type: 'success' })
   }
 
   const getNextStep = () => {
@@ -315,6 +326,9 @@ export default function DecisionDetail() {
           <button className="btn-action btn-primary" onClick={handleGoReview}>
             {decision.reviewType === 'result' ? '浇水：结果复盘' : '浇水：当下复盘'}
           </button>
+        )}
+        {decision.reviewDate && !decision.resultReviewDone && (
+          <button className="btn-action btn-secondary" onClick={handleAddToCalendar}>加入系统日历</button>
         )}
         <details className="detail-manage">
           <summary>管理这条记录</summary>

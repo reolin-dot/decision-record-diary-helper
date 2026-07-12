@@ -4,6 +4,7 @@ import { useIdentity } from '../../context/IdentityContext.js'
 import { useToast } from '../../components/Toast.jsx'
 import { useModal } from '../../components/Modal.jsx'
 import storage from '../../storage/LocalStorageAdapter.js'
+import { isInstalledApp, requestAppInstall } from '../../pwaInstall.js'
 import './profile.css'
 
 const SETTINGS = [
@@ -14,6 +15,7 @@ const SETTINGS = [
   { icon: '🤖', label: '数据导出与 AI 分析', action: 'dataExport' },
   { icon: '📝', label: '重新测试决策风格', action: 'styleTest' },
   { icon: '📊', label: '决策记录', action: 'decisionList' },
+  { icon: '🍂', label: '最近删除', action: 'recentlyDeleted' },
 ]
 
 function computeBadges(stats) {
@@ -58,6 +60,9 @@ export default function Profile() {
       case 'decisionList':
         navigate('/decision-list')
         break
+      case 'recentlyDeleted':
+        navigate('/recently-deleted')
+        break
       case 'dataExport':
         navigate('/data-export')
         break
@@ -66,6 +71,15 @@ export default function Profile() {
 
   const openLogin = () => {
     navigate('/login')
+  }
+
+  const handleInstall = async () => {
+    const result = await requestAppInstall()
+    if (result.accepted) return toast.show('已经放到桌面，随时可以回来', { type: 'success' })
+    if (!result.supported) {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      toast.show(isIOS ? '点浏览器的分享按钮，再选“添加到主屏幕”' : '打开浏览器菜单，选择“安装应用”或“添加到主屏幕”')
+    }
   }
 
   const handleDeleteAccount = async () => {
@@ -193,6 +207,13 @@ export default function Profile() {
       <div className="pf-section">
         <span className="pf-section-title">设置</span>
         <div className="pf-settings-list">
+          {!isInstalledApp() && (
+            <div className="pf-setting" onClick={handleInstall}>
+              <span className="pf-setting-icon">📲</span>
+              <span className="pf-setting-label">安装到桌面</span>
+              <span className="pf-setting-hint">像应用一样打开</span>
+            </div>
+          )}
           {SETTINGS.map((item) => (
             <div
               key={item.label}

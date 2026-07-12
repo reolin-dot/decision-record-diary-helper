@@ -22,6 +22,10 @@ export function getActiveDecisions() {
   return loadDecisions().filter(d => !d._deleted)
 }
 
+export function getDeletedDecisions() {
+  return loadDecisions().filter(d => d._deleted)
+}
+
 /**
  * Save a single decision (create or update).
  * Always writes to storage. Auto-generates updatedAt for conflict resolution.
@@ -83,6 +87,21 @@ export function deleteDecision(decisionId) {
   }
 
   return storage.set(STORAGE_KEYS.DECISIONS, decisions)
+}
+
+export function restoreDecision(decisionId) {
+  const decisions = loadDecisions()
+  const idx = decisions.findIndex(d => d.id === decisionId && d._deleted)
+  if (idx === -1) return false
+  decisions[idx] = { ...decisions[idx], _deleted: false, updatedAt: generateUpdatedAt() }
+  return storage.set(STORAGE_KEYS.DECISIONS, decisions)
+}
+
+export function purgeDecision(decisionId) {
+  const decisions = loadDecisions()
+  const next = decisions.filter(d => d.id !== decisionId)
+  if (next.length === decisions.length) return false
+  return storage.set(STORAGE_KEYS.DECISIONS, next)
 }
 
 /**
