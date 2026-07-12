@@ -2,18 +2,43 @@ import { useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import { buildAvailableReportMonths, buildMonthlyReport } from '../../domain/monthlyReport.js'
+import { createPrivacyShareCard } from '../../domain/privacyShareCard.js'
+import { useToast } from '../../components/Toast.jsx'
 import './monthly-report.css'
 
 export default function MonthlyReport() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const { decisions } = useApp()
+  const toast = useToast()
   const months = useMemo(() => buildAvailableReportMonths(decisions), [decisions])
   const requestedMonth = searchParams.get('month')
   const month = months.includes(requestedMonth) ? requestedMonth : months[0]
   const monthIndex = months.indexOf(month)
   const report = buildMonthlyReport(decisions, { month })
   const setMonth = nextMonth => setSearchParams(nextMonth === months[0] ? {} : { month: nextMonth })
+
+  const handleShare = () => {
+    const canvas = createPrivacyShareCard(report)
+    canvas.toBlob(async blob => {
+      if (!blob) return toast.show('分享卡生成失败，请稍后重试')
+      const file = new File([blob], `决策成长-${report.month}.png`, { type: 'image/png' })
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: '我的决策成长' })
+          return
+        } catch (error) {
+          if (error?.name === 'AbortError') return
+        }
+      }
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = file.name
+      link.click()
+      URL.revokeObjectURL(link.href)
+      toast.show('隐私分享卡已保存', { type: 'success' })
+    }, 'image/png')
+  }
 
   return (
     <div className="monthly-page">
@@ -40,6 +65,14 @@ export default function MonthlyReport() {
         <div><b>{report.decisionCount}</b><span>本月决策</span></div>
         <div><b>{report.reviewCount}</b><span>复盘次数</span></div>
         <div><b>{report.snippetCount}</b><span>成长片段</span></div>
+      </div>
+
+      <div className="privacy-share-card">
+        <div>
+          <b>生成隐私分享卡</b>
+          <span>只分享成长次数，不包含决策标题、选项、理由和复盘原文。</span>
+        </div>
+        <button onClick={handleShare}>生成并分享</button>
       </div>
 
       <div className="monthly-section">
