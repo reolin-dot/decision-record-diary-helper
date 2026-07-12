@@ -40,6 +40,11 @@ button {
   background: none;
 }
 
+:focus-visible {
+  outline: 3px solid rgba(74, 124, 89, .42);
+  outline-offset: 3px;
+}
+
 input, textarea {
   font-family: inherit;
   font-size: inherit;
@@ -337,6 +342,15 @@ input, textarea {
 
 .fade-in-up {
   animation: fadeInUp 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }
 
 /* ====== Safe Area ====== */

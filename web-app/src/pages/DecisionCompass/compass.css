@@ -1,0 +1,17 @@
+.compass-page { min-height: calc(100dvh - var(--page-header-height)); padding: 30px 20px; background: linear-gradient(180deg, #edf4ec 0%, #f7f2e9 48%, #f5f5f5 100%); position: relative; overflow: hidden; }
+.compass-sky span { position: absolute; top: 56px; right: 42px; color: #d2a94f; font-size: 30px; }
+.compass-sky i { position: absolute; width: 210px; height: 210px; border: 1px solid rgba(74,124,89,.18); border-radius: 50%; top: -90px; right: -70px; }
+.compass-question, .compass-result { position: relative; max-width: 430px; margin: 8vh auto 0; padding: 28px 24px; border-radius: 26px 26px 26px 8px; background: rgba(255,255,255,.9); border: 1px solid rgba(74,124,89,.14); box-shadow: 0 18px 50px rgba(64,81,66,.1); }
+.compass-kicker { color: #4a7c59; font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+.compass-progress { height: 4px; margin: 14px 0 28px; border-radius: 999px; background: #e8ece5; overflow: hidden; }
+.compass-progress i { display: block; height: 100%; background: #d0a94f; transition: width .25s ease; }
+.compass-question h1, .compass-result h1 { margin: 12px 0 10px; color: #26372b; font-size: clamp(24px,7vw,32px); line-height: 1.35; }
+.compass-question p, .compass-result p { color: #68756b; font-size: 14px; line-height: 1.8; }
+.compass-actions { display: grid; gap: 10px; margin-top: 30px; }
+.compass-actions button, .compass-primary { min-height: 48px; border-radius: 14px; background: #4a7c59; color: #fff; font-size: 15px; font-weight: 750; }
+.compass-actions button + button { background: #f3f0e8; color: #4e5d52; border: 1px solid #ded8cc; }
+.compass-back { display: block; margin: 16px auto 0; padding: 8px; color: #7a827b; }
+.compass-result { text-align: center; }
+.compass-result-icon { display: block; font-size: 62px; margin-bottom: 16px; }
+.compass-primary { width: 100%; margin-top: 26px; }
+@media (prefers-reduced-motion: reduce) { .compass-progress i { transition: none; } }

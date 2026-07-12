@@ -24,6 +24,11 @@ export default function GrowthArchive() {
       </div>
 
       <div className="archive-grid">
+        <div className="archive-card memory" onClick={() => navigate('/daily-memory')}>
+          <span className="archive-icon">🕯️</span>
+          <b>今日拾光</b>
+          <small>每天和过去的一次判断重新见面</small>
+        </div>
         <div className="archive-card primary" onClick={() => navigate('/monthly-report')}>
           <span className="archive-icon">🗓️</span>
           <b>月度成长报告</b>

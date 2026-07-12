@@ -245,3 +245,15 @@
   color: var(--color-text-placeholder);
   flex-shrink: 0;
 }
+.coach-compass-link {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .68);
+  border: 1px solid rgba(74, 124, 89, .18);
+  color: #4a7c59;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+}

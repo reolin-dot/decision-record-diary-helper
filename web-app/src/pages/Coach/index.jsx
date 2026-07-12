@@ -57,6 +57,7 @@ export default function Coach() {
   return (
     <div className="coach-page">
       <div className="coach-header">
+        <button className="coach-compass-link" onClick={() => navigate('/compass')}>还不知道从哪里开始？先做 30 秒决策罗盘 →</button>
         <span className="coach-kicker">决策圆桌</span>
         <span className="coach-title">把纠结放到桌面上</span>
         <span className="coach-desc">

@@ -1,0 +1,15 @@
+.memory-page { min-height: calc(100dvh - var(--page-header-height)); padding: 28px 18px 50px; background: #f1eee6; }
+.memory-intro { max-width: 430px; margin: 0 auto 22px; }
+.memory-intro > span, .memory-date { color: #7b6a46; font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+.memory-intro h1 { margin: 8px 0; color: #2f392f; font-size: 27px; line-height: 1.35; }
+.memory-intro p { color: #73786f; font-size: 13px; line-height: 1.75; }
+.memory-note { max-width: 430px; margin: auto; padding: 28px 24px; border-radius: 5px 24px 24px 24px; background: #fffdf8; box-shadow: 0 14px 45px rgba(78,70,49,.1); border: 1px solid #e3dccd; }
+.memory-note h2 { margin: 14px 0 8px; color: #26352b; font-size: 23px; line-height: 1.45; }
+.memory-choice { color: #788078; font-size: 13px; }
+.memory-note blockquote { margin: 24px 0; padding: 18px 0 18px 18px; border-left: 3px solid #d5b867; color: #435447; font-size: 17px; font-weight: 650; line-height: 1.8; }
+.memory-question { display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 14px; background: #edf3ea; }
+.memory-question span { color: #648068; font-size: 11px; font-weight: 800; }
+.memory-question b { color: #3e5142; font-size: 14px; line-height: 1.6; }
+.memory-note button, .memory-empty button { width: 100%; margin-top: 20px; padding: 13px; border-radius: 13px; background: #4a7c59; color: #fff; font-weight: 750; }
+.memory-empty { max-width: 430px; margin: 70px auto 0; text-align: center; }
+.memory-empty span { display: block; font-size: 66px; }

@@ -200,3 +200,7 @@
   color: var(--color-text-secondary);
   font-size: 12px;
 }
+.archive-card.memory {
+  background: linear-gradient(145deg, #fffaf0, #f4ead4);
+  border-color: #e7d7b5;
+}

@@ -19,6 +19,7 @@ export default function TabBar() {
             key={tab.path}
             className={`tab-item ${isActive ? 'tab-active' : ''}`}
             onClick={() => navigate(tab.path)}
+            aria-current={isActive ? 'page' : undefined}
           >
             <span className="tab-icon">{isActive ? tab.activeIcon : tab.icon}</span>
             <span className="tab-text">{tab.label}</span>

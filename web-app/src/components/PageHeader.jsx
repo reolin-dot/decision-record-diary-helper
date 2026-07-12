@@ -14,7 +14,7 @@ export default function PageHeader({ title, children }) {
   return (
     <div className="page-with-header">
       <header className="page-header">
-        <button className="page-header-back" onClick={handleBack}>
+        <button className="page-header-back" onClick={handleBack} aria-label="返回上一页">
           <span className="back-arrow">‹</span>
         </button>
         <h1 className="page-header-title">{title}</h1>

@@ -41,7 +41,6 @@ export default function Garden() {
   })
 
   const isEmpty = decisions.length === 0
-  const recentDecisions = sorted.slice(0, 5)
 
   const handlePlantFlower = () => {
     if (!hasStyleTest) {
@@ -100,7 +99,7 @@ export default function Garden() {
               种下第一颗种子
             </button>
             <div className="onboarding-choices">
-              <button onClick={() => navigate('/coach')}>我正在纠结：去圆桌梳理</button>
+              <button onClick={() => navigate('/compass')}>我有点乱：先找此刻的方向</button>
               <button onClick={() => navigate('/record?step=1')}>我已经想清：直接记录</button>
               <button onClick={() => navigate('/data-export')}>我有旧数据：恢复备份</button>
             </div>
@@ -202,7 +201,7 @@ export default function Garden() {
                   <span className="review-focus-kicker">{homeNextAction.label}</span>
                   <span className="review-focus-title">{homeNextAction.title}</span>
                 </div>
-                <span className="review-focus-count">{reminderCount} 个</span>
+                {reminderCount > 0 && <span className="review-focus-count">{reminderCount} 个</span>}
               </div>
               <span className="review-focus-tone">{homeNextAction.text}</span>
               <div className="review-focus-actions">
@@ -265,27 +264,6 @@ export default function Garden() {
         </div>
       )}
 
-      {recentDecisions.length > 0 && (
-        <div className="recent-section">
-          <span className="recent-title">最近决策</span>
-          <div className="recent-list">
-            {recentDecisions.map(d => (
-              <div
-                key={d.id}
-                className="recent-item"
-                onClick={() => navigate(`/decision/${d.id}`)}
-              >
-                <span className="recent-stage-icon">{d.stageIcon}</span>
-                <div className="recent-item-body">
-                  <span className="recent-item-title">{d.title}</span>
-                  <span className="recent-item-date">{d.stageLabel} · {d.stageDesc}</span>
-                </div>
-                <span className="recent-item-arrow">›</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   )
 }

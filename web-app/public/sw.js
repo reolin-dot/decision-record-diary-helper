@@ -1,4 +1,5 @@
-const CACHE = 'decidiary-shell-v1'
+const CACHE = 'decidiary-shell-v2'
+const MAX_ENTRIES = 40
 const APP_SHELL = ['/', '/manifest.webmanifest', '/app-icon.svg']
 
 self.addEventListener('install', event => {
@@ -22,7 +23,13 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(request)
       .then(response => {
-        if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()))
+        if (response.ok) caches.open(CACHE).then(async cache => {
+          await cache.put(request, response.clone())
+          const keys = await cache.keys()
+          const shellUrls = new Set(APP_SHELL.map(path => new URL(path, self.location.origin).href))
+          const removable = keys.filter(key => !shellUrls.has(key.url))
+          await Promise.all(removable.slice(0, Math.max(0, removable.length - MAX_ENTRIES)).map(key => cache.delete(key)))
+        })
         return response
       })
       .catch(async () => {

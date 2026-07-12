@@ -301,9 +301,6 @@ export default function DecisionDetail() {
 
       {/* Actions */}
       <div className="detail-actions">
-        <button className="btn-action btn-secondary" onClick={handleContinueRecord}>
-          编辑决策
-        </button>
         {decision.canStartAction && (
           <button className="btn-action btn-secondary" onClick={handleMarkActionStarted}>
             我开始行动了
@@ -319,12 +316,14 @@ export default function DecisionDetail() {
             {decision.reviewType === 'result' ? '浇水：结果复盘' : '浇水：当下复盘'}
           </button>
         )}
-        <button className="btn-action btn-secondary" onClick={handleArchive}>
-          {decision.isArchived ? '移回花园' : '归档决策'}
-        </button>
-        <button className="btn-action btn-danger" onClick={handleDelete}>
-          删除决策
-        </button>
+        <details className="detail-manage">
+          <summary>管理这条记录</summary>
+          <button className="btn-action btn-secondary" onClick={handleContinueRecord}>编辑决策</button>
+          <button className="btn-action btn-secondary" onClick={handleArchive}>
+            {decision.isArchived ? '移回花园' : '归档决策'}
+          </button>
+          <button className="btn-action btn-danger" onClick={handleDelete}>删除决策</button>
+        </details>
         <div className="btn-back" onClick={() => navigate('/')}>
           返回花园
         </div>

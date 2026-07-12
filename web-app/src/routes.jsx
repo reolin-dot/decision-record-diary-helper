@@ -22,6 +22,8 @@ const CoachResult = lazy(() => import('./pages/CoachResult/index.jsx'))
 const StyleTest = lazy(() => import('./pages/StyleTest/index.jsx'))
 const DataExport = lazy(() => import('./pages/DataExport/index.jsx'))
 const Login = lazy(() => import('./pages/Login/index.jsx'))
+const DecisionCompass = lazy(() => import('./pages/DecisionCompass/index.jsx'))
+const DailyMemory = lazy(() => import('./pages/DailyMemory/index.jsx'))
 
 function RouteFallback() {
   return <div className="page-container"><div className="empty-state">页面加载中...</div></div>
@@ -53,6 +55,8 @@ export default function AppRoutes() {
         <Route path="/style-test" element={<PageHeader title="决策风格测试"><StyleTest /></PageHeader>} />
         <Route path="/data-export" element={<PageHeader title="数据导出"><DataExport /></PageHeader>} />
         <Route path="/login" element={<PageHeader title="账号登录"><Login /></PageHeader>} />
+        <Route path="/compass" element={<PageHeader title="决策罗盘"><DecisionCompass /></PageHeader>} />
+        <Route path="/daily-memory" element={<PageHeader title="今日拾光"><DailyMemory /></PageHeader>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
