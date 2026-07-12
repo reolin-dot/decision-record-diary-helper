@@ -166,6 +166,12 @@ export default function Garden() {
             </div>
           </div>
 
+          <button className="garden-capture-strip" onClick={() => navigate('/quick-capture')}>
+            <span>✎</span>
+            <span><b>有个念头怕忘记？</b><small>10 秒收进花园，之后再慢慢想</small></span>
+            <i>›</i>
+          </button>
+
           {decisionPatterns.patternCards.length > 0 && (
             <div className="pattern-panel">
               <div className="pattern-head">

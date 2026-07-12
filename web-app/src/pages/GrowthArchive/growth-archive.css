@@ -204,3 +204,5 @@
   background: linear-gradient(145deg, #fffaf0, #f4ead4);
   border-color: #e7d7b5;
 }
+
+.archive-card.trail { background: linear-gradient(145deg, #f4f8f1, #e6eee2); }

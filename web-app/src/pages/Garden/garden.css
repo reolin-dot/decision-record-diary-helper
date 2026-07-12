@@ -423,6 +423,27 @@
   margin-bottom: 12px;
 }
 
+.garden-capture-strip {
+  order: 3;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 11px 13px;
+  border: 1px dashed rgba(74, 124, 89, .28);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .65);
+  color: #4f6254;
+  text-align: left;
+}
+
+.garden-capture-strip > span:first-child { font-size: 20px; }
+.garden-capture-strip > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; }
+.garden-capture-strip b { font-size: 13px; }
+.garden-capture-strip small { color: #889087; font-size: 11px; }
+.garden-capture-strip i { font-size: 22px; font-style: normal; }
+
 .action-btn {
   min-width: 0;
   min-height: 64px;

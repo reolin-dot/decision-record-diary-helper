@@ -5,7 +5,7 @@ import { getStageMeta } from '../../domain/decisionStages.js'
 import { formatDate } from '../../utils/util.js'
 import './list.css'
 
-const TABS = ['全部', '生长中', '待复盘', '已盛开', '已归档']
+const TABS = ['全部', '生长中', '待复盘', '已盛开', '已归档', '草稿种子']
 
 export default function DecisionList() {
   const navigate = useNavigate()
@@ -18,6 +18,7 @@ export default function DecisionList() {
   const today = formatDate(new Date())
 
   function getStatusLabel(d) {
+    if (d.isDraft) return '草稿种子'
     if (d.status === 'reviewed') return '已盛开'
     if (d.status === 'pending') {
       if (d.reviewDate && d.reviewDate <= today) return '待复盘'
@@ -65,6 +66,9 @@ export default function DecisionList() {
         break
       case 4: // 已归档
         filtered = decoratedDecisions.filter(d => d.isArchived)
+        break
+      case 5: // 草稿种子
+        filtered = decoratedDecisions.filter(d => d.isDraft && !d.isArchived)
         break
       default:
         filtered = decoratedDecisions.filter(d => !d.isArchived)

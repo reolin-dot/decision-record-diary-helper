@@ -47,6 +47,9 @@
 
 /* ====== Tab filters ====== */
 .dl-tabs {
+  overflow-x: auto;
+  justify-content: flex-start;
+  scrollbar-width: none;
   display: flex;
   background: #ffffff;
   padding: 0 16px;
@@ -54,7 +57,10 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
+.dl-tabs::-webkit-scrollbar { display: none; }
 .dl-tab {
+  flex: 0 0 auto;
+  min-width: 68px;
   padding: 10px 12px;
   font-size: 14px;
   color: #888888;

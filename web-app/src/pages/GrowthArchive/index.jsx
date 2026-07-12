@@ -29,6 +29,11 @@ export default function GrowthArchive() {
           <b>今日拾光</b>
           <small>每天和过去的一次判断重新见面</small>
         </div>
+        <div className="archive-card trail" onClick={() => navigate('/activity-trail')}>
+          <span className="archive-icon">•••</span>
+          <b>成长足迹</b>
+          <small>看看最近十二周留下的记录与复盘</small>
+        </div>
         <div className="archive-card primary" onClick={() => navigate('/monthly-report')}>
           <span className="archive-icon">🗓️</span>
           <b>月度成长报告</b>

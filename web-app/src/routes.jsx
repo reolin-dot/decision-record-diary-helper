@@ -24,6 +24,8 @@ const DataExport = lazy(() => import('./pages/DataExport/index.jsx'))
 const Login = lazy(() => import('./pages/Login/index.jsx'))
 const DecisionCompass = lazy(() => import('./pages/DecisionCompass/index.jsx'))
 const DailyMemory = lazy(() => import('./pages/DailyMemory/index.jsx'))
+const QuickCapture = lazy(() => import('./pages/QuickCapture/index.jsx'))
+const ActivityTrail = lazy(() => import('./pages/ActivityTrail/index.jsx'))
 
 function RouteFallback() {
   return <div className="page-container"><div className="empty-state">页面加载中...</div></div>
@@ -57,6 +59,8 @@ export default function AppRoutes() {
         <Route path="/login" element={<PageHeader title="账号登录"><Login /></PageHeader>} />
         <Route path="/compass" element={<PageHeader title="决策罗盘"><DecisionCompass /></PageHeader>} />
         <Route path="/daily-memory" element={<PageHeader title="今日拾光"><DailyMemory /></PageHeader>} />
+        <Route path="/quick-capture" element={<PageHeader title="收下念头"><QuickCapture /></PageHeader>} />
+        <Route path="/activity-trail" element={<PageHeader title="成长足迹"><ActivityTrail /></PageHeader>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
