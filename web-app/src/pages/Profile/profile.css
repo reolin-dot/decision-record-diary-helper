@@ -321,3 +321,286 @@
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
+
+/* ====== Personal archive / editorial second pass ====== */
+.profile-page {
+  width: 100%;
+  max-width: none;
+  padding: 0 0 54px;
+  background: var(--color-paper);
+}
+
+.profile-masthead {
+  position: relative;
+  overflow: hidden;
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 42px 24px;
+  background:
+    radial-gradient(circle at 82% 20%, rgba(93, 126, 99, .24), transparent 32%),
+    #101713;
+  color: #efeade;
+}
+
+.profile-masthead::after {
+  content: 'ARCHIVE';
+  position: absolute;
+  top: 22px;
+  right: 18px;
+  color: rgba(239, 234, 222, .05);
+  font-family: Georgia, serif;
+  font-size: clamp(66px, 17vw, 138px);
+  line-height: .8;
+}
+
+.profile-masthead > span {
+  position: relative;
+  z-index: 1;
+  color: var(--color-brass);
+  font-size: 8px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.profile-masthead h1 {
+  position: relative;
+  z-index: 1;
+  margin-top: 22px;
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: clamp(40px, 9vw, 72px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.05em;
+}
+
+.profile-masthead h1 em { color: #c8b587; font-weight: 400; }
+
+.profile-masthead p {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin-top: 18px;
+  color: rgba(239, 234, 222, .56);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.pf-header,
+.pf-stats,
+.pf-section {
+  width: min(calc(100% - 40px), 960px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pf-header {
+  margin-top: 28px;
+  margin-bottom: 0;
+  padding: 18px 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pf-avatar-wrap {
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  filter: grayscale(1);
+}
+
+.pf-name {
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.pf-style-tag {
+  color: var(--color-brass);
+  font-size: 8px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.pf-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 34px;
+  padding: 26px 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+}
+
+.pf-stats .pf-stat-item { min-height: 92px; justify-content: center; }
+.pf-stats .pf-stat-item:nth-child(1),
+.pf-stats .pf-stat-item:nth-child(3) { border-bottom: 1px solid var(--color-border); }
+.pf-stats .pf-stat-item:nth-child(1),
+.pf-stats .pf-stat-item:nth-child(5) { border-right: 1px solid var(--color-border); }
+
+.pf-stat-num {
+  color: var(--color-text-primary);
+  font-family: Georgia, serif;
+  font-size: clamp(25px, 6vw, 38px);
+  font-weight: 400;
+}
+
+.pf-stat-label {
+  color: var(--color-text-secondary);
+  font-size: 8px;
+  letter-spacing: .1em;
+}
+
+.pf-stat-divider { display: none; height: 44px; background: var(--color-border); }
+
+.pf-section {
+  padding: 0 0 34px;
+}
+
+.pf-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: var(--color-text-primary);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.pf-section-title::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--color-brass);
+}
+
+.pf-badge-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+}
+
+.pf-badge,
+.pf-badge.badge-unlocked {
+  position: relative;
+  min-height: 132px;
+  padding: 20px 8px 14px;
+  border: 0;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+}
+
+.pf-badge-index {
+  position: absolute;
+  top: 8px;
+  left: 9px;
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+  font-size: 8px;
+}
+
+.pf-badge-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e4e0d5;
+  filter: grayscale(1);
+}
+
+.badge-unlocked .pf-badge-icon {
+  background: #dbe4da;
+  filter: grayscale(.35);
+}
+
+.pf-badge-name,
+.badge-unlocked .pf-badge-name {
+  color: var(--color-text-primary);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 11px;
+}
+
+.pf-insight-card,
+.pf-insight-empty,
+.pf-settings-list,
+.pf-local-note {
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pf-insight-card,
+.pf-insight-empty { padding: 22px; }
+.pf-insight-title,
+.pf-insight-empty-title { font-family: 'Songti SC', 'STSong', Georgia, serif; font-size: 17px; font-weight: 400; }
+.pf-insight-action { color: var(--color-brass); letter-spacing: .06em; }
+
+.pf-local-note {
+  padding: 18px;
+  color: var(--color-text-secondary);
+}
+
+.pf-settings-list { border-bottom: 0; }
+
+.pf-setting {
+  min-height: 62px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pf-setting:active { background: rgba(71, 96, 79, .05); }
+
+.pf-setting-icon {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  filter: grayscale(1);
+  font-size: 14px;
+}
+
+.pf-setting-label {
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.pf-setting-arrow { color: var(--color-brass); }
+
+@media (min-width: 900px) {
+  .profile-page { width: 100%; max-width: none; padding: 0 0 70px; }
+
+  .profile-masthead {
+    min-height: 430px;
+    padding: 64px 70px;
+  }
+
+  .profile-masthead::after { top: 50px; right: 48px; }
+
+  .pf-header,
+  .pf-stats,
+  .pf-section { width: min(calc(100% - 80px), 960px); }
+
+  .pf-header { margin-top: 40px; padding: 22px 0; }
+  .pf-stats { display: flex; padding: 30px 0; }
+  .pf-stats .pf-stat-item { min-height: 0; border: 0; }
+  .pf-stat-divider { display: block; }
+  .pf-section { padding: 0 0 42px; }
+  .pf-badge-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}

@@ -1,9 +1,9 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 
 const tabs = [
-  { path: '/', label: '花园', icon: 'garden' },
-  { path: '/coach', label: '圆桌', icon: 'roundtable' },
-  { path: '/profile', label: '我的', icon: 'profile' },
+  { path: '/', index: '01', label: '今日展台', shortLabel: '今日', icon: 'garden' },
+  { path: '/coach', index: '02', label: '决策圆桌', shortLabel: '圆桌', icon: 'roundtable' },
+  { path: '/profile', index: '03', label: '个人档案', shortLabel: '档案', icon: 'profile' },
 ]
 
 function TabIcon({ name }) {
@@ -28,7 +28,7 @@ export default function TabBar() {
     <nav className="tab-bar" aria-label="主导航">
       <button className="tab-brand" type="button" onClick={() => navigate('/')} aria-label="返回决策成长日记首页">
         <span className="tab-brand-mark"><BrandMark /></span>
-        <span className="tab-brand-copy"><strong>决策成长日记</strong><small>把选择种成经验</small></span>
+        <span className="tab-brand-copy"><small>Decision Conservatory</small><strong>决策成长日记</strong></span>
       </button>
       <div className="tab-links">
         {tabs.map((tab) => {
@@ -40,13 +40,15 @@ export default function TabBar() {
               onClick={() => navigate(tab.path)}
               aria-current={isActive ? 'page' : undefined}
             >
+              <span className="tab-index">{tab.index}</span>
               <span className="tab-icon"><TabIcon name={tab.icon} /></span>
-              <span className="tab-text">{tab.label}</span>
+              <span className="tab-text tab-text-full">{tab.label}</span>
+              <span className="tab-text tab-text-short">{tab.shortLabel}</span>
             </button>
           )
         })}
       </div>
-      <span className="tab-note">今天也只需要理清一件事。<br />答案可以慢慢长出来。</span>
+      <span className="tab-note"><b>今日馆藏</b><br />每一次选择，都会留下可复用的证据。</span>
     </nav>
   )
 }

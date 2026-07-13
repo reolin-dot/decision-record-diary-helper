@@ -64,6 +64,7 @@
   position: relative;
 }
 
+
 .garden-search-btn {
   width: 44px;
   height: 44px;
@@ -915,5 +916,408 @@
 
   .flower-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ====== Decision Conservatory / editorial second pass ====== */
+.garden-page {
+  background: var(--color-paper);
+}
+
+.garden-top-bar {
+  min-height: 58px;
+  padding: 10px 20px;
+  background: var(--color-paper);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.garden-avatar,
+.garden-search-btn {
+  border-radius: 50%;
+  background: transparent;
+  border-color: var(--color-border);
+}
+
+.garden-streak {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  letter-spacing: .06em;
+}
+
+.garden-masthead {
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 38px 24px;
+  background:
+    radial-gradient(circle at 78% 30%, rgba(105, 136, 108, .25), transparent 34%),
+    linear-gradient(135deg, #121b16, #0b110d);
+  color: #efeade;
+}
+
+.garden-masthead::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: .22;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+}
+
+.garden-masthead-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+}
+
+.garden-masthead-kicker {
+  display: block;
+  margin-bottom: 22px;
+  color: var(--color-brass);
+  font-size: 8px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.garden-masthead h1 {
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: clamp(42px, 8vw, 78px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.05em;
+}
+
+.garden-masthead h1 em {
+  color: #c8b587;
+  font-weight: 400;
+}
+
+.garden-masthead p {
+  max-width: 460px;
+  margin-top: 20px;
+  color: rgba(239, 234, 222, .62);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.garden-masthead button {
+  width: min(100%, 260px);
+  min-height: 50px;
+  margin-top: 26px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(200, 181, 135, .62);
+  color: #efeade;
+  font-size: 12px;
+  letter-spacing: .08em;
+}
+
+.garden-masthead button i {
+  color: var(--color-brass);
+  font-size: 18px;
+  font-style: normal;
+}
+
+.garden-masthead-index {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: rgba(239, 234, 222, .08);
+  font-family: Georgia, serif;
+}
+
+.garden-masthead-index > span {
+  font-size: clamp(92px, 21vw, 176px);
+  line-height: .85;
+}
+
+.garden-masthead-index small {
+  margin-top: 10px;
+  color: rgba(239, 234, 222, .38);
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 8px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.garden-scene {
+  width: 100%;
+  padding: 24px 20px 40px;
+  align-items: stretch;
+}
+
+.garden-stats {
+  margin-bottom: 24px;
+  padding: 18px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.stat-num {
+  color: var(--color-text-primary);
+  font-family: Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+}
+
+.stat-label {
+  color: var(--color-text-secondary);
+  font-size: 9px;
+  letter-spacing: .12em;
+}
+
+.garden-stat-divider {
+  background: var(--color-border);
+}
+
+.garden-actions-inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  width: 100%;
+  margin-bottom: 18px;
+  border-top: 1px solid var(--color-border);
+  background: transparent;
+}
+
+.action-btn {
+  min-width: 0;
+  min-height: 86px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  padding: 16px 12px;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  text-align: left;
+}
+
+.action-btn:nth-child(2n) { border-right: 0; }
+
+.action-btn-index {
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+  font-size: 10px;
+}
+
+.action-btn-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--color-text-primary);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.action-btn-text small {
+  color: var(--color-text-secondary);
+  font-family: 'Avenir Next', 'PingFang SC', sans-serif;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.action-badge-wrap { position: relative; }
+.action-badge-dot { top: -2px; right: 2px; background: var(--color-brass); }
+
+.garden-capture-strip {
+  min-height: 76px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid #263c2f;
+  border-radius: 0;
+  background: #25382c;
+  color: #efeade;
+  box-shadow: none;
+}
+
+.garden-capture-strip > span:first-child {
+  width: 42px;
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+  font-size: 8px;
+  letter-spacing: .1em;
+  line-height: 1.45;
+}
+
+.garden-capture-strip small { color: rgba(239, 234, 222, .5); }
+.garden-capture-strip i { color: var(--color-brass); }
+
+.garden-review-focus,
+.pattern-panel,
+.garden-ai-insight,
+.garden-growth-snippet {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.garden-review-focus {
+  padding: 24px;
+  background: #18271e;
+  border: 1px solid #2d4435;
+}
+
+.review-focus-actions button {
+  border-radius: 0;
+  background: var(--color-paper);
+}
+
+.pattern-panel,
+.garden-ai-insight,
+.garden-growth-snippet {
+  border: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  background: transparent;
+}
+
+.pattern-panel { padding: 22px; }
+.pattern-card { border-radius: 0; box-shadow: none; }
+
+.flower-grid {
+  padding-top: 22px;
+  border-top: 1px solid var(--color-border);
+}
+
+.flower-card {
+  align-items: stretch;
+  padding: 0;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.flower-visual {
+  width: 100%;
+  height: 104px;
+  border-radius: 0;
+}
+
+.flower-info {
+  min-height: 78px;
+  align-items: flex-start;
+  padding: 12px;
+  text-align: left;
+}
+
+.flower-stage-label {
+  color: var(--color-brass);
+  font-size: 8px;
+  letter-spacing: .12em;
+}
+
+.flower-title {
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 14px;
+}
+
+.empty-garden {
+  position: relative;
+  overflow: hidden;
+  max-width: none;
+  min-height: calc(100dvh - 130px);
+  padding: 54px 26px 42px;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 76% 28%, rgba(101, 133, 106, .23), transparent 30%),
+    #101713;
+  color: #efeade;
+  box-shadow: none;
+}
+
+.empty-garden::before {
+  content: '01';
+  position: absolute;
+  top: 30px;
+  right: 20px;
+  color: rgba(239, 234, 222, .05);
+  font-family: Georgia, serif;
+  font-size: 140px;
+  line-height: .8;
+}
+
+.empty-illustration { color: #879d88; }
+.empty-eyebrow { color: var(--color-brass); letter-spacing: .18em; }
+.empty-title { color: #efeade; font-family: 'Songti SC', 'STSong', Georgia, serif; font-weight: 400; }
+.empty-desc { color: rgba(239, 234, 222, .56); }
+.empty-step { background: transparent; border-color: rgba(239, 234, 222, .14); }
+.step-num { color: var(--color-brass); }
+.step-text b { color: #efeade; font-family: 'Songti SC', 'STSong', Georgia, serif; }
+.step-text small { color: rgba(239, 234, 222, .45); }
+.empty-cta { border-radius: 0; background: #b69a61; color: #101713; box-shadow: none; }
+.onboarding-choices button { border-radius: 0; border-color: rgba(239, 234, 222, .18); color: rgba(239, 234, 222, .58); }
+
+@media (min-width: 900px) {
+  .garden-top-bar { padding: 12px 42px; }
+
+  .garden-masthead {
+    min-height: 430px;
+    align-items: center;
+    padding: 64px 70px;
+  }
+
+  .garden-masthead-index { top: 50px; right: 60px; }
+
+  .garden-scene {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 42px 40px 70px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+    grid-template-areas:
+      'stats stats'
+      'review actions'
+      'capture actions'
+      'pattern pattern'
+      'insight snippet'
+      'flowers flowers'
+      'monthly monthly';
+    gap: 20px;
+  }
+
+  .garden-stats { grid-area: stats; margin: 0; }
+  .garden-review-focus { grid-area: review; margin: 0; }
+  .garden-actions-inline { grid-area: actions; margin: 0; }
+  .garden-capture-strip { grid-area: capture; margin: 0; }
+  .pattern-panel { grid-area: pattern; margin: 0; }
+  .garden-ai-insight { grid-area: insight; margin: 0; }
+  .garden-growth-snippet { grid-area: snippet; margin: 0; }
+  .flower-grid { grid-area: flowers; margin: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .garden-monthly { grid-area: monthly; }
+
+  .garden-actions-inline { grid-template-columns: 1fr; border-left: 1px solid var(--color-border); }
+  .action-btn,
+  .action-btn:nth-child(2n) { min-height: 74px; border-right: 0; }
+
+  .empty-garden {
+    min-height: calc(100dvh - 58px);
+    padding: 74px 72px;
+  }
+
+  .empty-garden-onboarding {
+    grid-template-columns: minmax(240px, .8fr) minmax(320px, 1.2fr);
   }
 }

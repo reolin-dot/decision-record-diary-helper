@@ -7,6 +7,25 @@ import { inferDecisionOptions } from '../../domain/roundtableFlow.js'
 import { COACH_KITS } from './coachKits.js'
 import './coach.css'
 
+function RoundtableMark() {
+  return (
+    <div className="coach-orbit" aria-hidden="true">
+      <svg viewBox="0 0 320 320" fill="none">
+        <circle cx="160" cy="160" r="112" stroke="currentColor" strokeWidth="1" opacity=".35" />
+        <circle cx="160" cy="160" r="72" stroke="currentColor" strokeWidth="1" opacity=".2" />
+        <path d="M70 160h180M160 70v180" stroke="currentColor" strokeWidth="1" opacity=".16" />
+        <circle cx="160" cy="48" r="6" fill="currentColor" />
+        <circle cx="272" cy="160" r="6" fill="currentColor" />
+        <circle cx="160" cy="272" r="6" fill="currentColor" />
+        <circle cx="48" cy="160" r="6" fill="currentColor" />
+        <path d="M116 162h88M160 125v74M132 199h56" stroke="currentColor" strokeWidth="2" />
+        <circle cx="160" cy="160" r="10" fill="currentColor" opacity=".85" />
+      </svg>
+      <span>Four perspectives · One decision</span>
+    </div>
+  )
+}
+
 export default function Coach() {
   const navigate = useNavigate()
   const toast = useToast()
@@ -63,6 +82,7 @@ export default function Coach() {
         <span className="coach-desc">
           先写问题和选项，再邀请一个视角帮你追问。圆桌不替你做决定，只帮你形成一张可行动、可复盘的决策卡。
         </span>
+        <RoundtableMark />
         {recommendation && (
           <div className="coach-recommendation">
             <span className="coach-recommendation-label">{recommendation.label}</span>
@@ -105,13 +125,14 @@ export default function Coach() {
         </div>
 
         <div className="roundtable-perspective-grid">
-          {COACH_KITS.filter(item => item.id !== 'review').map((item) => (
+          {COACH_KITS.filter(item => item.id !== 'review').map((item, index) => (
             <button
               type="button"
               key={item.id}
               className={`dilemma-card kit-${item.id} ${recommendation?.kitId === item.id ? 'recommended' : ''}`}
               onClick={() => openPerspective(item.id)}
             >
+              <span className="dilemma-index">{String(index + 1).padStart(2, '0')}</span>
               <span className="dilemma-icon">{item.icon}</span>
               <span className="dilemma-info">
                 <span className="dilemma-title">

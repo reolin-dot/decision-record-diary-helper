@@ -103,6 +103,12 @@ export default function Profile() {
 
   return (
     <div className="profile-page">
+      <header className="profile-masthead">
+        <span>Personal Archive · Evidence of Choice</span>
+        <h1>你的决策，<br /><em>正在成为方法。</em></h1>
+        <p>这里收藏的不是标准答案，而是你一次次选择、行动与复盘后留下的证据。</p>
+      </header>
+
       <div className="pf-header">
         <div className="pf-avatar-wrap">
           <span className="pf-avatar">👤</span>
@@ -138,11 +144,12 @@ export default function Profile() {
       <div className="pf-section">
         <span className="pf-section-title">成就徽章</span>
         <div className="pf-badge-grid">
-          {badges.map((badge) => (
+          {badges.map((badge, index) => (
             <div
               key={badge.name}
               className={`pf-badge ${badge.unlocked ? 'badge-unlocked' : ''}`}
             >
+              <span className="pf-badge-index">{String(index + 1).padStart(2, '0')}</span>
               <span className="pf-badge-icon">{badge.icon}</span>
               <span className="pf-badge-name">{badge.name}</span>
             </div>

@@ -1,33 +1,36 @@
 /* Design Tokens - migrated from miniprogram app.wxss */
 :root {
   /* Colors */
-  --color-bg: #eef2ed;
-  --color-surface: #ffffff;
-  --color-border: #dce5de;
-  --color-border-light: #e8eee9;
-  --color-text-primary: #18231c;
-  --color-text-secondary: #5f6b63;
-  --color-text-placeholder: #8d9890;
-  --color-accent: #3f704d;
-  --color-accent-light: #e2eee5;
-  --color-accent-dark: #294f36;
+  --color-bg: #eeece3;
+  --color-surface: #f8f5eb;
+  --color-border: #d2cdbf;
+  --color-border-light: #e2ded2;
+  --color-text-primary: #172019;
+  --color-text-secondary: #62675f;
+  --color-text-placeholder: #92948c;
+  --color-accent: #47604f;
+  --color-accent-light: #dde4dc;
+  --color-accent-dark: #23352a;
+  --color-ink: #101713;
+  --color-paper: #f4f0e5;
+  --color-brass: #b69a61;
   --color-danger: #c0392b;
   --color-warning: #e67e22;
   --color-success: #4a7c59;
 
   /* Spacing & Radius */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
 
   /* Shadows */
   --shadow-card: 0 10px 30px rgba(37, 65, 45, 0.07);
   --shadow-button: 0 10px 24px rgba(45, 91, 58, 0.22);
 
   /* Layout */
-  --app-max-width: 1200px;
+  --app-max-width: 1320px;
   --mobile-max-width: 480px;
-  --sidebar-width: 224px;
+  --sidebar-width: 236px;
   --tab-bar-height: 56px;
   --page-header-height: 48px;
 }

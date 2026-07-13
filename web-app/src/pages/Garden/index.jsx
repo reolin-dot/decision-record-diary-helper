@@ -24,6 +24,8 @@ export default function Garden() {
   const { decisions, stats, isNewUser, hasStyleTest, decisionStyle, aiInsights } = useApp()
 
   const today = formatDate(new Date())
+  const dayMarker = String(new Date().getDate()).padStart(2, '0')
+  const dateLabel = new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(new Date())
 
   const decorated = decisions
     .filter(d => !d._deleted)
@@ -78,6 +80,23 @@ export default function Garden() {
         </div>
         {!isEmpty && <button className="garden-search-btn" onClick={() => navigate('/decision-list?focus=1')} aria-label="搜索全部决策">⌕</button>}
       </div>
+
+      {!isEmpty && (
+        <section className="garden-masthead">
+          <div className="garden-masthead-copy">
+            <span className="garden-masthead-kicker">Decision Conservatory · Daily</span>
+            <h1>今天，先理清<br /><em>一件事。</em></h1>
+            <p>把问题放到桌面上，称量选择，留下行动证据。答案不必一次完美。</p>
+            <button type="button" onClick={handlePlantFlower}>
+              <span>开始一次决策</span><i>↗</i>
+            </button>
+          </div>
+          <div className="garden-masthead-index" aria-hidden="true">
+            <span>{dayMarker}</span>
+            <small>{dateLabel} · 今日观察</small>
+          </div>
+        </section>
+      )}
 
       {isNewUser && isEmpty && (
         <div className="garden-scene">
@@ -153,31 +172,31 @@ export default function Garden() {
           </div>
 
           <div className="garden-actions-inline">
-            <div className="action-btn" onClick={handlePlantFlower}>
-              <span className="action-btn-icon">🌱</span>
-              <span className="action-btn-text">种花</span>
-            </div>
-            <div className="action-btn" onClick={() => navigate('/watering')}>
+            <button type="button" className="action-btn" onClick={handlePlantFlower}>
+              <span className="action-btn-index">01</span>
+              <span className="action-btn-text">记录新决策<small>从一个真实问题开始</small></span>
+            </button>
+            <button type="button" className="action-btn" onClick={() => navigate('/watering')}>
               <div className="action-badge-wrap">
-                <span className="action-btn-icon">💧</span>
+                <span className="action-btn-index">02</span>
                 {reminderCount > 0 && <div className="action-badge-dot"></div>}
               </div>
-              <span className="action-btn-text">提醒</span>
-            </div>
-            <div className="action-btn" onClick={() => navigate('/coach')}>
-              <span className="action-btn-icon">🧭</span>
-              <span className="action-btn-text">圆桌</span>
-            </div>
-            <div className="action-btn" onClick={() => navigate('/growth-snippets')}>
-              <span className="action-btn-icon">💡</span>
-              <span className="action-btn-text">片段</span>
-            </div>
+              <span className="action-btn-text">查看待复盘<small>{reminderCount > 0 ? `${reminderCount} 件等待回看` : '暂时没有新提醒'}</small></span>
+            </button>
+            <button type="button" className="action-btn" onClick={() => navigate('/coach')}>
+              <span className="action-btn-index">03</span>
+              <span className="action-btn-text">进入决策圆桌<small>换一个视角追问</small></span>
+            </button>
+            <button type="button" className="action-btn" onClick={() => navigate('/growth-snippets')}>
+              <span className="action-btn-index">04</span>
+              <span className="action-btn-text">浏览成长片段<small>收藏已验证的经验</small></span>
+            </button>
           </div>
 
           <button className="garden-capture-strip" onClick={() => navigate('/quick-capture')}>
-            <span>✎</span>
+            <span>NOTE<br />10S</span>
             <span><b>有个念头怕忘记？</b><small>10 秒收进花园，之后再慢慢想</small></span>
-            <i>›</i>
+            <i>↗</i>
           </button>
 
           {decisionPatterns.patternCards.length > 0 && (

@@ -357,3 +357,281 @@
     margin-top: 9px;
   }
 }
+
+/* ====== Decision chamber / editorial second pass ====== */
+.coach-page {
+  background: var(--color-paper);
+}
+
+.coach-header {
+  position: relative;
+  overflow: hidden;
+  min-height: 520px;
+  padding: 28px 24px 34px;
+  background:
+    radial-gradient(circle at 70% 62%, rgba(91, 125, 98, .24), transparent 34%),
+    #0f1712;
+  color: #efeade;
+}
+
+.coach-header::after {
+  content: 'ROUND / TABLE';
+  position: absolute;
+  top: 30px;
+  right: -22px;
+  color: rgba(239, 234, 222, .08);
+  font-family: Georgia, serif;
+  font-size: 10px;
+  letter-spacing: .32em;
+  transform: rotate(90deg);
+}
+
+.coach-kicker {
+  color: var(--color-brass);
+  font-size: 8px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.coach-title {
+  max-width: 500px;
+  margin-top: 24px;
+  color: #efeade;
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: clamp(44px, 10vw, 72px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.06em;
+}
+
+.coach-title br { display: block; }
+
+.coach-desc {
+  max-width: 470px;
+  color: rgba(239, 234, 222, .58);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.coach-compass-link {
+  color: rgba(239, 234, 222, .42);
+  border-bottom-color: rgba(239, 234, 222, .14);
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+
+.coach-orbit {
+  position: relative;
+  width: min(78vw, 290px);
+  margin: 28px auto 0;
+  color: #b69a61;
+}
+
+.coach-orbit svg { display: block; width: 100%; }
+
+.coach-orbit span {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  width: max-content;
+  transform: translateX(-50%);
+  color: rgba(239, 234, 222, .34);
+  font-size: 7px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.coach-recommendation {
+  border-radius: 0;
+  border-color: rgba(182, 154, 97, .26);
+  background: rgba(182, 154, 97, .08);
+}
+
+.coach-recommendation-label { color: var(--color-brass); }
+.coach-recommendation-text { color: rgba(239, 234, 222, .62); }
+
+.coach-body {
+  padding: 28px 20px 44px;
+  background: var(--color-paper);
+}
+
+.roundtable-input-card {
+  padding: 0 0 28px;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.roundtable-step-label {
+  color: var(--color-brass);
+  font-size: 8px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.roundtable-input-card textarea {
+  min-height: 150px;
+  padding: 20px 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: clamp(25px, 6vw, 38px);
+  line-height: 1.55;
+}
+
+.roundtable-input-card textarea::placeholder {
+  color: #aaa99f;
+}
+
+.roundtable-options {
+  margin-top: 12px;
+  gap: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.roundtable-option-row {
+  min-height: 58px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+}
+
+.roundtable-option-row > span {
+  width: 44px;
+  height: auto;
+  align-self: stretch;
+  border-right: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+}
+
+.roundtable-option-row input {
+  padding-left: 14px;
+  border: 0;
+  background: transparent;
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+}
+
+.roundtable-add-option {
+  margin-top: 14px;
+  color: var(--color-accent-dark);
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.roundtable-perspective-head {
+  margin: 34px 0 16px;
+}
+
+.roundtable-perspective-head > span:last-child {
+  max-width: 330px;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.roundtable-perspective-grid {
+  gap: 0;
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+}
+
+.dilemma-card,
+.dilemma-card.kit-choice,
+.dilemma-card.kit-emotion,
+.dilemma-card.kit-action,
+.dilemma-card.kit-info,
+.dilemma-card.kit-review {
+  position: relative;
+  min-height: 178px;
+  align-items: flex-start;
+  padding: 20px 18px;
+  border: 0;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dilemma-card:hover {
+  border-color: var(--color-border);
+  background: rgba(71, 96, 79, .04);
+  box-shadow: none;
+  transform: none;
+}
+
+.dilemma-card.recommended {
+  border-color: var(--color-brass);
+  background: rgba(182, 154, 97, .06);
+}
+
+.dilemma-index {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+  font-size: 10px;
+}
+
+.dilemma-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e3dfd2;
+  filter: grayscale(1);
+}
+
+.dilemma-title {
+  color: var(--color-text-primary);
+  font-family: 'Songti SC', 'STSong', Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.dilemma-badge {
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-brass);
+  letter-spacing: .08em;
+}
+
+.dilemma-desc { color: var(--color-text-secondary); }
+.dilemma-framework { color: var(--color-brass); font-size: 8px; letter-spacing: .1em; }
+.dilemma-arrow { color: var(--color-brass); }
+
+@media (min-width: 900px) {
+  .coach-page {
+    min-height: 100dvh;
+    grid-template-columns: minmax(400px, .84fr) minmax(520px, 1.16fr);
+  }
+
+  .coach-header {
+    min-height: 100dvh;
+    padding: 56px 52px 40px;
+  }
+
+  .coach-title { margin-top: 34px; font-size: clamp(52px, 5.2vw, 76px); }
+  .coach-title br { display: block; }
+  .coach-desc { margin-top: 22px; }
+
+  .coach-orbit {
+    width: min(28vw, 330px);
+    margin-top: 20px;
+  }
+
+  .coach-body { padding: 54px 48px 70px; }
+  .roundtable-input-card { padding: 0 0 34px; }
+  .roundtable-perspective-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+}
