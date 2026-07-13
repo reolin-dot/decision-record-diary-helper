@@ -1,7 +1,7 @@
 /* Profile page styles - converted from miniprogram profile.wxss */
 
 .profile-page {
-  background: #f5f5f5;
+  background: var(--color-bg);
   min-height: 100vh;
   min-height: 100dvh;
   padding-bottom: calc(var(--tab-bar-height) + 16px);
@@ -45,8 +45,8 @@
 
 .pf-style-tag {
   font-size: 12px;
-  color: #888888;
-  background: #f0f0f0;
+  color: var(--color-accent-dark);
+  background: var(--color-accent-light);
   padding: 3px 10px;
   border-radius: 8px;
   align-self: flex-start;
@@ -78,8 +78,8 @@
 }
 
 .pf-stat-label {
-  font-size: 11px;
-  color: #888888;
+  font-size: 12px;
+  color: var(--color-text-secondary);
 }
 
 .pf-stat-divider {
@@ -95,9 +95,9 @@
 }
 
 .pf-section-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: #888888;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
   margin-bottom: 10px;
   display: block;
 }
@@ -105,7 +105,7 @@
 /* ====== Badge grid ====== */
 .pf-badge-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
@@ -213,7 +213,8 @@
 /* ====== Settings list ====== */
 .pf-settings-list {
   background: #ffffff;
-  border-radius: 10px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -287,4 +288,36 @@
   flex-shrink: 0;
   font-size: 18px;
   line-height: 1.5;
+}
+
+@media (min-width: 900px) {
+  .profile-page {
+    width: min(100%, 820px);
+    margin: 0 auto;
+    padding: 28px 28px 40px;
+  }
+
+  .pf-header,
+  .pf-stats {
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+  }
+
+  .pf-header {
+    margin-bottom: 12px;
+    padding: 22px;
+  }
+
+  .pf-stats {
+    margin-bottom: 24px;
+    padding: 20px 8px;
+  }
+
+  .pf-section {
+    padding: 0 0 20px;
+  }
+
+  .pf-badge-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }

@@ -58,8 +58,8 @@ export default function Coach() {
     <div className="coach-page">
       <div className="coach-header">
         <button className="coach-compass-link" onClick={() => navigate('/compass')}>还不知道从哪里开始？先做 30 秒决策罗盘 →</button>
-        <span className="coach-kicker">决策圆桌</span>
-        <span className="coach-title">把纠结放到桌面上</span>
+        <span className="coach-kicker">决策圆桌 · 清晰比正确更重要</span>
+        <h1 className="coach-title">把纠结摊开，<br />一次看清。</h1>
         <span className="coach-desc">
           先写问题和选项，再邀请一个视角帮你追问。圆桌不替你做决定，只帮你形成一张可行动、可复盘的决策卡。
         </span>
@@ -104,26 +104,29 @@ export default function Coach() {
           <span>不同视角会问不同的问题，你随时可以回来换一个。</span>
         </div>
 
-        {COACH_KITS.filter(item => item.id !== 'review').map((item) => (
-          <div
-            key={item.id}
-            className={`dilemma-card kit-${item.id} ${recommendation?.kitId === item.id ? 'recommended' : ''}`}
-            onClick={() => openPerspective(item.id)}
-          >
-            <div className="dilemma-icon">{item.icon}</div>
-            <div className="dilemma-info">
-              <span className="dilemma-title">
-                {item.perspectiveLabel}
-                {recommendation?.kitId === item.id && (
-                  <span className="dilemma-badge">适合你</span>
-                )}
+        <div className="roundtable-perspective-grid">
+          {COACH_KITS.filter(item => item.id !== 'review').map((item) => (
+            <button
+              type="button"
+              key={item.id}
+              className={`dilemma-card kit-${item.id} ${recommendation?.kitId === item.id ? 'recommended' : ''}`}
+              onClick={() => openPerspective(item.id)}
+            >
+              <span className="dilemma-icon">{item.icon}</span>
+              <span className="dilemma-info">
+                <span className="dilemma-title">
+                  {item.perspectiveLabel}
+                  {recommendation?.kitId === item.id && (
+                    <span className="dilemma-badge">适合你</span>
+                  )}
+                </span>
+                <span className="dilemma-desc">{item.title}。{item.desc}</span>
+                <span className="dilemma-framework">{item.framework} · {item.tone}</span>
               </span>
-              <span className="dilemma-desc">{item.title}。{item.desc}</span>
-              <span className="dilemma-framework">{item.framework} · {item.tone}</span>
-            </div>
-            <span className="dilemma-arrow">›</span>
-          </div>
-        ))}
+              <span className="dilemma-arrow">›</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )

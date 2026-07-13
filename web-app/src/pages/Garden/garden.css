@@ -6,7 +6,7 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: #f5f5f5;
+  background: var(--color-bg);
   overflow-y: auto;
 }
 
@@ -15,9 +15,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  background: #ffffff;
-  border-bottom: 1px solid #e8e8e8;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.84);
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .garden-user-info {
@@ -27,23 +27,23 @@
 }
 
 .garden-avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--color-accent-light);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  border: 1.5px solid #d0d0d0;
+  border: 1px solid rgba(63, 112, 77, 0.18);
   cursor: pointer;
 }
 
 .garden-streak {
   font-size: 13px;
-  color: #888888;
-  background: #f9f9f9;
-  padding: 5px 12px;
+  color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.66);
+  padding: 6px 12px;
   border-radius: 12px;
   border: 1px solid #e8e8e8;
 }
@@ -60,16 +60,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 12px 16px 8px;
+  padding: 16px;
   position: relative;
 }
 
 .garden-search-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid #e8e8e8;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
   border-radius: 50%;
   background: #fff;
+  color: var(--color-text-primary);
+  font-size: 23px;
   cursor: pointer;
 }
 
@@ -83,9 +85,11 @@
 .onboarding-choices button {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 11px 12px;
-  background: #fff;
-  color: var(--color-text-primary);
+  min-height: 44px;
+  padding: 10px 12px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -663,26 +667,30 @@
 
 /* ====== Empty garden / New user ====== */
 .empty-garden {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 24px;
+  padding: 36px 22px;
   background: #ffffff;
   border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.82);
   box-shadow: var(--shadow-card);
-  margin: 12px 0;
+  margin: 0;
 }
 
 .empty-illustration {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
-.empty-icon-large {
-  font-size: 64px;
-  opacity: 0.8;
+.empty-plant {
+  width: 132px;
+  height: auto;
+  color: var(--color-accent);
+  filter: drop-shadow(0 14px 18px rgba(45, 91, 58, .13));
 }
 
 .empty-ground {
@@ -697,30 +705,41 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 24px;
-  padding: 0 16px;
+  margin-bottom: 26px;
+  padding: 0;
+  max-width: 430px;
+}
+
+.empty-eyebrow {
+  margin-bottom: 8px;
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 .empty-title {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 760;
+  line-height: 1.25;
   color: var(--color-text-primary);
   margin-bottom: 10px;
   text-align: center;
 }
 
 .empty-desc {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--color-text-secondary);
-  line-height: 1.8;
+  line-height: 1.75;
   text-align: center;
 }
 
 .empty-steps {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 28px;
+  gap: 8px;
+  margin-bottom: 26px;
   width: 100%;
   padding: 0 8px;
   box-sizing: border-box;
@@ -730,15 +749,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--color-accent-light);
+  background: rgba(226, 238, 229, .72);
   border-radius: var(--radius-md);
   padding: 12px 14px;
-  border-left: 3px solid var(--color-accent);
+  border: 1px solid rgba(63, 112, 77, .1);
 }
 
 .step-num {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--color-accent);
   color: #ffffff;
@@ -751,9 +770,21 @@
 }
 
 .step-text {
-  font-size: 14px;
+  display: flex;
+  flex-direction: column;
   color: var(--color-text-primary);
-  font-weight: 500;
+}
+
+.step-text b {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.step-text small {
+  margin-top: 2px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .empty-cta {
@@ -761,9 +792,10 @@
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
-  padding: 14px 40px;
-  border-radius: 24px;
-  letter-spacing: 1px;
+  min-height: 50px;
+  padding: 14px 30px;
+  border-radius: 14px;
+  letter-spacing: .02em;
   box-shadow: var(--shadow-button);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -774,4 +806,114 @@
   opacity: 0.85;
   transform: scale(0.96);
   box-shadow: 0 6px 24px rgba(74, 124, 89, 0.3);
+}
+
+@media (min-width: 900px) {
+  .garden-page {
+    min-height: calc(100dvh - 48px);
+  }
+
+  .garden-top-bar {
+    padding: 17px 24px;
+  }
+
+  .garden-scene {
+    align-items: stretch;
+    padding: 24px;
+  }
+
+  .empty-garden-onboarding {
+    min-height: calc(100dvh - 158px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.06fr) minmax(290px, .94fr);
+    grid-template-areas:
+      "illustration steps"
+      "copy steps"
+      "cta steps"
+      "choices steps";
+    align-content: center;
+    column-gap: 54px;
+    padding: 46px 50px;
+  }
+
+  .empty-garden-onboarding .empty-illustration {
+    grid-area: illustration;
+    align-items: flex-start;
+    margin: 0;
+  }
+
+  .empty-garden-onboarding .empty-plant {
+    width: 154px;
+    margin-left: -8px;
+  }
+
+  .empty-garden-onboarding .empty-text-group {
+    grid-area: copy;
+    align-items: flex-start;
+    margin: 12px 0 28px;
+  }
+
+  .empty-garden-onboarding .empty-title,
+  .empty-garden-onboarding .empty-desc {
+    text-align: left;
+  }
+
+  .empty-garden-onboarding .empty-title {
+    max-width: 420px;
+    font-size: clamp(32px, 3.2vw, 42px);
+    letter-spacing: -.035em;
+  }
+
+  .empty-garden-onboarding .empty-steps {
+    grid-area: steps;
+    align-self: center;
+    gap: 0;
+    margin: 0;
+    padding: 10px 24px;
+    border: 1px solid rgba(63, 112, 77, .13);
+    border-radius: 22px;
+    background: rgba(226, 238, 229, .5);
+  }
+
+  .empty-garden-onboarding .empty-step {
+    padding: 20px 0;
+    border: 0;
+    border-bottom: 1px solid rgba(63, 112, 77, .12);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .empty-garden-onboarding .empty-step:last-child {
+    border-bottom: 0;
+  }
+
+  .empty-garden-onboarding .empty-cta {
+    grid-area: cta;
+    justify-self: start;
+  }
+
+  .empty-garden-onboarding .onboarding-choices {
+    grid-area: choices;
+    display: flex;
+    margin-top: 14px;
+  }
+
+  .empty-garden-onboarding .onboarding-choices button {
+    border: 0;
+    padding: 8px 0;
+    text-align: left;
+  }
+
+  .empty-garden-compact {
+    min-height: calc(100dvh - 158px);
+    justify-content: center;
+  }
+
+  .empty-garden-compact .empty-title {
+    font-size: 36px;
+  }
+
+  .flower-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

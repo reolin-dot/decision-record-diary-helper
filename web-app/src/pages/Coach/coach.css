@@ -8,33 +8,41 @@
 }
 
 .coach-header {
-  padding: 28px 16px 18px;
-  background: linear-gradient(135deg, #f4efe6 0%, #e6f0e7 100%);
-  border-bottom: 1px solid var(--color-border-light);
+  padding: 20px 16px 16px;
+  background:
+    radial-gradient(circle at 86% 14%, transparent 0 38px, rgba(255,255,255,.06) 39px 40px, transparent 41px 68px, rgba(255,255,255,.04) 69px 70px, transparent 71px),
+    linear-gradient(145deg, #244b32 0%, #356646 100%);
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
 .coach-kicker {
   display: block;
   font-size: 12px;
   font-weight: 700;
-  color: var(--color-accent);
+  color: #bcd6c2;
   margin-bottom: 6px;
   letter-spacing: 0.08em;
 }
 
 .coach-title {
   display: block;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--color-text-primary);
+  font-size: 26px;
+  font-weight: 760;
+  line-height: 1.22;
+  letter-spacing: -.025em;
+  color: #ffffff;
   margin-bottom: 8px;
+}
+
+.coach-title br {
+  display: none;
 }
 
 .coach-desc {
   display: block;
   font-size: 13px;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
+  color: #d9e5dc;
+  line-height: 1.65;
 }
 
 .coach-recommendation {
@@ -43,32 +51,32 @@
   gap: 5px;
   margin-top: 14px;
   padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.68);
-  border: 1px solid rgba(74, 124, 89, 0.16);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-md);
 }
 
 .coach-recommendation-label {
   font-size: 12px;
   font-weight: 700;
-  color: var(--color-accent);
+  color: #cbe1d0;
 }
 
 .coach-recommendation-text {
   font-size: 13px;
-  color: var(--color-text-primary);
+  color: #ffffff;
   line-height: 1.5;
 }
 
 .coach-body {
-  padding: 12px 16px;
+  padding: 14px 16px 24px;
 }
 
 .roundtable-input-card {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 14px;
+  padding: 16px;
   margin-bottom: 16px;
   background: var(--color-surface);
   border: 1px solid var(--color-border-light);
@@ -77,7 +85,7 @@
 }
 
 .roundtable-step-label {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--color-text-primary);
 }
@@ -91,6 +99,7 @@
   background: #ffffff;
   color: var(--color-text-primary);
   font: inherit;
+  font-size: 16px;
   outline: none;
 }
 
@@ -114,7 +123,7 @@
 
 .roundtable-option-row {
   display: grid;
-  grid-template-columns: 26px 1fr 28px;
+  grid-template-columns: 28px 1fr 36px;
   align-items: center;
   gap: 8px;
 }
@@ -122,8 +131,8 @@
 .roundtable-option-row > span {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--color-accent-light);
   color: var(--color-accent);
@@ -141,17 +150,26 @@
   background: none;
 }
 
+.roundtable-option-row button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
 .roundtable-add-option {
   align-self: flex-start;
-  padding: 4px 0;
+  min-height: 44px;
+  padding: 8px 4px;
   font-size: 13px;
+  font-weight: 700;
 }
 
 .roundtable-perspective-head {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin: 0 2px 10px;
+  margin: 0 2px 12px;
 }
 
 .roundtable-perspective-head > span:last-child {
@@ -160,7 +178,14 @@
   color: var(--color-text-secondary);
 }
 
+.roundtable-perspective-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
 .dilemma-card {
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -169,13 +194,21 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
-  margin-bottom: 10px;
+  margin: 0;
+  color: var(--color-text-primary);
+  text-align: left;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .dilemma-card:active {
   background: var(--color-bg);
+}
+
+.dilemma-card:hover {
+  border-color: rgba(63, 112, 77, .28);
+  box-shadow: 0 8px 24px rgba(37, 65, 45, .08);
+  transform: translateY(-1px);
 }
 
 .dilemma-card.recommended {
@@ -247,13 +280,80 @@
 }
 .coach-compass-link {
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   padding: 10px 12px;
+  min-height: 44px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, .68);
-  border: 1px solid rgba(74, 124, 89, .18);
-  color: #4a7c59;
+  background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .14);
+  color: #e9f2eb;
   font-size: 12px;
   font-weight: 700;
   text-align: left;
+}
+
+@media (min-width: 900px) {
+  .coach-page {
+    min-height: calc(100dvh - 48px);
+    display: grid;
+    grid-template-columns: minmax(300px, .82fr) minmax(0, 1.18fr);
+    align-items: start;
+    padding-bottom: 0;
+  }
+
+  .coach-header {
+    position: sticky;
+    top: 0;
+    min-height: calc(100dvh - 48px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 56px 38px;
+    border: 0;
+  }
+
+  .coach-compass-link {
+    position: absolute;
+    top: 28px;
+    left: 32px;
+    right: 32px;
+    width: auto;
+  }
+
+  .coach-title {
+    max-width: 420px;
+    font-size: clamp(38px, 4vw, 48px);
+  }
+
+  .coach-title br {
+    display: initial;
+  }
+
+  .coach-desc {
+    max-width: 440px;
+    font-size: 15px;
+  }
+
+  .coach-body {
+    padding: 30px;
+  }
+
+  .roundtable-input-card {
+    padding: 22px;
+  }
+
+  .roundtable-perspective-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .dilemma-card {
+    min-height: 174px;
+    align-items: flex-start;
+    padding: 18px 14px;
+  }
+
+  .dilemma-arrow {
+    margin-top: 9px;
+  }
 }

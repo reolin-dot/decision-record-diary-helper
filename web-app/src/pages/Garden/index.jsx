@@ -8,6 +8,17 @@ import { buildHomeNextAction } from '../../domain/homeNextAction.js'
 import { formatDate } from '../../utils/util.js'
 import './garden.css'
 
+function SeedlingMark() {
+  return (
+    <svg className="empty-plant" viewBox="0 0 160 150" fill="none" aria-hidden="true">
+      <path d="M80 126V61" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
+      <path d="M78 82C51 83 35 68 32 42c28 0 45 14 46 40Z" fill="currentColor" opacity=".78" />
+      <path d="M82 99c3-27 20-42 48-41-2 27-20 42-48 41Z" fill="currentColor" />
+      <path d="M42 129c12-16 25-23 38-23 16 0 30 8 41 23" stroke="currentColor" strokeWidth="6" strokeLinecap="round" opacity=".28" />
+    </svg>
+  )
+}
+
 export default function Garden() {
   const navigate = useNavigate()
   const { decisions, stats, isNewUser, hasStyleTest, decisionStyle, aiInsights } = useApp()
@@ -54,9 +65,9 @@ export default function Garden() {
     <div className="garden-page">
       <div className="garden-top-bar">
         <div className="garden-user-info">
-          <div className="garden-avatar" onClick={() => navigate('/profile')}>
+          <button className="garden-avatar" type="button" onClick={() => navigate('/profile')} aria-label="打开我的页面">
             <span>👤</span>
-          </div>
+          </button>
           <div className="garden-streak">
             {!isEmpty ? (
               <span>🔥 连续 <span className="streak-num">{stats.streak}</span> 天记录</span>
@@ -65,43 +76,40 @@ export default function Garden() {
             )}
           </div>
         </div>
-        <button className="garden-search-btn" onClick={() => navigate('/decision-list?focus=1')} aria-label="搜索全部决策">🔍</button>
+        {!isEmpty && <button className="garden-search-btn" onClick={() => navigate('/decision-list?focus=1')} aria-label="搜索全部决策">⌕</button>}
       </div>
 
       {isNewUser && isEmpty && (
         <div className="garden-scene">
-          <div className="empty-garden">
+          <div className="empty-garden empty-garden-onboarding">
             <div className="empty-illustration">
-              <span className="empty-icon-large">🌱</span>
-              <div className="empty-ground"></div>
+              <SeedlingMark />
             </div>
             <div className="empty-text-group">
-              <div className="empty-title">欢迎来到你的决策花园</div>
-              <div className="empty-desc">每一个重要决策，都是一颗种子。</div>
-              <div className="empty-desc">记录下来，开始行动，再慢慢复盘，</div>
-              <div className="empty-desc">它会陪你从种子长到盛开。</div>
+              <div className="empty-eyebrow">你的第一块决策花圃</div>
+              <h1 className="empty-title">今天，想理清哪件事？</h1>
+              <p className="empty-desc">把问题写下来，看清选项，选一个能验证的行动。答案不必一次完美，它会在复盘里慢慢长出来。</p>
             </div>
             <div className="empty-steps">
               <div className="empty-step">
                 <span className="step-num">1</span>
-                <span className="step-text">种花：看清问题并做选择</span>
+                <span className="step-text"><b>写下问题</b><small>把脑海里的纠结放到纸面上</small></span>
               </div>
               <div className="empty-step">
                 <span className="step-num">2</span>
-                <span className="step-text">长叶：开始推进真实行动</span>
+                <span className="step-text"><b>选一个行动</b><small>用真实反馈代替反复空想</small></span>
               </div>
               <div className="empty-step">
                 <span className="step-num">3</span>
-                <span className="step-text">开花：当下复盘和结果复盘</span>
+                <span className="step-text"><b>回来复盘</b><small>把这次选择变成下次的经验</small></span>
               </div>
             </div>
             <button className="empty-cta" onClick={handlePlantFlower}>
-              种下第一颗种子
+              开始一次决策
             </button>
             <div className="onboarding-choices">
-              <button onClick={() => navigate('/compass')}>我有点乱：先找此刻的方向</button>
-              <button onClick={() => navigate('/record?step=1')}>我已经想清：直接记录</button>
-              <button onClick={() => navigate('/data-export')}>我有旧数据：恢复备份</button>
+              <button onClick={() => navigate('/compass')}>还没有头绪？先做 30 秒罗盘</button>
+              <button onClick={() => navigate('/data-export')}>从备份恢复旧记录</button>
             </div>
           </div>
         </div>
@@ -109,17 +117,17 @@ export default function Garden() {
 
       {!isNewUser && isEmpty && (
         <div className="garden-scene">
-          <div className="empty-garden">
+          <div className="empty-garden empty-garden-compact">
             <div className="empty-illustration">
-              <span className="empty-icon-large">🌱</span>
-              <div className="empty-ground"></div>
+              <SeedlingMark />
             </div>
             <div className="empty-text-group">
-              <div className="empty-title">花园还是空的</div>
-              <div className="empty-desc">记录一个决策，种下第一颗种子吧。</div>
+              <div className="empty-eyebrow">新的选择，从这里开始</div>
+              <h1 className="empty-title">今天，想理清哪件事？</h1>
+              <p className="empty-desc">写下一个真实问题，给未来的自己留下一条可以回看的决策路径。</p>
             </div>
             <button className="empty-cta" onClick={handlePlantFlower}>
-              种下第一颗种子
+              开始一次决策
             </button>
           </div>
         </div>
