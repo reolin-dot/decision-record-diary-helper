@@ -8,24 +8,24 @@ import { isInstalledApp, requestAppInstall } from '../../pwaInstall.js'
 import './profile.css'
 
 const SETTINGS = [
-  { icon: '🗂️', label: '成长档案', action: 'growthArchive' },
-  { icon: '🗓️', label: '月度成长报告', action: 'monthlyReport' },
-  { icon: '💧', label: '提醒中心', action: 'watering' },
-  { icon: '💡', label: '成长片段', action: 'growthSnippets' },
-  { icon: '🤖', label: '数据导出与 AI 分析', action: 'dataExport' },
-  { icon: '📝', label: '重新测试决策风格', action: 'styleTest' },
-  { icon: '📊', label: '决策记录', action: 'decisionList' },
-  { icon: '🍂', label: '最近删除', action: 'recentlyDeleted' },
+  { code: 'A01', label: '成长档案', action: 'growthArchive' },
+  { code: 'A02', label: '月度成长报告', action: 'monthlyReport' },
+  { code: 'A03', label: '提醒中心', action: 'watering' },
+  { code: 'A04', label: '成长片段', action: 'growthSnippets' },
+  { code: 'D01', label: '数据导出与 AI 分析', action: 'dataExport' },
+  { code: 'P01', label: '重新测试决策风格', action: 'styleTest' },
+  { code: 'D02', label: '决策记录', action: 'decisionList' },
+  { code: 'D03', label: '最近删除', action: 'recentlyDeleted' },
 ]
 
 function computeBadges(stats) {
   return [
-    { icon: '🌱', name: '首次记录', unlocked: stats.totalDecisions > 0 },
-    { icon: '🔥', name: '连续 7 天', unlocked: stats.streak >= 7 },
-    { icon: '🌸', name: '首次开花', unlocked: stats.bloomedCount > 0 },
-    { icon: '🌳', name: '决策大树', unlocked: stats.totalDecisions >= 10 },
-    { icon: '📚', name: '锦囊达人', unlocked: false },
-    { icon: '👑', name: '月度复盘王', unlocked: stats.bloomedCount >= 3 },
+    { mark: 'I', name: '首次记录', condition: '完成第 1 次决策记录', unlocked: stats.totalDecisions > 0 },
+    { mark: 'VII', name: '连续 7 天', condition: '连续记录 7 天', unlocked: stats.streak >= 7 },
+    { mark: 'R', name: '首次复盘', condition: '完成第 1 次回看', unlocked: stats.bloomedCount > 0 },
+    { mark: 'X', name: '十次选择', condition: '累计记录 10 次决策', unlocked: stats.totalDecisions >= 10 },
+    { mark: 'N', name: '经验成章', condition: '收藏一条有效经验', unlocked: false },
+    { mark: 'M', name: '月度复盘', condition: '单月完成 3 次复盘', unlocked: stats.bloomedCount >= 3 },
   ]
 }
 
@@ -111,7 +111,7 @@ export default function Profile() {
 
       <div className="pf-header">
         <div className="pf-avatar-wrap">
-          <span className="pf-avatar">👤</span>
+          <span className="pf-avatar">D</span>
         </div>
         <div className="pf-user">
           <span className="pf-name">{userInfo?.name || '决策者'}</span>
@@ -132,7 +132,7 @@ export default function Profile() {
         <div className="pf-stat-divider" />
         <div className="pf-stat-item">
           <span className="pf-stat-num">{stats.growthLoopRate || '0%'}</span>
-          <span className="pf-stat-label">盛开率</span>
+          <span className="pf-stat-label">闭环率</span>
         </div>
         <div className="pf-stat-divider" />
         <div className="pf-stat-item">
@@ -150,8 +150,9 @@ export default function Profile() {
               className={`pf-badge ${badge.unlocked ? 'badge-unlocked' : ''}`}
             >
               <span className="pf-badge-index">{String(index + 1).padStart(2, '0')}</span>
-              <span className="pf-badge-icon">{badge.icon}</span>
+              <span className="pf-badge-mark">{badge.mark}</span>
               <span className="pf-badge-name">{badge.name}</span>
+              <span className="pf-badge-condition">{badge.unlocked ? '已解锁' : badge.condition}</span>
             </div>
           ))}
         </div>
@@ -179,7 +180,7 @@ export default function Profile() {
       <div className="pf-section">
         <span className="pf-section-title">数据保存</span>
         <div className="pf-local-note">
-          <span className="pf-local-note-icon">🌿</span>
+          <span className="pf-local-note-icon">LOCAL</span>
           <span>
             当前数据保存在本机浏览器。换设备、清缓存或更换浏览器可能看不到原记录，建议定期在“数据导出”里备份。
           </span>
@@ -190,20 +191,20 @@ export default function Profile() {
         <span className="pf-section-title">账号与数据保护</span>
         <div className="pf-settings-list">
           <div className="pf-setting" onClick={openLogin}>
-            <span className="pf-setting-icon">🔐</span>
+            <span className="pf-setting-icon">ID</span>
             <span className="pf-setting-label">{user ? '已登录账号' : '账号登录'}</span>
             <span className="pf-setting-hint">
               {isLoading ? '确认中' : user?.email || (isConfigured ? '邮箱登录' : '未配置')}
             </span>
           </div>
           <div className="pf-setting" onClick={() => navigate(user ? '/data-export' : '/login')}>
-            <span className="pf-setting-icon">☁️</span>
+            <span className="pf-setting-icon">SYNC</span>
             <span className="pf-setting-label">云备份与跨设备恢复</span>
             <span className="pf-setting-hint">{user ? '手动备份可用' : '登录后开放'}</span>
           </div>
           {user && (
             <div className="pf-setting pf-setting-danger" onClick={handleDeleteAccount}>
-              <span className="pf-setting-icon">🗑️</span>
+              <span className="pf-setting-icon">DEL</span>
               <span className="pf-setting-label">永久注销账号</span>
               <span className="pf-setting-hint">同时删除云端与本机数据</span>
             </div>
@@ -216,7 +217,7 @@ export default function Profile() {
         <div className="pf-settings-list">
           {!isInstalledApp() && (
             <div className="pf-setting" onClick={handleInstall}>
-              <span className="pf-setting-icon">📲</span>
+              <span className="pf-setting-icon">APP</span>
               <span className="pf-setting-label">安装到桌面</span>
               <span className="pf-setting-hint">像应用一样打开</span>
             </div>
@@ -227,7 +228,7 @@ export default function Profile() {
               className="pf-setting"
               onClick={() => handleTapSetting(item.action)}
             >
-              <span className="pf-setting-icon">{item.icon}</span>
+              <span className="pf-setting-icon">{item.code}</span>
               <span className="pf-setting-label">{item.label}</span>
               <span className="pf-setting-arrow">›</span>
             </div>

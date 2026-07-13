@@ -223,18 +223,6 @@
 .dilemma-card.kit-info { border-left: 4px solid #7fb89a; }
 .dilemma-card.kit-review { border-left: 4px solid #e0a0a0; }
 
-.dilemma-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
 .dilemma-info {
   flex: 1;
   display: flex;
@@ -360,17 +348,26 @@
 
 /* ====== Decision chamber / editorial second pass ====== */
 .coach-page {
-  background: var(--color-paper);
+  --color-border: rgba(239, 233, 220, .14);
+  --color-border-light: rgba(239, 233, 220, .09);
+  --color-text-primary: #efe9dc;
+  --color-text-secondary: #aaa79e;
+  --color-text-placeholder: #77766f;
+  --color-accent: #b69a61;
+  --color-accent-dark: #d2b778;
+  --color-accent-light: rgba(182, 154, 97, .12);
+  --color-paper: #10110f;
+  background: #10110f;
+  color: #efe9dc;
 }
 
 .coach-header {
   position: relative;
   overflow: hidden;
-  min-height: 520px;
+  min-height: 390px;
   padding: 28px 24px 34px;
-  background:
-    radial-gradient(circle at 70% 62%, rgba(91, 125, 98, .24), transparent 34%),
-    #0f1712;
+  background: #10110f;
+  border-bottom: 1px solid var(--color-border);
   color: #efeade;
 }
 
@@ -421,27 +418,6 @@
   letter-spacing: .08em;
 }
 
-.coach-orbit {
-  position: relative;
-  width: min(78vw, 290px);
-  margin: 28px auto 0;
-  color: #b69a61;
-}
-
-.coach-orbit svg { display: block; width: 100%; }
-
-.coach-orbit span {
-  position: absolute;
-  left: 50%;
-  bottom: 12%;
-  width: max-content;
-  transform: translateX(-50%);
-  color: rgba(239, 234, 222, .34);
-  font-size: 7px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-}
-
 .coach-recommendation {
   border-radius: 0;
   border-color: rgba(182, 154, 97, .26);
@@ -453,7 +429,7 @@
 
 .coach-body {
   padding: 28px 20px 44px;
-  background: var(--color-paper);
+  background: #10110f;
 }
 
 .roundtable-input-card {
@@ -467,7 +443,7 @@
 
 .roundtable-step-label {
   color: var(--color-brass);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: .18em;
   text-transform: uppercase;
 }
@@ -486,7 +462,7 @@
 }
 
 .roundtable-input-card textarea::placeholder {
-  color: #aaa99f;
+  color: #aaa69c;
 }
 
 .roundtable-options {
@@ -519,6 +495,7 @@
   padding-left: 14px;
   border: 0;
   background: transparent;
+  color: #efe9dc;
   font-family: 'Songti SC', 'STSong', Georgia, serif;
 }
 
@@ -536,7 +513,8 @@
 .roundtable-perspective-head > span:last-child {
   max-width: 330px;
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 .roundtable-perspective-grid {
@@ -560,13 +538,13 @@
   border-bottom: 1px solid var(--color-border);
   border-left: 0;
   border-radius: 0;
-  background: transparent;
+  background: #151613;
   box-shadow: none;
 }
 
 .dilemma-card:hover {
   border-color: var(--color-border);
-  background: rgba(71, 96, 79, .04);
+  background: #191915;
   box-shadow: none;
   transform: none;
 }
@@ -585,18 +563,10 @@
   font-size: 10px;
 }
 
-.dilemma-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e3dfd2;
-  filter: grayscale(1);
-}
-
 .dilemma-title {
   color: var(--color-text-primary);
   font-family: 'Songti SC', 'STSong', Georgia, serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
 }
 
@@ -607,8 +577,9 @@
   letter-spacing: .08em;
 }
 
-.dilemma-desc { color: var(--color-text-secondary); }
-.dilemma-framework { color: var(--color-brass); font-size: 8px; letter-spacing: .1em; }
+.dilemma-info { gap: 10px; padding-right: 26px; }
+.dilemma-desc { color: #c2bdb2; font-size: 14px; line-height: 1.75; }
+.dilemma-framework { color: var(--color-brass); font-size: 11px; line-height: 1.6; letter-spacing: .06em; }
 .dilemma-arrow { color: var(--color-brass); }
 
 @media (min-width: 900px) {
@@ -625,11 +596,6 @@
   .coach-title { margin-top: 34px; font-size: clamp(52px, 5.2vw, 76px); }
   .coach-title br { display: block; }
   .coach-desc { margin-top: 22px; }
-
-  .coach-orbit {
-    width: min(28vw, 330px);
-    margin-top: 20px;
-  }
 
   .coach-body { padding: 54px 48px 70px; }
   .roundtable-input-card { padding: 0 0 34px; }

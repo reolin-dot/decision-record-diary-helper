@@ -366,10 +366,6 @@
 .flower-visual.stage-full_bloom { background: linear-gradient(135deg, #fde8e8, #f8d8d8); }
 .flower-visual.stage-bloom { background: linear-gradient(135deg, #fde8e8, #f8d8d8); }
 
-.flower-emoji {
-  font-size: 32px;
-}
-
 .flower-info {
   display: flex;
   flex-direction: column;
@@ -921,13 +917,23 @@
 
 /* ====== Decision Conservatory / editorial second pass ====== */
 .garden-page {
-  background: var(--color-paper);
+  --color-border: rgba(239, 233, 220, .14);
+  --color-border-light: rgba(239, 233, 220, .09);
+  --color-text-primary: #efe9dc;
+  --color-text-secondary: #aaa79e;
+  --color-text-placeholder: #77766f;
+  --color-accent: #b69a61;
+  --color-accent-dark: #d2b778;
+  --color-accent-light: rgba(182, 154, 97, .12);
+  --color-paper: #10110f;
+  background: #10110f;
+  color: #efe9dc;
 }
 
 .garden-top-bar {
   min-height: 58px;
   padding: 10px 20px;
-  background: var(--color-paper);
+  background: #10110f;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -936,6 +942,7 @@
   border-radius: 50%;
   background: transparent;
   border-color: var(--color-border);
+  color: var(--color-brass);
 }
 
 .garden-streak {
@@ -954,9 +961,8 @@
   display: flex;
   align-items: flex-end;
   padding: 38px 24px;
-  background:
-    radial-gradient(circle at 78% 30%, rgba(105, 136, 108, .25), transparent 34%),
-    linear-gradient(135deg, #121b16, #0b110d);
+  background: #10110f;
+  border-bottom: 1px solid var(--color-border);
   color: #efeade;
 }
 
@@ -964,7 +970,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  opacity: .22;
+  opacity: .16;
   background-image:
     linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
@@ -1145,9 +1151,9 @@
   min-height: 76px;
   margin-bottom: 20px;
   padding: 14px 16px;
-  border: 1px solid #263c2f;
+  border: 1px solid rgba(182, 154, 97, .34);
   border-radius: 0;
-  background: #25382c;
+  background: #171713;
   color: #efeade;
   box-shadow: none;
 }
@@ -1174,13 +1180,21 @@
 
 .garden-review-focus {
   padding: 24px;
-  background: #18271e;
-  border: 1px solid #2d4435;
+  background: #171713;
+  border: 1px solid rgba(182, 154, 97, .34);
 }
 
 .review-focus-actions button {
   border-radius: 0;
-  background: var(--color-paper);
+  background: #b69a61;
+  color: #11120f;
+}
+
+.review-focus-icon {
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+  font-size: 8px;
+  letter-spacing: .08em;
 }
 
 .pattern-panel,
@@ -1192,7 +1206,12 @@
 }
 
 .pattern-panel { padding: 22px; }
-.pattern-card { border-radius: 0; box-shadow: none; }
+.pattern-card {
+  border-radius: 0;
+  border-color: var(--color-border);
+  background: #151613;
+  box-shadow: none;
+}
 
 .flower-grid {
   padding-top: 22px;
@@ -1210,9 +1229,43 @@
 }
 
 .flower-visual {
+  position: relative;
   width: 100%;
   height: 104px;
   border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 14px;
+  background: #171713;
+}
+
+.flower-visual.stage-seed,
+.flower-visual.stage-sprout,
+.flower-visual.stage-leaf,
+.flower-visual.stage-bud,
+.flower-visual.stage-first_bloom,
+.flower-visual.stage-full_bloom,
+.flower-visual.stage-bloom { background: #171713; }
+
+.flower-serial {
+  position: relative;
+  z-index: 1;
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+  font-size: 11px;
+  letter-spacing: .12em;
+}
+
+.flower-watermark {
+  position: absolute;
+  top: 12px;
+  right: -3px;
+  color: rgba(239, 233, 220, .045);
+  font-family: Georgia, serif;
+  font-size: 32px;
+  letter-spacing: .04em;
 }
 
 .flower-info {
@@ -1241,9 +1294,7 @@
   padding: 54px 26px 42px;
   border: 0;
   border-radius: 0;
-  background:
-    radial-gradient(circle at 76% 28%, rgba(101, 133, 106, .23), transparent 30%),
-    #101713;
+  background: #10110f;
   color: #efeade;
   box-shadow: none;
 }
@@ -1259,7 +1310,7 @@
   line-height: .8;
 }
 
-.empty-illustration { color: #879d88; }
+.empty-illustration { color: #b69a61; }
 .empty-eyebrow { color: var(--color-brass); letter-spacing: .18em; }
 .empty-title { color: #efeade; font-family: 'Songti SC', 'STSong', Georgia, serif; font-weight: 400; }
 .empty-desc { color: rgba(239, 234, 222, .56); }

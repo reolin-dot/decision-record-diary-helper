@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
-import { getStageMeta, isBloomStage, isGrowingStage } from '../../domain/decisionStages.js'
+import { isBloomStage, isGrowingStage } from '../../domain/decisionStages.js'
 import { getReminders } from '../../domain/reminders.js'
 import { getLatestGrowthSnippets } from '../../domain/growthSnippets.js'
 import { buildDecisionPatterns } from '../../domain/decisionPatterns.js'
@@ -8,13 +8,21 @@ import { buildHomeNextAction } from '../../domain/homeNextAction.js'
 import { formatDate } from '../../utils/util.js'
 import './garden.css'
 
-function SeedlingMark() {
+const STAGE_LABELS = {
+  seed: '待整理',
+  sprout: '已选择',
+  leaf: '行动中',
+  first_bloom: '已复盘',
+  full_bloom: '已闭环',
+  bloom: '已闭环',
+}
+
+function ArchiveMark() {
   return (
     <svg className="empty-plant" viewBox="0 0 160 150" fill="none" aria-hidden="true">
-      <path d="M80 126V61" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-      <path d="M78 82C51 83 35 68 32 42c28 0 45 14 46 40Z" fill="currentColor" opacity=".78" />
-      <path d="M82 99c3-27 20-42 48-41-2 27-20 42-48 41Z" fill="currentColor" />
-      <path d="M42 129c12-16 25-23 38-23 16 0 30 8 41 23" stroke="currentColor" strokeWidth="6" strokeLinecap="round" opacity=".28" />
+      <rect x="30" y="18" width="100" height="114" stroke="currentColor" strokeWidth="2" />
+      <path d="M48 46h64M48 68h64M48 90h45M48 112h28" stroke="currentColor" strokeWidth="2" />
+      <path d="M112 88v26M99 101h26" stroke="currentColor" strokeWidth="2" />
     </svg>
   )
 }
@@ -29,10 +37,7 @@ export default function Garden() {
 
   const decorated = decisions
     .filter(d => !d._deleted)
-    .map(d => {
-      const meta = getStageMeta(d.stage)
-      return { ...d, stageIcon: meta.icon, stageLabel: meta.label, stageDesc: meta.description }
-    })
+    .map(d => ({ ...d, stageLabel: STAGE_LABELS[d.stage] || '待整理' }))
 
   const sorted = [...decorated].sort(
     (a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')
@@ -68,13 +73,13 @@ export default function Garden() {
       <div className="garden-top-bar">
         <div className="garden-user-info">
           <button className="garden-avatar" type="button" onClick={() => navigate('/profile')} aria-label="打开我的页面">
-            <span>👤</span>
+            <span>D</span>
           </button>
           <div className="garden-streak">
             {!isEmpty ? (
-              <span>🔥 连续 <span className="streak-num">{stats.streak}</span> 天记录</span>
+              <span>连续 <span className="streak-num">{stats.streak}</span> 天记录</span>
             ) : (
-              <span>欢迎来到决策花园</span>
+              <span>欢迎来到决策档案</span>
             )}
           </div>
         </div>
@@ -102,10 +107,10 @@ export default function Garden() {
         <div className="garden-scene">
           <div className="empty-garden empty-garden-onboarding">
             <div className="empty-illustration">
-              <SeedlingMark />
+              <ArchiveMark />
             </div>
             <div className="empty-text-group">
-              <div className="empty-eyebrow">你的第一块决策花圃</div>
+              <div className="empty-eyebrow">你的第一份决策档案</div>
               <h1 className="empty-title">今天，想理清哪件事？</h1>
               <p className="empty-desc">把问题写下来，看清选项，选一个能验证的行动。答案不必一次完美，它会在复盘里慢慢长出来。</p>
             </div>
@@ -138,7 +143,7 @@ export default function Garden() {
         <div className="garden-scene">
           <div className="empty-garden empty-garden-compact">
             <div className="empty-illustration">
-              <SeedlingMark />
+              <ArchiveMark />
             </div>
             <div className="empty-text-group">
               <div className="empty-eyebrow">新的选择，从这里开始</div>
@@ -157,7 +162,7 @@ export default function Garden() {
           <div className="garden-stats">
             <div className="garden-stat-item">
               <span className="stat-num">{growingCount}</span>
-              <span className="stat-label">正在生长</span>
+              <span className="stat-label">正在推进</span>
             </div>
             <div className="garden-stat-divider"></div>
             <div className="garden-stat-item">
@@ -167,7 +172,7 @@ export default function Garden() {
             <div className="garden-stat-divider"></div>
             <div className="garden-stat-item">
               <span className="stat-num">{bloomedCount}</span>
-              <span className="stat-label">已经盛开</span>
+              <span className="stat-label">已经闭环</span>
             </div>
           </div>
 
@@ -195,7 +200,7 @@ export default function Garden() {
 
           <button className="garden-capture-strip" onClick={() => navigate('/quick-capture')}>
             <span>NOTE<br />10S</span>
-            <span><b>有个念头怕忘记？</b><small>10 秒收进花园，之后再慢慢想</small></span>
+            <span><b>有个念头怕忘记？</b><small>10 秒收进档案，之后再慢慢想</small></span>
             <i>↗</i>
           </button>
 
@@ -229,7 +234,7 @@ export default function Garden() {
               onClick={() => navigate(homeNextAction.path)}
             >
               <div className="review-focus-head">
-                <span className="review-focus-icon">{topReminder?.icon || '🌱'}</span>
+                <span className="review-focus-icon">DUE</span>
                 <div className="review-focus-title-wrap">
                   <span className="review-focus-kicker">{homeNextAction.label}</span>
                   <span className="review-focus-title">{homeNextAction.title}</span>
@@ -272,14 +277,15 @@ export default function Garden() {
           )}
 
           <div className="flower-grid">
-            {sorted.map(d => (
+            {sorted.map((d, index) => (
               <div
                 key={d.id}
                 className="flower-card"
                 onClick={() => navigate(`/decision/${d.id}`)}
               >
                 <div className={`flower-visual stage-${d.stage}`}>
-                  <span className="flower-emoji">{d.stageIcon}</span>
+                  <span className="flower-serial">NO. {String(index + 1).padStart(2, '0')}</span>
+                  <span className="flower-watermark">DECISION</span>
                 </div>
                 <div className="flower-info">
                   <span className="flower-stage-label">{d.stageLabel}</span>
@@ -291,7 +297,7 @@ export default function Garden() {
 
           {stats.monthlyDecisions > 0 && (
             <div className="garden-monthly">
-              本月种下 {stats.monthlyDecisions} 个决策
+              本月记录 {stats.monthlyDecisions} 个决策
             </div>
           )}
         </div>

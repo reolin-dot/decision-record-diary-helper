@@ -11,17 +11,17 @@ export const REMINDER_META = {
   [REMINDER_TYPES.DUE_REVIEW]: {
     label: '到期复盘',
     icon: '💧',
-    tone: '这朵花到了约定回看的时间。',
+    tone: '这项决策到了约定回看的时间。',
   },
   [REMINDER_TYPES.ACTION]: {
     label: '行动提醒',
     icon: '🍃',
-    tone: '这颗种子已经发芽，可以看看第一步有没有开始。',
+    tone: '已经做出选择，可以看看第一步有没有开始。',
   },
   [REMINDER_TYPES.RESULT_FOLLOWUP]: {
     label: '结果跟进',
     icon: '🌷',
-    tone: '这朵花已经初开，可以温柔地回头看看结果是否更明朗。',
+    tone: '已经完成一次回看，可以确认结果是否更明朗。',
   },
 }
 

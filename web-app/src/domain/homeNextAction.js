@@ -11,7 +11,7 @@ export function buildHomeNextAction(decisions, reminder) {
     .find(item => item.isDraft || getDecisionLifecycle(item).canStartAction)
 
   if (latest?.isDraft) return {
-    label: '今天的下一步', title: latest.title, text: '把这颗草稿种子补完整，让它进入成长流程。',
+    label: '今天的下一步', title: latest.title, text: '把这份草稿补完整，让它进入决策流程。',
     action: '继续完善', path: `/record?draftId=${latest.id}&step=1`,
   }
   if (latest) return {
@@ -20,7 +20,7 @@ export function buildHomeNextAction(decisions, reminder) {
     action: '查看并行动', path: `/decision/${latest.id}`,
   }
   return {
-    label: '今天的下一步', title: '种下一颗新种子', text: '记录一个正在纠结的问题，先不急着得到完美答案。',
+    label: '今天的下一步', title: '记录一个新问题', text: '写下正在纠结的事，先不急着得到完美答案。',
     action: '开始记录', path: '/record?step=1',
   }
 }

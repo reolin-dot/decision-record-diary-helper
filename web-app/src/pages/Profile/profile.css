@@ -128,15 +128,6 @@
   box-shadow: 0 1px 6px rgba(74, 124, 89, 0.12);
 }
 
-.pf-badge-icon {
-  font-size: 22px;
-  opacity: 0.25;
-}
-
-.badge-unlocked .pf-badge-icon {
-  opacity: 1;
-}
-
 .pf-badge-name {
   font-size: 11px;
   color: #999999;
@@ -165,7 +156,7 @@
 
 .pf-insight-card:active,
 .pf-insight-empty:active {
-  background: #f9fbf8;
+  background: #1a1a16;
 }
 
 .pf-insight-head {
@@ -324,10 +315,19 @@
 
 /* ====== Personal archive / editorial second pass ====== */
 .profile-page {
+  --color-border: rgba(239, 233, 220, .14);
+  --color-border-light: rgba(239, 233, 220, .09);
+  --color-text-primary: #efe9dc;
+  --color-text-secondary: #aaa79e;
+  --color-text-placeholder: #77766f;
+  --color-accent: #b69a61;
+  --color-accent-dark: #d2b778;
+  --color-accent-light: rgba(182, 154, 97, .12);
   width: 100%;
   max-width: none;
   padding: 0 0 54px;
-  background: var(--color-paper);
+  background: #10110f;
+  color: #efe9dc;
 }
 
 .profile-masthead {
@@ -338,9 +338,8 @@
   flex-direction: column;
   justify-content: flex-end;
   padding: 42px 24px;
-  background:
-    radial-gradient(circle at 82% 20%, rgba(93, 126, 99, .24), transparent 32%),
-    #101713;
+  background: #10110f;
+  border-bottom: 1px solid var(--color-border);
   color: #efeade;
 }
 
@@ -414,10 +413,18 @@
   border: 1px solid var(--color-border);
   border-radius: 50%;
   background: transparent;
-  filter: grayscale(1);
+  color: var(--color-brass);
+  filter: none;
+}
+
+.pf-avatar {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-style: italic;
 }
 
 .pf-name {
+  color: #efe9dc;
   font-family: 'Songti SC', 'STSong', Georgia, serif;
   font-size: 21px;
   font-weight: 400;
@@ -428,6 +435,7 @@
   font-size: 8px;
   letter-spacing: .14em;
   text-transform: uppercase;
+  background: rgba(182, 154, 97, .1);
 }
 
 .pf-stats {
@@ -500,7 +508,12 @@
   border-right: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   border-radius: 0;
-  background: transparent;
+  background: #151613;
+}
+
+.pf-badge.badge-unlocked {
+  background: linear-gradient(145deg, rgba(182, 154, 97, .13), #151613 62%);
+  box-shadow: inset 0 0 0 1px rgba(182, 154, 97, .22);
 }
 
 .pf-badge-index {
@@ -512,19 +525,23 @@
   font-size: 8px;
 }
 
-.pf-badge-icon {
-  width: 48px;
-  height: 48px;
+.pf-badge-mark {
+  width: 52px;
+  height: 52px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #e4e0d5;
-  filter: grayscale(1);
+  border: 1px solid rgba(239, 233, 220, .18);
+  color: #8b8982;
+  font-family: Georgia, serif;
+  font-size: 20px;
+  letter-spacing: .04em;
 }
 
-.badge-unlocked .pf-badge-icon {
-  background: #dbe4da;
-  filter: grayscale(.35);
+.badge-unlocked .pf-badge-mark {
+  border-color: rgba(182, 154, 97, .62);
+  color: #d2b778;
+  box-shadow: inset 0 0 0 4px #151613, inset 0 0 0 5px rgba(182, 154, 97, .22);
 }
 
 .pf-badge-name,
@@ -534,25 +551,46 @@
   font-size: 11px;
 }
 
+.pf-badge-condition {
+  max-width: 112px;
+  color: #77766f;
+  font-size: 8px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.badge-unlocked .pf-badge-condition { color: var(--color-brass); }
+
 .pf-insight-card,
 .pf-insight-empty,
 .pf-settings-list,
 .pf-local-note {
   border: 1px solid var(--color-border);
   border-radius: 0;
-  background: transparent;
+  background: #151613;
   box-shadow: none;
 }
 
 .pf-insight-card,
 .pf-insight-empty { padding: 22px; }
 .pf-insight-title,
-.pf-insight-empty-title { font-family: 'Songti SC', 'STSong', Georgia, serif; font-size: 17px; font-weight: 400; }
+.pf-insight-empty-title { color: #efe9dc; font-family: 'Songti SC', 'STSong', Georgia, serif; font-size: 17px; font-weight: 400; }
+.pf-insight-content,
+.pf-insight-empty-desc { color: #aaa79e; }
+.pf-insight-date { color: #77766f; }
 .pf-insight-action { color: var(--color-brass); letter-spacing: .06em; }
 
 .pf-local-note {
   padding: 18px;
   color: var(--color-text-secondary);
+}
+
+.pf-local-note-icon {
+  padding-top: 2px;
+  color: var(--color-brass);
+  font-family: Georgia, serif;
+  font-size: 8px;
+  letter-spacing: .12em;
 }
 
 .pf-settings-list { border-bottom: 0; }
@@ -566,22 +604,27 @@
 .pf-setting:active { background: rgba(71, 96, 79, .05); }
 
 .pf-setting-icon {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 28px;
   border: 1px solid var(--color-border);
-  border-radius: 50%;
+  border-radius: 0;
   background: transparent;
-  filter: grayscale(1);
-  font-size: 14px;
+  color: var(--color-brass);
+  filter: none;
+  font-family: Georgia, serif;
+  font-size: 8px;
+  letter-spacing: .08em;
 }
 
 .pf-setting-label {
+  color: #efe9dc;
   font-family: 'Songti SC', 'STSong', Georgia, serif;
   font-size: 14px;
   font-weight: 400;
 }
 
 .pf-setting-arrow { color: var(--color-brass); }
+.pf-setting-hint { color: #85837c; }
 
 @media (min-width: 900px) {
   .profile-page { width: 100%; max-width: none; padding: 0 0 70px; }
