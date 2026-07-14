@@ -114,7 +114,7 @@ export default function CoachResult() {
       return
     }
 
-    toast.show(choiceStatus === 'chosen' ? '已种入花园' : '已作为待确认种子保存', { type: 'success' })
+    toast.show(choiceStatus === 'chosen' ? '已存入决策档案' : '已作为待确认决策保存', { type: 'success' })
     setTimeout(() => navigate(`/decision/${decision.id}`), 500)
   }
 
@@ -123,7 +123,7 @@ export default function CoachResult() {
   }
 
   return (
-    <div className="page-container">
+    <div className="page-container coach-result-page">
       <div className="result-body">
         <div className="coach-result-hero">
           <span className="coach-result-kicker">{analysis.kitTitle || '决策圆桌'}</span>
@@ -207,7 +207,7 @@ export default function CoachResult() {
             <span className="coach-save-kicker">{suggestedDraft.sourceLabel}</span>
             <span className="coach-save-title">完成这张决策卡</span>
             <span className="coach-save-desc">
-              先判断现在能否选择，再写下一个最小行动。两种情况都可以种进花园。
+              先判断现在能否选择，再写下一个最小行动。两种情况都可以保存为决策档案。
             </span>
           </div>
 
@@ -299,7 +299,7 @@ export default function CoachResult() {
           </label>
 
           <button className="save-draft-btn save-primary" onClick={handleSaveDecision} disabled={saving}>
-            {saving ? '种入花园中...' : '种入花园并设置复盘'}
+            {saving ? '保存中...' : '保存到档案并设置复盘'}
           </button>
         </div>
       </div>

@@ -89,7 +89,7 @@ export default function Garden() {
       {!isEmpty && (
         <section className="garden-masthead">
           <div className="garden-masthead-copy">
-            <span className="garden-masthead-kicker">Decision Conservatory · Daily</span>
+            <span className="garden-masthead-kicker">Decision Archive · Daily</span>
             <h1>今天，先理清<br /><em>一件事。</em></h1>
             <p>把问题放到桌面上，称量选择，留下行动证据。答案不必一次完美。</p>
             <button type="button" onClick={handlePlantFlower}>
@@ -133,7 +133,6 @@ export default function Garden() {
             </button>
             <div className="onboarding-choices">
               <button onClick={() => navigate('/compass')}>还没有头绪？先做 30 秒罗盘</button>
-              <button onClick={() => navigate('/data-export')}>从备份恢复旧记录</button>
             </div>
           </div>
         </div>
@@ -176,33 +175,44 @@ export default function Garden() {
             </div>
           </div>
 
-          <div className="garden-actions-inline">
-            <button type="button" className="action-btn" onClick={handlePlantFlower}>
-              <span className="action-btn-index">01</span>
-              <span className="action-btn-text">记录新决策<small>从一个真实问题开始</small></span>
-            </button>
-            <button type="button" className="action-btn" onClick={() => navigate('/watering')}>
-              <div className="action-badge-wrap">
-                <span className="action-btn-index">02</span>
-                {reminderCount > 0 && <div className="action-badge-dot"></div>}
+          {homeNextAction && (
+            <div
+              className={`garden-review-focus focus-${topReminder?.type || 'action'}`}
+              onClick={() => navigate(homeNextAction.path)}
+            >
+              <div className="review-focus-head">
+                <span className="review-focus-icon">NEXT</span>
+                <div className="review-focus-title-wrap">
+                  <span className="review-focus-kicker">现在最值得推进</span>
+                  <span className="review-focus-title">{homeNextAction.title}</span>
+                </div>
+                {reminderCount > 0 && <span className="review-focus-count">{reminderCount} 件</span>}
               </div>
-              <span className="action-btn-text">查看待复盘<small>{reminderCount > 0 ? `${reminderCount} 件等待回看` : '暂时没有新提醒'}</small></span>
-            </button>
-            <button type="button" className="action-btn" onClick={() => navigate('/coach')}>
-              <span className="action-btn-index">03</span>
-              <span className="action-btn-text">进入决策圆桌<small>换一个视角追问</small></span>
-            </button>
-            <button type="button" className="action-btn" onClick={() => navigate('/growth-snippets')}>
-              <span className="action-btn-index">04</span>
-              <span className="action-btn-text">浏览成长片段<small>收藏已验证的经验</small></span>
-            </button>
-          </div>
+              <span className="review-focus-tone">{homeNextAction.text}</span>
+              <div className="review-focus-actions">
+                <button type="button" onClick={(e) => { e.stopPropagation(); navigate(homeNextAction.path) }}>
+                  {homeNextAction.action}
+                </button>
+                {reminderCount > 1 && (
+                  <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/watering') }}>
+                    查看全部
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
-          <button className="garden-capture-strip" onClick={() => navigate('/quick-capture')}>
-            <span>NOTE<br />10S</span>
-            <span><b>有个念头怕忘记？</b><small>10 秒收进档案，之后再慢慢想</small></span>
-            <i>↗</i>
-          </button>
+          <nav className="garden-tools-bar" aria-label="快捷工具">
+            <button type="button" onClick={() => navigate('/coach')}>
+              <span>ROUND TABLE</span><b>圆桌梳理</b><small>换一个角度追问</small>
+            </button>
+            <button type="button" onClick={() => navigate('/quick-capture')}>
+              <span>QUICK NOTE</span><b>十秒速记</b><small>先收下，再整理</small>
+            </button>
+            <button type="button" onClick={() => navigate('/growth-snippets')}>
+              <span>EVIDENCE</span><b>经验档案</b><small>回看已验证的方法</small>
+            </button>
+          </nav>
 
           {decisionPatterns.patternCards.length > 0 && (
             <div className="pattern-panel">
@@ -228,33 +238,6 @@ export default function Garden() {
             </div>
           )}
 
-          {homeNextAction && (
-            <div
-              className={`garden-review-focus focus-${topReminder?.type || 'action'}`}
-              onClick={() => navigate(homeNextAction.path)}
-            >
-              <div className="review-focus-head">
-                <span className="review-focus-icon">DUE</span>
-                <div className="review-focus-title-wrap">
-                  <span className="review-focus-kicker">{homeNextAction.label}</span>
-                  <span className="review-focus-title">{homeNextAction.title}</span>
-                </div>
-                {reminderCount > 0 && <span className="review-focus-count">{reminderCount} 个</span>}
-              </div>
-              <span className="review-focus-tone">{homeNextAction.text}</span>
-              <div className="review-focus-actions">
-                <button type="button" onClick={(e) => { e.stopPropagation(); navigate(homeNextAction.path) }}>
-                  {homeNextAction.action}
-                </button>
-                {reminderCount > 1 && (
-                  <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/watering') }}>
-                    查看全部
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
           {latestAiInsight && (
             <div className="garden-ai-insight" onClick={() => navigate('/data-export')}>
               <div className="ai-insight-head">
@@ -275,6 +258,11 @@ export default function Garden() {
               ))}
             </div>
           )}
+
+          <div className="garden-section-head">
+            <span><small>RECENT FILES</small>最近决策</span>
+            <button type="button" onClick={() => navigate('/decision-list')}>查看全部 ↗</button>
+          </div>
 
           <div className="flower-grid">
             {sorted.map((d, index) => (

@@ -105,14 +105,17 @@ export default function Coach() {
         </div>
 
         <div className="roundtable-perspective-grid">
-          {COACH_KITS.filter(item => item.id !== 'review').map((item, index) => (
+          {COACH_KITS.filter(item => item.id !== 'review').map((item) => (
             <button
               type="button"
               key={item.id}
               className={`dilemma-card kit-${item.id} ${recommendation?.kitId === item.id ? 'recommended' : ''}`}
               onClick={() => openPerspective(item.id)}
             >
-              <span className="dilemma-index">{String(index + 1).padStart(2, '0')}</span>
+              <span className="dilemma-emblem" aria-hidden="true">
+                <b>{item.perspectiveLabel.slice(0, 1)}</b>
+                <small>{item.id.slice(0, 3).toUpperCase()}</small>
+              </span>
               <span className="dilemma-info">
                 <span className="dilemma-title">
                   {item.perspectiveLabel}
@@ -123,7 +126,7 @@ export default function Coach() {
                 <span className="dilemma-desc">{item.title}。{item.desc}</span>
                 <span className="dilemma-framework">{item.framework} · {item.tone}</span>
               </span>
-              <span className="dilemma-arrow">›</span>
+              <span className="dilemma-arrow">进入视角 ↗</span>
             </button>
           ))}
         </div>

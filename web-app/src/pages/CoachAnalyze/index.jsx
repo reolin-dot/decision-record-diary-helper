@@ -73,7 +73,10 @@ export default function CoachAnalyze() {
     <div className="analyze-page">
       <div className="analyze-body">
         <div className={`kit-hero kit-${kit.id}`}>
-          <span className="kit-hero-icon">{kit.icon}</span>
+          <span className="kit-hero-emblem" aria-hidden="true">
+            <b>{kit.perspectiveLabel.slice(0, 1)}</b>
+            <small>{kit.id.slice(0, 3).toUpperCase()}</small>
+          </span>
           <div>
             <div className="framework-title">{kit.perspectiveLabel} · {kit.framework}</div>
             <div className="framework-desc">{kit.desc}</div>

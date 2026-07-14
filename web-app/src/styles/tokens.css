@@ -18,6 +18,18 @@
   --color-warning: #e67e22;
   --color-success: #4a7c59;
 
+  /* Decision Archive — shared visual language for the three primary routes */
+  --archive-bg: #10110f;
+  --archive-surface: #151613;
+  --archive-surface-raised: #1a1b17;
+  --archive-text: #efe9dc;
+  --archive-text-muted: #b7b1a6;
+  --archive-text-dim: #85827a;
+  --archive-border: rgba(239, 233, 220, 0.14);
+  --archive-border-soft: rgba(239, 233, 220, 0.09);
+  --archive-brass: #bfa66d;
+  --archive-brass-strong: #d7bf83;
+
   /* Spacing & Radius */
   --radius-sm: 4px;
   --radius-md: 8px;

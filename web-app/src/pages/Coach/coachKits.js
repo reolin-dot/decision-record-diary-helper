@@ -1,7 +1,6 @@
 export const COACH_KITS = [
   {
     id: 'choice',
-    icon: '🔀',
     perspectiveLabel: '权衡者视角',
     title: '我在几个选项里反复纠结',
     shortTitle: '纠结选择型',
@@ -22,7 +21,6 @@ export const COACH_KITS = [
   },
   {
     id: 'emotion',
-    icon: '🌧️',
     perspectiveLabel: '守护者视角',
     title: '我情绪很乱，没法判断',
     shortTitle: '情绪降噪型',
@@ -42,7 +40,6 @@ export const COACH_KITS = [
   },
   {
     id: 'action',
-    icon: '🏃',
     perspectiveLabel: '行动者视角',
     title: '我知道方向，但迟迟动不起来',
     shortTitle: '行动启动型',
@@ -52,7 +49,7 @@ export const COACH_KITS = [
     resultTitle: '把决定变成一个能开始的动作',
     summaryTitle: '真正卡住你的地方',
     nextActionTitle: '5 分钟启动动作',
-    nextAction: '只做一个小到不会失败的动作，先让这朵花长出第一片叶子。',
+    nextAction: '只做一个小到不会失败的动作，先让这项决定获得一个真实反馈。',
     steps: [
       { title: '你其实已经倾向于做什么？', placeholder: '写下那个你心里知道但一直没开始的方向。', hint: '', type: 'textarea' },
       { title: '你迟迟没动的主要阻力是什么？', placeholder: '例如：怕失败、太麻烦、不知道第一步、没人支持...', hint: '阻力写出来，就已经小了一点。', type: 'textarea' },
@@ -62,7 +59,6 @@ export const COACH_KITS = [
   },
   {
     id: 'info',
-    icon: '🔎',
     perspectiveLabel: '调查者视角',
     title: '我缺信息，不敢决定',
     shortTitle: '信息验证型',
@@ -82,7 +78,6 @@ export const COACH_KITS = [
   },
   {
     id: 'review',
-    icon: '🌸',
     perspectiveLabel: '复盘者视角',
     title: '我已经做完了，想复盘一下',
     shortTitle: '复盘提炼型',
@@ -92,7 +87,7 @@ export const COACH_KITS = [
     resultTitle: '把这次经历变成可带走的经验',
     summaryTitle: '这次决策留下的线索',
     nextActionTitle: '下次可以保留的做法',
-    nextAction: '把最有价值的一条经验写回决策花园，作为下一次选择的提醒。',
+    nextAction: '把最有价值的一条经验存入经验档案，作为下一次选择的提醒。',
     steps: [
       { title: '实际发生了什么？', placeholder: '只写事实，不评价自己。', hint: '', type: 'textarea' },
       { title: '当初哪些判断被验证了？', placeholder: '哪些想法是对的？哪些出乎意料？', hint: '', type: 'textarea' },

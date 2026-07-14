@@ -142,7 +142,7 @@ export default function Profile() {
       </div>
 
       <div className="pf-section">
-        <span className="pf-section-title">成就徽章</span>
+        <span className="pf-section-title">成就档案</span>
         <div className="pf-badge-grid">
           {badges.map((badge, index) => (
             <div

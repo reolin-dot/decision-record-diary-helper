@@ -28,7 +28,7 @@ export default function TabBar() {
     <nav className="tab-bar" aria-label="主导航">
       <button className="tab-brand" type="button" onClick={() => navigate('/')} aria-label="返回决策成长日记首页">
         <span className="tab-brand-mark"><BrandMark /></span>
-        <span className="tab-brand-copy"><small>Decision Conservatory</small><strong>决策成长日记</strong></span>
+        <span className="tab-brand-copy"><small>Decision Archive</small><strong>决策成长日记</strong></span>
       </button>
       <div className="tab-links">
         {tabs.map((tab) => {

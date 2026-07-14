@@ -315,19 +315,20 @@
 
 /* ====== Personal archive / editorial second pass ====== */
 .profile-page {
-  --color-border: rgba(239, 233, 220, .14);
-  --color-border-light: rgba(239, 233, 220, .09);
-  --color-text-primary: #efe9dc;
-  --color-text-secondary: #aaa79e;
-  --color-text-placeholder: #77766f;
-  --color-accent: #b69a61;
-  --color-accent-dark: #d2b778;
-  --color-accent-light: rgba(182, 154, 97, .12);
+  --color-border: var(--archive-border);
+  --color-border-light: var(--archive-border-soft);
+  --color-text-primary: var(--archive-text);
+  --color-text-secondary: var(--archive-text-muted);
+  --color-text-placeholder: var(--archive-text-dim);
+  --color-accent: var(--archive-brass);
+  --color-accent-dark: var(--archive-brass-strong);
+  --color-accent-light: rgba(191, 166, 109, .12);
+  --color-brass: var(--archive-brass);
   width: 100%;
   max-width: none;
   padding: 0 0 54px;
-  background: #10110f;
-  color: #efe9dc;
+  background: var(--archive-bg);
+  color: var(--archive-text);
 }
 
 .profile-masthead {
@@ -493,70 +494,86 @@
 }
 
 .pf-badge-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  border-top: 1px solid var(--color-border);
-  border-left: 1px solid var(--color-border);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  border: 0;
 }
 
 .pf-badge,
 .pf-badge.badge-unlocked {
   position: relative;
-  min-height: 132px;
-  padding: 20px 8px 14px;
-  border: 0;
-  border-right: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  border-radius: 0;
-  background: #151613;
+  aspect-ratio: auto;
+  min-height: 210px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  background: transparent;
 }
 
 .pf-badge.badge-unlocked {
-  background: linear-gradient(145deg, rgba(182, 154, 97, .13), #151613 62%);
-  box-shadow: inset 0 0 0 1px rgba(182, 154, 97, .22);
+  border-color: rgba(191, 166, 109, .42);
+  background: linear-gradient(145deg, rgba(191, 166, 109, .15), var(--archive-surface) 58%);
+  box-shadow: inset 3px 0 0 var(--color-brass);
 }
 
 .pf-badge-index {
   position: absolute;
-  top: 8px;
-  left: 9px;
+  top: 14px;
+  left: 16px;
   color: var(--color-brass);
   font-family: Georgia, serif;
-  font-size: 8px;
+  font-size: 9px;
+  letter-spacing: .12em;
 }
 
+.pf-badge::after {
+  content: 'PENDING';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: var(--archive-text-dim);
+  font-family: Georgia, serif;
+  font-size: 7px;
+  letter-spacing: .16em;
+}
+
+.pf-badge.badge-unlocked::after { content: 'ARCHIVED'; color: var(--color-brass); }
+
 .pf-badge-mark {
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border-radius: 0;
   border: 1px solid rgba(239, 233, 220, .18);
   color: #8b8982;
   font-family: Georgia, serif;
-  font-size: 20px;
+  font-size: 26px;
   letter-spacing: .04em;
 }
 
 .badge-unlocked .pf-badge-mark {
   border-color: rgba(182, 154, 97, .62);
   color: #d2b778;
-  box-shadow: inset 0 0 0 4px #151613, inset 0 0 0 5px rgba(182, 154, 97, .22);
+  box-shadow: inset 0 0 0 5px var(--archive-surface), inset 0 0 0 6px rgba(191, 166, 109, .24);
 }
 
 .pf-badge-name,
 .badge-unlocked .pf-badge-name {
   color: var(--color-text-primary);
   font-family: 'Songti SC', 'STSong', Georgia, serif;
-  font-size: 11px;
+  font-size: 16px;
+  text-align: left;
 }
 
 .pf-badge-condition {
-  max-width: 112px;
-  color: #77766f;
-  font-size: 8px;
-  line-height: 1.5;
-  text-align: center;
+  max-width: none;
+  color: var(--archive-text-dim);
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: left;
 }
 
 .badge-unlocked .pf-badge-condition { color: var(--color-brass); }
@@ -645,5 +662,5 @@
   .pf-stats .pf-stat-item { min-height: 0; border: 0; }
   .pf-stat-divider { display: block; }
   .pf-section { padding: 0 0 42px; }
-  .pf-badge-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .pf-badge-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
